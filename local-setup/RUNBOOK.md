@@ -306,19 +306,23 @@ about what broke and move on.
    `eval`/`exec`/`system`/`shell_exec`/`passthru`, touches user or session tables, or executes an
    obfuscated string.
 2. **Registry check.** Look up its `$id` and `$mapID` in `local-setup/variant-registry.md`. On a
-   collision, renumber the newcomer into the **900 block** and record its original ID in Notes.
-   Never displace an incumbent. Derivatives sharing a parent's `$mapID` (three Classic
+   collision, renumber the newcomer **downwards from 250** — *not* into the 900 block, which this
+   schema cannot hold (see the gotcha table) — and record its original ID in Notes. Never displace
+   an incumbent. Derivatives sharing a parent's `$mapID` (three Classic
    derivatives share map 1) are correct and must not be "fixed".
 3. **Place the folder** under `variants/<Name>/` and create a writable `cache/` directory —
    it will not arrive with a download and the root `.gitignore` hides `/cache/`:
    `mkdir -p variants/<Name>/cache`
 4. **Check resources.** It must ship `resources/style.css` (**not** `variant.css`) and dark-mode
    resources.
-5. **Register the ID** in `config.php`, in `Config::$variants` — ninety-four entries after issue
-   009 wave 3; the current line is recorded in `local-setup/variant-registry.md`, because
-   `config.php` is gitignored and git will not record it. **Every ID must be ≤ 255**:
+5. **Register the ID** in `config.php`, in `Config::$variants` — one hundred and eleven entries
+   after issue 009 wave 4; the current line is recorded in `local-setup/variant-registry.md`,
+   because `config.php` is gitignored and git will not record it. **Every ID must be ≤ 255**:
    `wD_Games.variantID` and `wD_Territories.mapID` are `tinyint unsigned` and silently clamp
-   anything larger. Renumber a colliding port from **254 downwards**.
+   anything larger. Renumber a colliding port from **254 downwards** (250, 251 and 254 are taken;
+   252 and 253 are reserved to deferred variants). **ID 57 must never be used** — core hard-codes
+   `if($variantID != 57)` in five places and a variant registered as 57 never appears in any
+   dropdown.
 6. **Admin panel**, logged in as `admin`, in this order:
    - <http://localhost:43000/admincp.php?actionName=wipeVariants#wipeVariants> to cool the caches;
    - then <http://localhost:43000/admincp.php?actionName=updateVariantInfo&variantID=#updateVariantInfo>,
@@ -338,13 +342,23 @@ Sanity checks afterwards:
 ```sh
 # no duplicate variant IDs (do NOT grep the whole file: the server-message and bot arrays match too)
 python3 -c "import re;l=re.search(r'public static \\\$variants=array\\(.*?\\);',open('config.php').read(),re.S).group(0);i=re.findall(r\"(\\d+)=>'\",l);print(len(i),'variants','OK' if len(i)==len(set(i)) else 'DUPLICATES')"
-curl -s http://127.0.0.1:43000/gamecreate.php | grep -c '<option'
+# the dropdown must have exactly as many options as the config has variants (issue 009 wave 4).
+# gamecreate.php needs a logged-in session, so use a cookie jar from a logon.php POST:
+curl -s -b jar.txt http://127.0.0.1:43000/gamecreate.php \
+  | grep -o '<option name="newGame\[variantID\]"' | wc -l        # must equal the count above
 docker compose logs --tail=200 php-fpm | grep -iE 'fatal|deprecated'
 
 # the map really installed: install.php's row count must equal the database's
 docker compose exec -T mariadb mysql -u root --password=mypassword123 -N -e \
   "use webdiplomacy; select mapID,count(*),sum(supply='Yes') from wD_Territories where mapID=<id>;"
-grep -cE "^\s*array\(\s*'" variants/<Name>/install.php
+# NB: count only the $territoryRawData block — $bordersRawData rows also start with array('
+python3 - <<'EOF'
+import re
+t=open('variants/<Name>/install.php',encoding='utf-8',errors='replace').read()
+i=t.find('$territoryRawData=array(');j=t.find('$bordersRawData',i)
+rows=re.findall(r"^\s*array\((.*?)\),?\s*$",t[i:j],re.M)
+print(len(rows),'territories,',sum(1 for r in rows if "'Yes'" in r.split(',')[2]),'supply centres')
+EOF
 ```
 
 ---
@@ -532,6 +546,10 @@ Everything below has bitten this install at least once. In the order you are lik
 | **`processStatus='Crashed'` is sticky** | The gamemaster skips the game for ever after, silently | Set it back to `Not-processing` once the cause is fixed |
 | **Sum-of-squares scoring divides by zero when nobody owns a supply centre** (issue 009 wave 3, `objects/scoringsystem.php:136`) | Every board load of the game is *"Division by zero"*. Hits `Imperium`, whose installer makes all 28 centres neutral | Create such games with any other pot type. Core bug; see `PLAYING.md` §B.1 |
 | **A variant's own order class can reject an order silently** (issue 009 wave 3, e.g. Lepanto forbidding `Move` from four territories) | The order comes back with **no type**, the member never reaches `Completed`, `Game::needsProcess()` never fires, and the game sits in one phase for ever with nothing in any log | Re-read the board's order context after submitting and give anything typeless a `Hold` (or `Wait` in a Builds phase) |
+| **Core hard-codes variant ID 57 out of every dropdown** (issue 009 wave 4). `if($variantID != 57)` appears twice in `locales/English/gamecreate.php`, three times in `locales/English/gamecreateSandbox.php` and once in `gamelistings.php:334` | A variant registered as 57 installs, row-counts correctly, draws on `map.php` and lists on `variants.php` — and is **invisible** in New Game, Start a Sandbox Game and the games-list variant filter. No error anywhere | Never use ID 57. `KnownWorld_901` was renumbered 57 → 250. Catch it by counting: the `<option>`s in the New Game variant select must equal `count(Config::$variants)` |
+| **Forcing a phase that is not Ready NMRs everyone, draws the game and temp-bans the accounts** (issue 009 wave 4). Setting `wD_Games.processTime` into the past and calling `gamemaster.php` processes regardless of order status; `gamemaster/game.php:786` draws a game where no member is left `Playing`, and the reliability system writes `wD_Users.tempBan` with `tempBanReason='System'` | The game ends `Drawn` out of nowhere, and afterwards `board.php` shows those accounts **no Join button and no error** — only the banner *"You are blocked from joining, rejoining, or creating new games for 4 days"* (`lib/html.php:758-762`) | Only ever force `processTime` on a **Pre-game** phase, to end the join period. For every other phase, confirm `wD_Members.orderStatus LIKE '%Ready%'` for all members and then wait — the SSE gamemaster driver polls once a second and `needsProcess()` fires on its own. To clear a ban: `UPDATE wD_Users SET tempBan=NULL, tempBanReason=NULL WHERE tempBanReason='System';` |
+| **`admincp actionName=cancelGame` refuses a `Finished` game** | Nothing happens and the game stays in the listings | `cancelGame` only handles `Diplomacy`/`Retreats`/`Builds`. A finished game has to be removed by hand: delete its rows from `wD_Orders`, `wD_Moves`, `wD_Units`, `wD_TerrStatus`, `wD_Members`, `wD_GameMessages` and `wD_Games` |
+| **`wD_TerrStatus` has no row for a territory nobody has ever owned** | A query that finds neutral supply centres by joining `wD_TerrStatus` returns almost nothing, and any tooling built on it thinks the map is full | Find them from `wD_Territories` with a `LEFT JOIN wD_TerrStatus`, treating a missing row as unowned |
 
 ---
 

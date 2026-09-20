@@ -210,8 +210,10 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`, and is also in
 `wD_VariantInfo.countryCount`. "Enabled" means the ID is in `Config::$variants` in the gitignored
-`config.php`, which after issues 007, 008 and 009 (waves 0, 1 and 3) is **all ninety-four below** —
-every one of them installed and played through at least one adjudicated phase. The React
+`config.php`, which after issues 007, 008 and 009 (waves 0, 1, 3 and 4) is **all one hundred and
+eleven below**. Every variant with ten powers or fewer has been installed and played through at
+least one adjudicated phase; the eight with more powers than this install has accounts are
+installed and verified to render, but have never been sat at a table (see *Above ten players*). The React
 (point-and-click) board is whitelisted to exactly three variants — `Game::isClassicGame()`,
 `objects/game.php:565-568`, is `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything
 else renders on the legacy `board.php` drop-down board, **including the two-player variants that
@@ -247,6 +249,7 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **5** | Caucasia | 118 | legacy |
 | **5** | WesternEurope1300 (*Western Europe 1300*) | 145 | legacy |
 | **5** | SouthSahara (*South of Sahara*) | 149 | legacy |
+| **5** | Sengoku6 (*Sengoku: Nagashino (V6)*) | 100 | legacy |
 | **6** | Imperium (*Imperium Diplomacy*) | 13 | legacy |
 | **6** | GreekDip (*Greek Diplomacy*) | 35 | legacy |
 | **6** | Fubar | 39 | legacy |
@@ -254,6 +257,7 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **6** | AnarchyInTheUK (*Anarchy in the UK*) | 79 | legacy |
 | **6** | Mars | 80 | legacy |
 | **6** | BalkanWarsVI (*Balkan Wars VI*) | 254 | legacy |
+| **6** | YoungstownWWII (*Youngstown World War II*) | 92 | legacy |
 | **7** | Classic | 1 | **React** |
 | **7** | FleetRome (*Classic, with fleet in Rome*) | 3 | legacy |
 | **7** | CustomStart (*Classic with a custom start*) | 4 | legacy |
@@ -285,6 +289,7 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **7** | Edwardian3 (*Edwardian - 3rd Edition*) | 130 | legacy |
 | **7** | Classic1898 (*Classic - 1898*) | 133 | legacy |
 | **7** | Scottish_Clan_Wars (*Scottish Clan Wars*) | 141 | legacy |
+| **7** | MachiavelliTTR (*Machiavelli - To the Renaissance*) | 115 | legacy |
 | **8** | Migraine | 21 | legacy |
 | **8** | SouthAmerica8 (*South American Supremacy*) | 24 | legacy |
 | **8** | MateAgainstMate (*Mate Against Mate*) | 37 | legacy |
@@ -297,6 +302,9 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **8** | CelticBritain (*Celtic Britain*) | 75 | legacy |
 | **8** | TiglathPileser (*Tiglath-Pileser*) | 137 | legacy |
 | **8** | Karibik | 251 | legacy |
+| **8** | Sengoku5 (*Sengoku*) | 27 | legacy |
+| **8** | Africa | 83 | legacy |
+| **8** | Machiavelli (*Machiavelli - The Balance of Power*) | 109 | legacy |
 | **9** | Hussite (*Hussite Wars*) | 47 | legacy |
 | **9** | GreatLakes (*Indians of the Great Lakes*) | 77 | legacy |
 | **9** | AberrationV (*Aberration V*) | 88 | legacy |
@@ -309,12 +317,24 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **10** | War2020 (*War in 2020*) | 61 | legacy |
 | **10** | Enlightenment (*Enlightenment & Succession*) | 76 | legacy |
 | **10** | Napoleonic | 101 | legacy |
+| **10** | YoungstownRedux (*Youngstown - Redux*) | 59 | legacy |
+| **10** | Colonial1885 (*Colonial 1885*) | 71 | legacy |
 | **11** | ClassicCrowded (*Classic - Crowded*) | 14 | legacy |
+| **11** | Crusades1201 (*Crusades 1201*) | 114 | legacy |
+| **11** | MongolianEmpire (*13th Century Mongolian Empire*) | 138 | legacy |
+| **12** | FantasyWorld (*Fantasy World Diplomacy*) | 44 | legacy |
+| **12** | Rinascimento | 29 | legacy |
+| **12** | WorldAtWar1937 (*A World At War - 1937*) | 171 | legacy |
+| **13** | Imperial2 (*Imperial Diplomacy II*) | 81 | legacy |
+| **14** | EastIndies (*East Indies*) | 131 | legacy |
+| **14** | GobbleEarth (*Gobble-Earth*) | 96 | legacy |
+| **15** | KnownWorld_901 (*Known World 901*) | 250 | legacy |
 | **17** | World (*World Diplomacy IX*) | 2 | legacy |
 | **34** | ClassicChaos (*Classic - Chaos*) | 17 | legacy |
 | **34** | ClassicChaoctopi (*Classic - Chaoctopi*) | 54 | legacy |
 
-**Every player count from 2 to 11 is now servable**, and 17 and 34 as well. The gaps that
+**Every player count from 2 to 15 is now servable**, and 17 and 34 as well — though only up to
+ten can actually be seated from this install's ten accounts without adding more (§A.4). The gaps that
 issue 009 wave 1 could only fill with `ClassicVS`'s name trick are gone: four, five and six
 players all have real maps now.
 
@@ -333,9 +353,25 @@ something that is not really Diplomacy at all.
 (the Carolingian split), or the two Classic ones. Four: `SouthAmerica4`, `NorthSeaWars`,
 `SailHo2`, `ColdWarRedux`, `AtlanticColonies` (nine units each) or `Chesspolitik` (a chessboard,
 32 of its 64 squares are supply centres). Five: `AncMed` is still the best-tested, with
-`SouthAmerica5`, `WWII`, `Caucasia`, `Chromatic`, `ManifestDestiny`, `WesternEurope1300` and
-`SouthSahara` beside it. Six: `GreekDip`, `AnarchyInTheUK`, `BalkanWarsVI`, `AmericanConflict`,
-`Fubar`, `Mars` or `Imperium`.
+`SouthAmerica5`, `WWII`, `Caucasia`, `Chromatic`, `ManifestDestiny`, `WesternEurope1300`,
+`SouthSahara` and `Sengoku6` beside it. Six: `GreekDip`, `AnarchyInTheUK`, `BalkanWarsVI`,
+`AmericanConflict`, `Fubar`, `Mars`, `Imperium` or `YoungstownWWII`.
+
+**The Machiavelli / Sengoku family.** Issue 009 wave 4 added six maps that share two house
+rules, and both change how a game feels:
+
+- **Build anywhere.** `Machiavelli` (109), `MachiavelliTTR` (115), `Africa` (83), `Sengoku5`
+  (27), `Sengoku6` (100), `Crusades1201` (114), `MongolianEmpire` (138), `Rinascimento` (29),
+  `EastIndies` (131) and `KnownWorld_901` (250) let a build go in **any** owned, unoccupied
+  supply centre — not just your home centres. Conquering a neutral town and building in it the
+  same winter is legal and normal.
+- **Neutral units.** `MachiavelliTTR`, `Africa`, `Sengoku5`, `Sengoku6`, `MongolianEmpire`,
+  `Rinascimento` and `KnownWorld_901` place a non-playable power's units on the board at the
+  start (like `Duo`'s "Black" and `WesternWorld_901`'s tenth power). Nobody plays them, they
+  never move, and they have to be **dislodged** — which means a supported attack, since an
+  unsupported one just bounces. `Sengoku6` is the extreme case: **all 38 supply centres are
+  occupied at the start**, twenty of them by neutrals, so nobody can build at all until someone
+  breaks a neutral garrison. Expect the first two or three years to be siege warfare.
 
 **Two warnings, both learned the hard way in issue 009 wave 3:**
 
@@ -350,11 +386,19 @@ something that is not really Diplomacy at all.
   `ClassicChaoctopi`, `War2020`, `Migraine`, `Fubar`, `Mars` and `Empire1on1`. Budget five
   minutes of game night for it, and note that fleets can only go on coastal home centres.
 
-**Bigger tables.** Seven players has thirty-one choices, eight has twelve, nine has seven and ten
-has five (`Modern2`, `Empire4`, `War2020`, `Enlightenment`, `Napoleonic`). Above ten,
-`ClassicCrowded` is eleven, `World` is seventeen and `ClassicChaos` / `ClassicChaoctopi` are
-thirty-four — more players than this install has accounts, so those need extra accounts
-(§A.4).
+**Bigger tables.** Seven players has thirty-two choices, eight has fifteen, nine has seven and
+ten has seven (`Modern2`, `Empire4`, `War2020`, `Enlightenment`, `Napoleonic`,
+`YoungstownRedux`, `Colonial1885`). Ten is the largest table this install can seat as it stands.
+
+**Above ten players.** `ClassicCrowded` is eleven, `World` is seventeen and `ClassicChaos` /
+`ClassicChaoctopi` are thirty-four; issue 009 wave 4 added nine more between eleven and fifteen
+— `Crusades1201` (11), `MongolianEmpire` (11), `FantasyWorld` (12), `Rinascimento` (12),
+`WorldAtWar1937` (12), `Imperial2` (13), `EastIndies` (14), `GobbleEarth` (14) and
+`KnownWorld_901` (15). **All nine are installed and drawn but have never been played here**:
+they need more seats than the ten accounts provide, so add accounts first (§A.4). Two are worth
+the trouble if you ever do — `Imperial2` is **384 territories and 172 supply centres**, the
+biggest board in the tree, and `Colonial1885` (271 / 122) is the biggest that ten people can
+actually sit at.
 
 ### B.2 Creating the game, step by step
 

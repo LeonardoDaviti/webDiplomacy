@@ -1252,3 +1252,239 @@ After `nginx -t` and `docker compose restart webserver`:
 `/variants/variant.php` **404**, and the site, the legacy board, `map.php`, `/game/` and
 `/events` all unchanged. Wave 3 harvested **eleven** packages that ship a PHP file under
 `resources/` or `interactiveMap/` — every one of them is now 404 rather than executable.
+
+
+---
+
+## Wave 4 (the requested high-interest set) — candidate set
+
+Scope, as briefed: the named wants — **Machiavelli (both)**, **Known World 901**, **Youngstown
+(all versions)**, **Sengoku**, **Africa (all African maps)** — plus every remaining vDiplomacy
+variant that wave 3 excluded *only* because it was on the wave-4 list, plus everything with
+**11–16 players** (render-only acceptance above ten seats). **17+ players is wave 5 and was not
+touched.**
+
+Source, as for waves 1–3: `Sleepcap/vDiplomacy` @ `72c81f0dd73bedccc11f13a750dfcc62f580549a`,
+cloned to `/tmp/vdip`.
+
+### The named wants, resolved
+
+| Named | Outcome |
+| --- | --- |
+| **Machiavelli** | vDip ships **two**: `Machiavelli` 109 *"Machiavelli - The Balance of Power"* (8 players, 1454) and `MachiavelliTTR` 115 *"Machiavelli - To the Renaissance"* (7 players, 1253). Both harvested. |
+| **Known World 901** | `KnownWorld_901` 57, 15 players. **Not the same map as wave 3's `WesternWorld_901` (127)** — 297 territories against 167, fifteen powers against nine, 159 territory names in common. Western World 901 is the Europe-and-Mediterranean subset; Known World 901 adds India, China, south-east Asia and sub-Saharan Africa. Harvested, **renumbered 57 → 250** (see the core gotcha below), render-only. |
+| **Youngstown** | Two versions in vDip: `YoungstownRedux` 59 (10 players) and `YoungstownWWII` 92 (6 players). Both harvested and played. There is no third. |
+| **Sengoku** | Two: `Sengoku5` 27 *"Sengoku"* (8 players) and `Sengoku6` 100 *"Sengoku: Nagashino (V6)"* (5 players, **subclasses `Sengoku5Variant`**). Both harvested and played. |
+| **Africa** | `Africa` 83 (8 players) is the only African map wave 3 left; `SouthSahara` 149 *"South of Sahara"* was already harvested in wave 3, and `Karibik`/`SouthAmerica*` are not African. So "all African maps" = Africa 83. Harvested and played. |
+| **Colonial1885** | `Colonial1885` 71, 10 players — the one remaining ≤ 10-player variant wave 3 excluded solely for being on the wave-4 list. Harvested and played. |
+
+### How the set was determined
+
+Every `/tmp/vdip/variants/*/variant.php` was re-read for `$id`, `$mapID` and `count($countries)`,
+and every `install.php`'s `$territoryRawData` block counted. A variant is a wave-4 candidate when:
+
+- it is one of the named wants above, **or** it has 11–16 `$countries`;
+- it has its own full `install.php`;
+- it is not already in `variant-registry.md` and not deferred.
+
+`ClassicCrowded` (11) was already in the tree. `TenSixtySix_V2` (85) and `TenSixtySix_V3` (94)
+declare no `$countries` and stay out, as in wave 3. The whole `Classic*` family stays out of
+scope — wave 3's exclusion of it was not a wave-4 deferral.
+
+**17 candidates**, worked smallest-first within each group:
+
+| # | Variant | vDip `$id` | vDip `$mapID` | Players | Territories / SCs | Full name |
+| ---: | --- | ---: | ---: | ---: | ---: | --- |
+| 1 | Sengoku6 | 100 | 100 | 5 | 59 / 38 | Sengoku: Nagashino (V6) |
+| 2 | MachiavelliTTR | 115 | 115 | 7 | 71 / 42 | Machiavelli - To the Renaissance |
+| 3 | Machiavelli | 109 | 109 | 8 | 73 / 44 | Machiavelli - The Balance of Power |
+| 4 | Sengoku5 | 27 | 27 | 8 | 81 / 37 | Sengoku |
+| 5 | Crusades1201 | 114 | 114 | **11** | 100 / 39 | Crusades 1201 |
+| 6 | FantasyWorld | 44 | 44 | **12** | 131 / 58 | Fantasy World Diplomacy |
+| 7 | Rinascimento | 29 | 29 | **12** | 142 / 60 | Rinascimento |
+| 8 | Africa | 83 | 83 | 8 | 144 / 63 | Africa |
+| 9 | EastIndies | 131 | 131 | **14** | 161 / 70 | East Indies |
+| 10 | YoungstownWWII | 92 | 92 | 6 | 194 / 79 | Youngstown World War II |
+| 11 | YoungstownRedux | 59 | 59 | 10 | 196 / 81 | Youngstown - Redux |
+| 12 | MongolianEmpire | 138 | 138 | **11** | 203 / 68 | 13th Century Mongolian Empire |
+| 13 | GobbleEarth | 96 | 96 | **14** | 266 / 107 | Gobble-Earth |
+| 14 | Colonial1885 | 71 | 71 | 10 | 271 / 122 | Colonial 1885 |
+| 15 | WorldAtWar1937 | 171 | 171 | **12** | 294 / 129 | A World At War - 1937 |
+| 16 | KnownWorld_901 | 57 → **250** | 57 → **250** | **15** | 297 / 109 | Known World 901 |
+| 17 | Imperial2 | 81 | 81 | **13** | 384 / 172 | Imperial Diplomacy II |
+
+### Wave 4 — result: 17 candidates, 17 playable, 0 deferred
+
+Nine were played through **Spring → Autumn → Builds** with the variant's own player count and
+left **paused**; eight have more than ten powers and took **render-only** acceptance, as briefed.
+**Every one of the seventeen matches its own `install.php` exactly** on both territory and
+supply-centre count.
+
+| Variant | `$id` | `$mapID` | Players | Terr / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Sengoku5 | 27 | 27 | 8 | 81 / 37 | 25 *(declared)* | **107** | **Pass** |
+| Rinascimento | 29 | 29 | 12 | 142 / 60 | 33 *(declared)* | — | **Pass (render-only)** |
+| FantasyWorld | 44 | 44 | 12 | 131 / 58 | 30 *(declared)* | — | **Pass (render-only)** |
+| YoungstownRedux | 59 | 59 | 10 | 196 / 81 | 28 *(declared)* | **111** | **Pass** |
+| Colonial1885 | 71 | 71 | 10 | 271 / 122 | 50 *(declared)* | **112** | **Pass** |
+| Imperial2 | 81 | 81 | 13 | 384 / 172 | 70 *(declared)* | — | **Pass (render-only)** |
+| Africa | 83 | 83 | 8 | 144 / 63 | 33 | **109** | **Pass** (one PHP 8 fix) |
+| YoungstownWWII | 92 | 92 | 6 | 194 / 79 | 42 | **110** | **Pass** |
+| GobbleEarth | 96 | 96 | 14 | 266 / 107 | 37 *(declared)* | — | **Pass (render-only)** (one PHP 8 fix) |
+| Sengoku6 | 100 | 100 | 5 | 59 / 38 | 20 *(declared)* | **108** | **Pass** |
+| Machiavelli | 109 | 109 | 8 | 73 / 44 | 23 | **105** | **Pass** |
+| Crusades1201 | 114 | 114 | 11 | 100 / 39 | 14 *(declared)* | — | **Pass (render-only)** |
+| MachiavelliTTR | 115 | 115 | 7 | 71 / 42 | 22 | **106** | **Pass** |
+| EastIndies | 131 | 131 | 14 | 161 / 70 | 37 | — | **Pass (render-only)** |
+| MongolianEmpire | 138 | 138 | 11 | 203 / 68 | 36 | — | **Pass (render-only)** (apostrophe fix) |
+| WorldAtWar1937 | 171 | 171 | 12 | 294 / 129 | 65 *(declared)* | — | **Pass (render-only)** |
+| KnownWorld_901 | **250** (upstream 57) | **250** | 15 | 297 / 109 | 55 *(declared)* | — | **Pass (render-only)** |
+
+Unlike wave 3, **eleven of the seventeen declare their own `$supplyCenterTarget`** rather than
+taking `round(18/34 * supplyCenterCount)`; the issue-007 target trap is live across this whole
+wave and every declared value was checked against `wD_VariantInfo`.
+
+### The variant-specific rule exercised in each acceptance game
+
+The brief asked for at least one variant-specific rule per Machiavelli-style variant. What was
+checked, and how:
+
+- **Machiavelli (109) — build anywhere.** `BuildAnywhere_userOrderBuilds` lets a build go in
+  *any* owned unoccupied supply centre. In gameID 105 Florence built in **Lucca** and
+  **Piombino** (`wD_Territories.countryID = 0`, neutral, not anyone's home) and Austria built in
+  a **captured Milan** (home of another power). A stock webDiplomacy build would have rejected
+  all three.
+- **MachiavelliTTR (115) — build anywhere plus neutral units.** `wD_Units` for gameID 106 holds
+  six units under **countryID 8** with **no `wD_Members` row** — `countryID()` is overridden to
+  return `count($countries)+1` for the pseudo-power "Neutral units", and
+  `NeutralUnits_processMembers` gives it a throwaway member object for the supply-centre count.
+  Its `processGame` also re-runs a Retreats phase that only the neutral power would act in.
+  The game ran six turns with them in place.
+- **Sengoku5 (27) — neutral units and a forced pot type.** Seven neutral units under countryID 9
+  in gameID 107, and `classes/processMember.php` (`ChangeGameType_processMember::makeBet`)
+  **`UPDATE`s `wD_Games` to set `potType = 'Winner-takes-all'`** the first time anyone bets.
+  gameID 107's `potType` was confirmed `Winner-takes-all`. It is the only harvested variant that
+  writes to `wD_Games`; it touches only its own game's row, so it was allowed.
+- **Sengoku6 (100) — twenty neutral units, and a map that starts full.** Its
+  `adjudicatorPreGame` places 18 player units and **20 neutral units on all 38 supply centres**,
+  so — like `Pure` — no build is possible until a neutral unit is dislodged. gameID 108 held
+  seven Diplomacy phases without a Builds phase, then reached one in Autumn 1573 by having each
+  power run a **2-on-1 supported attack** on an adjacent neutral-held centre; all five powers
+  then built. Its own `initialize()` override (`supplyCenterTarget = 20`) was confirmed in
+  `wD_VariantInfo`.
+- **Africa (83) — build anywhere, neutral units and coast convoys.** Seven neutral units under
+  countryID 9 in gameID 109, builds into four neutral centres (North Chad, Juba, Uganda,
+  Tamanrasset), and `$convoyCoasts` — eight coastal territories armies may be convoyed between,
+  which is the code path the PHP 8 `implode` fix is in. Every member loaded the board and
+  submitted orders, which is the proof the fix works.
+- **Colonial1885 (71), YoungstownWWII (92), YoungstownRedux (59)** are plain map variants: no
+  order-class overrides at all, only `drawMap`, `panelGameBoard` and `adjudicatorPreGame`. The
+  rule checked in each was its **declared solo target** (50 and 28 against formula values of 65
+  and 43) and, for the two ten-power maps, that all ten accounts could be seated.
+
+### Wave 4 — the three code fixes, all in-folder
+
+1. **`implode($array, $glue)`, PHP 8 argument order** — `Africa/classes/OrderInterface.php:30`
+   and `Africa/interactiveMap/interactiveMap.php:19`, and
+   `GobbleEarth/classes/OrderInterface.php:22`. Same fatal as wave 3's eight: the board dies for
+   every member and the game can never leave its first Diplomacy phase. Both are marked
+   `LOCAL DEVIATION (issue 009 wave 4)` in place.
+2. **An apostrophe in `$description`** — `MongolianEmpire`'s *"the Mongol's strive"* kills
+   `admincp actionName=updateVariantInfo` with a SQL syntax error, because
+   `admin/adminActionsRestricted.php:1235` interpolates `$name`, `$fullName`, `$description` and
+   `$author` unescaped. Replaced with U+2019, exactly as `ClassicIER` needed in wave 1. **The
+   core bug is still there and will bite the next harvest with an apostrophe in any of those
+   four fields.**
+3. **`KnownWorld_901` renumbered 57 → 250** — see the next section.
+
+### The gotcha that cost wave 4 the most time: core blacklists variant ID 57
+
+`KnownWorld_901` installed perfectly at its upstream ID 57 — 297 territories / 109 SCs matching
+`install.php`, `wD_VariantInfo` written, `map.php?variantID=57` drawing a 137 KB PNG,
+`variants.php` listing it — and was **absent from the New Game dropdown**. The count caught it:
+111 entries in `Config::$variants`, 110 `<option>`s.
+
+```php
+foreach(Config::$variants as $variantID=>$variantName)
+{
+    if($variantID != 57)   // locales/English/gamecreate.php:244
+```
+
+The same literal appears **five times** in core: twice in `locales/English/gamecreate.php`,
+three times in `locales/English/gamecreateSandbox.php` (one of which also excludes 70) and once
+in `gamelistings.php:334`, which is the variant filter on the games list. Upstream evidently
+retired a variant 57 and hard-coded it out rather than removing it from the array.
+
+The fix stayed in the variant's own folder: `$id` and `$mapID` became **250**, the map-57 rows
+and the `wD_VariantInfo` row were deleted, and the variant reinstalled on map 250. **ID 57 is now
+reserved and permanently unusable on this codebase**, and that is recorded in the registry.
+Nothing in core was edited.
+
+### Two operational traps met in wave 4
+
+- **Forcing a phase that is not Ready NMRs the whole table, and the NMR temp-bans the accounts.**
+  The first two Machiavelli attempts were driven by setting `wD_Games.processTime` into the past
+  and calling `gamemaster.php`. Any member not yet `Ready` is an NMR; two rounds of that and
+  `Game::process()` hits *"If all remaining players NMRed the same turn … Draw"*
+  (`gamemaster/game.php:786`) and ends the game `Drawn`. Worse, the reliability system then
+  writes **`wD_Users.tempBan` with `tempBanReason = 'System'`** for every offender, and those
+  accounts silently stop being offered the Join button — `board.php` renders with no join form
+  and no error, only the banner *"You are blocked from joining, rejoining, or creating new games
+  for 4 days"* (`lib/html.php:758-762`). The cure is
+  `UPDATE wD_Users SET tempBan=NULL, tempBanReason=NULL WHERE tempBanReason='System'`; the
+  prevention is **never force a Diplomacy or Builds phase** — check every member's
+  `orderStatus LIKE '%Ready%'` and then simply wait, because the SSE gamemaster driver hits the
+  site once a second and `Game::needsProcess()` fires on its own. Forcing `processTime` is only
+  safe on a **Pre-game** phase, to end the join period.
+- **A `Finished` game cannot be cancelled.** `admincp actionName=cancelGame` only handles
+  `Diplomacy`/`Retreats`/`Builds`, so a game that NMR-drew itself has to be removed by deleting
+  its rows from `wD_Orders`, `wD_Moves`, `wD_Units`, `wD_TerrStatus`, `wD_Members`,
+  `wD_GameMessages` and `wD_Games` by hand. Two such games (101 and 102) were removed that way;
+  the wave-4 acceptance games are **105–112**.
+
+### Class-name collisions between variants: a risk that does not bite
+
+Wave 4's packages redefine the same intermediate class names over and over —
+`BuildAnywhere_OrderInterface`, `NeutralUnits_processMembers`, `MoveFlags_drawMap`,
+`ZoomMap_drawMap`, `MapName_IAmap`, `CustomIcons_OrderInterface`. Eleven of the seventeen ship
+their own copy of `BuildAnywhere_*`. Redeclaring a class is fatal in PHP, so this would matter
+if two variants' class files were ever loaded in one request — and they are not: the autoloader
+at `variants/variant.php:573-584` maps `[Name]Variant_[Class]` to
+`variants/[Name]/classes/[Class].php` and is only reached through a board or gamemaster request
+that has exactly one variant. `variants.php` instantiates every variant but never touches the
+`classes/` directory. `WesternWorld_901` has shipped `ZoomMap_drawMap` since wave 3 without
+incident; `YoungstownRedux`, `EastIndies`, `Imperial2` and `KnownWorld_901` now ship three more
+copies of it. Worth knowing before adding anything that loads two variants at once.
+
+### Wave 4 — nothing deferred
+
+The security read (the wave-3 grep list plus `STATICSRV`, `extends Maps`, `wD_Users`,
+`implode($`, `$Game->targetSCs`/`maxTurns`, `buildEligibilityFlags`, and `extends <X>Variant`
+for an `<X>` not in the tree) came back **clean for all seventeen**. No fog variants, no
+`wD_Users` access, no missing schema columns. The only cross-package dependency is
+**`Sengoku6` → `Sengoku5`**, and both are enabled, so no dependency-only folder was added to
+`variants/` this wave (`RuleExtensions` remains the only one).
+
+### The `config.php` line after wave 4
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',27=>'Sengoku5',28=>'Classic1897',29=>'Rinascimento',31=>'Alacavre',33=>'Empire1on1',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',44=>'FantasyWorld',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',59=>'YoungstownRedux',61=>'War2020',62=>'ClassicEvT',63=>'Viking',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',71=>'Colonial1885',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',81=>'Imperial2',82=>'DarkAges',83=>'Africa',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',92=>'YoungstownWWII',93=>'Chromatic',96=>'GobbleEarth',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',100=>'Sengoku6',101=>'Napoleonic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',109=>'Machiavelli',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',114=>'Crusades1201',115=>'MachiavelliTTR',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',130=>'Edwardian3',131=>'EastIndies',132=>'Chesspolitik',133=>'Classic1898',137=>'TiglathPileser',138=>'MongolianEmpire',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',171=>'WorldAtWar1937',250=>'KnownWorld_901',251=>'Karibik',254=>'BalkanWarsVI');
+```
+
+**111 variants**, every key unique — up from 94 after wave 3.
+
+### What wave 4 learned, for wave 5
+
+1. **Count the dropdown against `Config::$variants` every time.** That one comparison is what
+   found the hard-coded `!= 57`. A variant can pass every other check and still be unreachable.
+2. **Never force a phase.** Wait for `needsProcess()`; forcing costs a drawn game and a
+   four-day temp-ban on every account involved.
+3. **Read `$supplyCenterTarget` out of `wD_VariantInfo` and compare it to the variant's own
+   declaration.** Eleven of seventeen declared one this wave.
+4. Wave 3's greps still earn their keep, and still find things: one apostrophe and three
+   `implode($array, $glue)` sites in seventeen packages.
+5. **Wave 5 is everything with 17 or more powers** — `Pirates` 66 (17), `World10` 129 (17),
+   `Haven` 51 (19), `A_Modern_Europe` 136 (20), `WWIV` 52 (35), `WWIVsealanes` 95 (35),
+   `WWIV_V6` 102 (36), `Europa_Renovatio` 155 (36) and `Divided_States` 105 (50) — all of which
+   can only ever be render-only here, plus the twelve `Classic*` near-misses wave 1 excluded and
+   the two `TenSixtySix_V*` packages with no `$countries`.

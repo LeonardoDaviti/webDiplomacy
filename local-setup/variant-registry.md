@@ -186,10 +186,10 @@ Rows are added by issues 007, 008 and 009 as work lands. Issues 007 (Westeros) a
 **Config line** (`config.php` is gitignored, so this is the only versioned record):
 
 ```php
-public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',33=>'Empire1on1',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',63=>'Viking',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',82=>'DarkAges',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',101=>'Napoleonic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',130=>'Edwardian3',132=>'Chesspolitik',133=>'Classic1898',137=>'TiglathPileser',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',251=>'Karibik',254=>'BalkanWarsVI');
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',27=>'Sengoku5',28=>'Classic1897',29=>'Rinascimento',31=>'Alacavre',33=>'Empire1on1',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',44=>'FantasyWorld',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',59=>'YoungstownRedux',61=>'War2020',62=>'ClassicEvT',63=>'Viking',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',71=>'Colonial1885',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',81=>'Imperial2',82=>'DarkAges',83=>'Africa',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',92=>'YoungstownWWII',93=>'Chromatic',96=>'GobbleEarth',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',100=>'Sengoku6',101=>'Napoleonic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',109=>'Machiavelli',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',114=>'Crusades1201',115=>'MachiavelliTTR',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',130=>'Edwardian3',131=>'EastIndies',132=>'Chesspolitik',133=>'Classic1898',137=>'TiglathPileser',138=>'MongolianEmpire',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',171=>'WorldAtWar1937',250=>'KnownWorld_901',251=>'Karibik',254=>'BalkanWarsVI');
 ```
 
-**94 variants**, every key unique:
+**111 variants**, every key unique:
 
 ```sh
 sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d    # prints nothing
@@ -248,6 +248,21 @@ reports duplicates that are not duplicate variant IDs.)
   (extends a nonexistent `IAmap`; the interactive-map subsystem was never part of webDiplomacy,
   and the file is not under `classes/` so the autoloader could not reach it anyway).
 - **IDs 22, 26 and 62 (variant and map) are now reserved permanently.**
+
+**Notes from issue 009 wave 4**
+
+- **ID 57 must never be used.** Core hard-codes `if($variantID != 57)` in five places —
+  `locales/English/gamecreate.php` (twice), `locales/English/gamecreateSandbox.php` (three
+  times, one of which also excludes 70) and `gamelistings.php:334` — so a variant registered as
+  57 installs cleanly, renders on `map.php` and `variants.php`, and is **silently absent from
+  every New Game dropdown, the sandbox dropdown and the game-list variant filter**. `KnownWorld_901`
+  was found this way (111 config entries, 110 options) and renumbered **57 → 250**. 57 stays
+  reserved and unusable.
+- **The renumber band is now 250, 251, 254.** Wave 3 took 254 (BalkanWarsVI) and 251 (Karibik);
+  wave 4 takes 250 (KnownWorld_901). 252 and 253 are reserved to the deferred Baron1900 and
+  SpeedEuropa. Count downwards from 250 next.
+- **`171` is the highest upstream ID kept as-is** (WorldAtWar1937), and it is still well under
+  the `tinyint` 255 ceiling.
 
 ## Deferred
 
