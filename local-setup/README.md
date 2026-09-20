@@ -14,6 +14,7 @@ upstream.
 | `SPEC.md` | The corrected requirements spec for the LAN instance. Start here. |
 | `UPGRADE.md` | **Upgrade procedure**: how to take an upstream change — pre-flight backup, the `master`→`local` merge and its expected conflicts, the `install/*/update.sql` walk, rebuilds, acceptance, rollback, cadence. Read this *before* touching upstream. |
 | `RUNBOOK.md` | **Operations manual**: start/stop, health checks, backup and restore, adding a variant, accounts, LAN access, known gotchas, git workflow. Read this when something is broken or you have forgotten how. |
+| `PLAYING.md` | **Player and hosting guide**: changing/resetting passwords, renaming and adding accounts, which variant serves which player count, and creating, joining, running, pausing and cancelling a game. Read this when you want to *play*, not fix. |
 | `scripts/` | `db-backup.sh` and `db-restore.sh` (issue 002), used by the runbook. |
 | `variant-registry.md` | Every variant known to this install: name, `$id`, `$mapID`, source, status. |
 | `issues/NNN-slug.md` | One work item per file. |
