@@ -1500,8 +1500,8 @@ already deferred**. Source, as for waves 1–4: `Sleepcap/vDiplomacy` @
 
 ### How the leftover list was built
 
-`/tmp/vdip/variants/*` (**146 directories**) was diffed against `variants/` (**116** at the start
-of the wave). **31 folders** were left. Eight of them are wave-1/wave-3 deferrals that are
+`/tmp/vdip/variants/*` (**142 variant directories**, plus four loose files) was diffed against
+`variants/` (**113 variant directories** at the start of the wave). **31 folders** were left. Eight of them are wave-1/wave-3 deferrals that are
 already documented with a reason, leaving **23 candidates**:
 
 | # | Variant | vDip `$id` | vDip `$mapID` | Players | Territories / SCs | Full name |
@@ -1728,9 +1728,20 @@ Run at the close of the wave, all from the repo root:
 
 ### The whole vDiplomacy tree, accounted for
 
-146 directories in `/tmp/vdip/variants/`. 132 − 21 in-tree-or-other-source = **125 harvested from
-vDiplomacy**, plus **10 deferred/excluded**, plus **1 dependency-only** (`RuleExtensions`), plus
-**10** packages whose in-tree equivalents ship with webDiplomacy 1.83 under the same names
-(`Classic`, `World`, `AncMed`, `Colonial`, `ClassicFvA`, `ClassicChaos`, `Modern2`, `Empire4`,
-`ClassicGvI`, `ColdWar`, `Zeus5`, `FleetRome`, `CustomStart`, `BuildAnywhere`). **Nothing in
-`/tmp/vdip/variants/` is now unexamined.**
+`/tmp/vdip/variants/` holds **142 variant directories** (plus `variantDATC.php`, a file, not a
+variant). Every one of them now has a place:
+
+| | Count | |
+| --- | ---: | --- |
+| Enabled here | **130** | Registered in `Config::$variants`, installed, row-counted, rendered. |
+| Deferred or excluded | **10** | ClassicFog 30, DutchRevolt 32, TenSixtySix 55, RatWars 65, TenSixtySix_V2 85, TenSixtySix_V3 94, Classic1898Fog 134, PunicWars 208, SpeedEuropa 253, Baron1900 1900 — one reason each, above. |
+| Dependency only | **1** | `RuleExtensions` — abstract, in the tree because `SouthSahara` (149) extends it, deliberately not registered. |
+| Not a variant | **1** | `author_utilities` (`packageMapData.php`), which ships with webDiplomacy 1.83 as well. |
+
+**Nothing in `/tmp/vdip/variants/` is unexamined.** The two enabled variants that did *not* come
+from vDiplomacy are `GoT` (45) and `GoT2` (46), harvested from
+`mcoirad/gameofthrones-diplomacy` by issue 007 — 130 + 2 = the **132** in `Config::$variants`.
+
+`variants/` itself now holds **134 directories**: the 132 enabled, plus `RuleExtensions` and
+`author_utilities`, both of which `variants.php` skips by the guard wave 3 added
+(`LOCAL DEVIATION (issue 009)`).
