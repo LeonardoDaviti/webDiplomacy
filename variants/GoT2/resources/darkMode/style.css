@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+/* Dark-mode variant of resources/style.css; lightened so the country names
+   stay legible on the dark page background. */
+
+.variantGoT2 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global          */
+.variantGoT2 .country1 { color: rgb(120, 140, 235) ! important; }       /* House Tully     */
+.variantGoT2 .country2 { color: rgb(232, 107, 107) ! important; }       /* House Lannister */
+
+.variantGoT2 .occupationBar1 { background-color: rgb(120, 140, 235); } /* House Tully     */
+.variantGoT2 .occupationBar2 { background-color: rgb(232, 107, 107); } /* House Lannister */

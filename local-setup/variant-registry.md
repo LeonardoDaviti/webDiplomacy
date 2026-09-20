@@ -68,11 +68,31 @@ config's variant array.
 
 ## Ported and harvested variants
 
-Empty. Rows are added by issues 007, 008 and 009 as work lands.
+Rows are added by issues 007, 008 and 009 as work lands. Issue 007 (Westeros) has landed.
 
 | Variant | `$id` | `$mapID` | Players | Source | Status | Notes |
 | --- | ---: | ---: | ---: | --- | --- | --- |
-| _(Westeros)_ | _TBD, 900 block_ | _TBD_ | _TBD_ | mcoirad/gameofthrones-diplomacy | not started | Issue 007. Requires a dependency variant installed first. Legacy board only. Security-review the PHP before loading it. |
+| GoT2 | 46 | 46 | 2 | mcoirad/gameofthrones-diplomacy `GoT2` @ `8e1be97` (Dario Mitchell, after echepron / evil-minion) | playable | Issue 007. "Game of Thrones - Tully vs Lannister". Upstream `$id`/`$mapID` 46 were both free, so they were kept — no 900-block renumber. Own map data (ownership and two borders differ from `GoT`), so its own `$mapID`. Legacy board only. Solo target 20 (see Notes below). |
+| GoT | 45 | 45 | 8 | mcoirad/gameofthrones-diplomacy `master` @ `d1e01af` (Dario Mitchell, after echepron / evil-minion) | playable | Issue 007. "Game of Thrones", the full eight-house map. Upstream `$id`/`$mapID` 45 were both free, so they were kept. Legacy board only. Solo target 35 (see Notes below). |
+
+**Config line** (`config.php` is gitignored, so this is the only versioned record):
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',9=>'AncMed',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',23=>'ClassicGvI',45=>'GoT',46=>'GoT2',91=>'ColdWar');
+```
+
+**Notes on both Westeros variants**
+
+- Both maps are the same 135 territories / 51 supply centres; only supply-centre *ownership*
+  (and `The North`, `Maidenpool` and two border rows) differs, so they must not share a
+  `$mapID`.
+- `WDVariant::initialize()` unconditionally overwrites `$supplyCenterCount` and
+  `$supplyCenterTarget` from the database, computing the target as
+  `round(18/34 * 51) = 27`. Both variants declare their own solo target (20 for GoT2, 35 for
+  GoT), so each now restores it in an `initialize()` override, exactly as `ColdWar` does.
+- They are named `GoT` / `GoT2` in the New Game dropdown, **not** "Westeros" — grep for `GoT`,
+  not `Westeros`.
+- **IDs 45 and 46 (variant and map) are now reserved permanently.**
 
 ## Deferred
 

@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+/* Two-player Westeros: countryID 1 = House Tully, 2 = House Lannister.
+   Colours match classes/drawMap.php $countryColors. */
+
+.variantGoT2 .country0 { color: #CE7800 ! important; } /* Global          */
+.variantGoT2 .country1 { color: #000ba5 ! important; } /* House Tully     */
+.variantGoT2 .country2 { color: #a50000 ! important; } /* House Lannister */
+
+.variantGoT2 .occupationBar1 { background-color: #323aa5; } /* House Tully     */
+.variantGoT2 .occupationBar2 { background-color: #a51a1a; } /* House Lannister */
