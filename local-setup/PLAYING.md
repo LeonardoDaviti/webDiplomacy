@@ -210,8 +210,8 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`. "Enabled" means the
 ID is in `Config::$variants` in the gitignored `config.php`, which after issues 007, 008 and 009
-is all thirty-one of `1, 2, 3, 4, 5, 9, 12, 14, 15, 17, 19, 20, 22, 23, 25, 26, 28, 38, 40, 45, 46, 48,
-49, 50, 62, 70, 90, 91, 122, 123, 133`. The
+is all thirty-three of `1, 2, 3, 4, 5, 9, 12, 14, 15, 17, 19, 20, 22, 23, 25, 26, 28, 38, 40, 42, 45,
+46, 48, 49, 50, 54, 62, 70, 90, 91, 122, 123, 133`. The
 React (point-and-click) board is whitelisted to exactly three variants —
 `Game::isClassicGame()`, `objects/game.php:565-568`, is
 `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything else renders on the legacy
@@ -247,8 +247,10 @@ geography**, because the whitelist matches by name, not by map.
 | **7** | Classic1898 (*Classic — 1898*) | 133 | enabled | legacy |
 | **7** | ClassicOctopus (*Classic — Octopus*) | 40 | enabled | legacy |
 | **7** | ClassicAnkaraCrescent (*Classic — Ankara Crescent*) | 90 | enabled | legacy |
+| **2–7** | ClassicVS (*Classic — Pick your countries*) | 42 | enabled | legacy |
 | **8** | GoT (*Game of Thrones*) | 45 | enabled | legacy |
 | **11** | ClassicCrowded (*Classic — Crowded*) | 14 | enabled | legacy |
+| **34** | ClassicChaoctopi (*Classic — Chaoctopi*) | 54 | enabled | legacy |
 
 Also installed, outside the 2–8 range: **World** (`$id` 2, **17** players, legacy),
 **Modern2** (19, 10 players, legacy), **Empire4** (20, 10 players, legacy), **ClassicChaos**
@@ -264,9 +266,12 @@ USSR vs USA), **Duo** (an original symmetric map, with eight static neutral unit
 that both sides have to chew through) and **GoT2** (Westeros). Suggested defaults: **ClassicFvA**
 if you want the nice board, **Duo** or **ColdWar** if you want a new map.
 
-**Four and six players are still not servable** (three now is — ClassicFGA or ClassicIER).
-For an awkward number the practical
-answers are: play Classic (or one of its five seven-player cousins) with the spare people
+**Four, five and six players are now servable after all — by `ClassicVS` (`$id` 42), which reads
+the powers out of the game's *name*:** call the game `Friday night (EFGA)` and it is a four-player
+England/France/Germany/Austria game on the Classic board. The letters are E, F, I, G, A, T, R for
+the seven powers, `?` adds a random one, and a name with no bracketed code gives all seven.
+Three is also directly servable, by ClassicFGA or ClassicIER. The older answers still work for
+an awkward number: play Classic (or one of its nine seven-player cousins) with the spare people
 spectating or sharing a seat, or run two of the two-player maps in parallel.
 
 **The seven-player cousins, briefly**, since they are new and the New Game form only shows a

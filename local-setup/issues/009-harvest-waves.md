@@ -587,3 +587,86 @@ upstream `$id`/`$mapID`. None may share map 1 — all four ship full installers.
 
 All four appear in the New Game dropdown, render in `variants.php` with their player counts, and
 answer `board.php?gameID=…` with **200** (legacy board).
+
+### Wave 1 batch 4 — ClassicVS, ClassicChaoctopi, and the two fog variants
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| ClassicFog | 30 | 30 | 7 | 91 / 34 | 31 (cancelled) | **Deferred** |
+| ClassicVS | 42 | 42 | 2–7 | **82** / 34 | **29**, **30** | **Pass** |
+| ClassicChaoctopi | 54 | 54 | 34 | 81 / 34 | — | **Pass (render-only)** |
+| Classic1898Fog | 134 | 134 | 7 | — | — | **Deferred, not installed** |
+
+**Security review — clean** for ClassicVS (8 files) and ClassicChaoctopi (8 files); same negative
+checklist. Both contain SQL in their `processOrderBuilds` / `userOrderBuilds` subclasses and both
+interpolate only internal integers. ClassicChaoctopi's `Chatbox` subclass rewrites message bodies
+for display and its `panelMembersHome` rewrites the 34-power member table; neither touches input.
+
+- **ClassicVS (42) — gameIDs 29 and 30.** *"Classic - Pick your countries"*, and the rule is
+  genuinely unusual: the variant's `__call()` override parses the **game's name** for a
+  parenthesised code and rewrites `$countries` before `Members`, `processMembers`,
+  `panelMembers` or `panelMembersHome` is constructed. Both paths were tested.
+  **gameID 29**, named without a code, filled seven seats with the standard Classic start and
+  played Spring → Autumn → Builds to **Spring 1902** (bounce at the English Channel, two
+  supported moves, 3/4/3/4/3/5/4 centres). **gameID 30**, named
+  `ClassicVS pick (EFG) 009`, **started as a three-player game** with exactly England
+  (F London, F Edinburgh, A Liverpool), France (F Brest, A Paris, A Marseilles) and Germany
+  (F Kiel, A Berlin, A Munich) — nine units, no Italy/Austria/Turkey/Russia — and played to
+  Spring 1902. That makes **four-, five- and six-player games servable on this install for the
+  first time**, which is worth more than the variant count: see `PLAYING.md` §B.1.
+  Its map is **82 territories**, Classic's 81 plus a dummy `PreGameCheck` used by its
+  pre-game logic. Own installer and `$mapID`.
+- **ClassicChaoctopi (54) — render-only.** Chaos × Octopus: 34 one-centre powers on the Classic
+  board with Octopus's double-movement borders (**1,205** border rows). Thirty-four players
+  against ten accounts, so acceptance is install + render + counts, as the brief allows. Verified:
+  in the dropdown; `variants.php` renders *"Classic - Chaoctopi (34 Players)"*;
+  `map.php?variantID=54` → an 18 KB PNG; `wD_VariantInfo` 34/18 for 34 countries;
+  `wD_Territories` 81 territories / 34 SCs with **every SC owned by its own power** (34 of 34 have
+  a non-zero home country) and 1,205 borders. Like Classic1897 it disables `assignUnits()` and
+  opens in a turn-0 Builds phase, so there is no starting-unit table to check — each player
+  builds their single unit on their own centre.
+
+#### The two fog variants — **deferred**, and why
+
+**ClassicFog (30) failed at the board, not at the install.** It installed cleanly (91
+territories: Classic's 81 plus ten fog pseudo-territories such as `Denmark - Seas` and
+`Irish Sea - Islands`; 34 SCs), appeared in the dropdown, and a seven-player game started with
+the correct standard position. Then every member's `board.php` died with:
+
+```
+Error triggered: A software exception was not caught: "Undefined constant "STATICSRV""
+Raised: "/application/variants/ClassicFog/classes/OrderInterface.php"  Line: "22"
+```
+
+`STATICSRV` is a **vDiplomacy-only constant** (its static-asset host) and is defined nowhere in
+webDiplomacy. Two further blockers sit behind it, so this is not a one-line fix:
+
+- `classes/Maps.php` declares `class Fog_Maps extends Maps` — **`Maps` does not exist in this
+  codebase.** vDiplomacy refactored map display into a `Maps` class; webDiplomacy never did.
+  Nothing here ever asks for `$Variant->Maps()`, so the class is merely inert rather than fatal,
+  but it means the fogged-map substitution has no hook of its own.
+- `classes/OrderArchiv.php` extends **`OrderArchiv`**, also absent (the same dangling reference
+  the in-tree Zeus5 and Duo have). In vDiplomacy that class is what hides *other players' orders*
+  in the archive, so even with `STATICSRV` defined and the board fixed, the fog would be
+  incomplete — a fog variant that leaks is worse than no fog variant.
+
+Per the twenty-minute rule it was **removed from `Config::$variants`**, its acceptance game
+(gameID 31) was cancelled through `admincp actionName=cancelGame` so that no game references a
+disabled variant, and the orphan map-30 rows were deleted from `wD_Territories`, `wD_Borders` and
+`wD_CoastalBorders`.
+
+**One deliberate departure from "leave the folder": `variants/ClassicFog/` was deleted.** It
+ships three front controllers under `resources/` — `fogmap.php`, `orders.php` and
+`jsonBoardData.php` — which `require_once('header.php')` and run a full request. While the folder
+was present, `GET /variants/ClassicFog/resources/fogmap.php` returned **200 and executed**
+("gameID or turn not provided; cannot draw map"). Leaving unreachable-by-design third-party front
+controllers executing in the webroot for a variant that is not even enabled is not worth it; the
+package is one `git clone` away in `/tmp/vdip` if anyone revisits. After deletion the same URL is
+**404**. This is flagged for the human sign-off rather than buried.
+
+**Classic1898Fog (134) was not installed at all.** Its `classes/OrderInterface.php:22` is the
+identical `STATICSRV` line, and it ships the same `Maps`, `OrderArchiv` and `resources/fogmap.php`.
+Installing it would have reproduced a known failure. One fix unblocks both.
+
+**IDs 30 and 134 are reserved permanently** even though neither is installed, per the registry's
+never-reuse rule.
