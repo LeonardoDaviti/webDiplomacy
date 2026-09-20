@@ -12,6 +12,8 @@ upstream.
 | File | Purpose |
 | --- | --- |
 | `SPEC.md` | The corrected requirements spec for the LAN instance. Start here. |
+| `RUNBOOK.md` | **Operations manual**: start/stop, health checks, backup and restore, adding a variant, accounts, LAN access, known gotchas, git workflow. Read this when something is broken or you have forgotten how. |
+| `scripts/` | `db-backup.sh` and `db-restore.sh` (issue 002), used by the runbook. |
 | `variant-registry.md` | Every variant known to this install: name, `$id`, `$mapID`, source, status. |
 | `issues/NNN-slug.md` | One work item per file. |
 | `credentials/` | Account passwords and secrets. **Gitignored** (see `.gitignore`). |
@@ -28,6 +30,9 @@ ported variants — happens on the **`local`** branch. To take upstream changes:
 git checkout master && git pull        # fast-forward only
 git checkout local && git merge master
 ```
+
+The full upgrade sequence — including the `install/*/update.sql` walk and the re-acceptance
+checks — is in [`RUNBOOK.md`](RUNBOOK.md) § 9, *Git workflow*.
 
 If a change is genuinely a fix to upstream code, make it on a topic branch off `master` and
 offer it upstream; do not smuggle it into `local` only.
