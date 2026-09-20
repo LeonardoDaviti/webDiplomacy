@@ -416,43 +416,87 @@ links hard-code `https://` and must be hand-edited to `http://`.
 
 ## 7. LAN address and access
 
-**Current state: the site is localhost-only.** Every published port is bound to `127.0.0.1`:
+**The site is on the LAN at <http://10.13.101.254:43000/>** — bookmark that. `http://localhost:43000/`
+still works on this host. Full write-up, including the human steps still outstanding, is in
+`local-setup/issues/006-lan-access.md`.
+
+| | |
+|---|---|
+| Host | `helicarrier`, interface `wlp194s0` (wifi), MAC `f8:3d:c6:b7:12:fc` |
+| Address | `10.13.101.254/22` — **DHCP, not reserved**, so it can change |
+| Subnet / gateway | `10.13.100.0/22` / `10.13.100.1` |
+| Tailscale | `100.93.151.44` — works from anywhere, see below |
+
+If the bookmark stops working, the address moved. Get the new one with:
+
+```sh
+ip -4 addr show wlp194s0 | awk '/inet /{print $2}'
+```
+
+### Which ports are open where
 
 ```
-webserver   127.0.0.1:43000->80/tcp        the site
-mailhog     127.0.0.1:43001->8025/tcp      mail catcher
-mariadb     127.0.0.1:43003->3306/tcp      database
-redis       127.0.0.1:43005->6379/tcp      cache
-sse         127.0.0.1:43006->43006/tcp     event server (also proxied at /events)
-phpmyadmin  127.0.0.1:43009->80/tcp        database admin UI
+webserver   0.0.0.0:43000->80/tcp     the site        <- the only one on the network
+mailhog     127.0.0.1:43001->8025/tcp mail catcher
+mariadb     127.0.0.1:43003->3306/tcp database
+redis       127.0.0.1:43005->6379/tcp cache
+sse         127.0.0.1:43006->43006/tcp event server (also proxied at /events)
+phpmyadmin  127.0.0.1:43009->80/tcp   database admin UI
 ```
 
-Opening it to the house is **issue 006 and is not done yet**; when it is, this section gets the
-host's actual LAN address. The shape of that change, so it is not re-derived:
+Check it has not drifted — the first must show `0.0.0.0`, the rest `127.0.0.1`:
 
-- There is **no site-URL setting and no static-host setting** in this codebase. Everything — the
-  React board's requests and the `/events` stream — is relative to whatever host the browser
-  used. LAN access is a **port-binding change and nothing else**.
-- Drop the `127.0.0.1:` prefix from the **webserver** binding only. Everything else stays on
-  localhost. **Docker's firewall rules sit in front of the host firewall's**, so removing that
-  prefix really does publish the port to the network whatever `ufw`/`firewalld` says — which is
-  why exposing the database, whose password is the compose file's published default, is the worst
-  single mistake available here.
-- Change the database password off the compose default and update `config.php` in the same change.
-- Give the host a stable address with a **DHCP reservation on the router** keyed to its MAC, in
-  preference to a static address on the host.
-- Restrict the host firewall so 43000 admits the LAN subnet only.
-- Verify: `docker compose ps --format '{{.Service}}\t{{.Ports}}'` — webserver on `0.0.0.0`,
-  every other published port on `127.0.0.1`. Then, from a second physical device, load
-  `http://<host-lan-ip>:43000/`, log in, submit an order, and watch the board update without a
-  reload.
+```sh
+docker compose ps --format '{{.Service}}\t{{.Ports}}'
+ss -ltnp | grep 43000
+```
 
-**Two accepted losses on plain HTTP**, both known and both permanent without a certificate:
+**Never drop the `127.0.0.1:` from any other binding.** Docker's firewall rules sit in front of
+the host firewall's, so removing that prefix really does publish the port to the network whatever
+`ufw` says — and the database password is still the compose file's published default
+(`mypassword123`), so exposing 43003 is the worst single mistake available here.
 
-- **Web push notifications do not work.** They require a secure context and `http://<ip>` is not
-  one. The `/events` stream itself is unaffected — that is what makes the board update live.
+### This is a coworking wifi, not a house LAN
+
+The network is `D Block Workspace@stamba`, a shared /22 with room for ~1022 machines that are not
+yours. Everything on it can reach the site. Registration is 404 (issue 003) and the secrets in
+`config.php` are generated rather than sample values, so nobody gets an admin account for free —
+but **the ten account passwords are short, known, and now travel over plain HTTP in front of
+strangers.** Treat them as public and never reuse them.
+
+Restricting the firewall to "the LAN subnet" does not help here, because the LAN subnet *is* the
+untrusted population. It is still worth having for the next network this laptop joins; the rule
+needs root and lives in Docker's `DOCKER-USER` chain, not in `ufw` (`ufw` rules do not apply to
+published container ports). The exact commands are in issue 006.
+
+**Prefer Tailscale for real use.** It is already running here and the owner's phone is already in
+the tailnet: `http://100.93.151.44:43000/` is the same site over an encrypted link, reachable from
+anywhere, with no strangers on the path.
+
+### Two accepted losses on plain HTTP
+
+Both known, both permanent without a certificate, and both apply to the Tailscale address too:
+
+- **Web push notifications do not work.** They need a secure context and `http://<ip>` is not one.
+  The `/events` stream is unaffected — that is what makes the board update live, and it is the
+  part that matters.
 - **Registration and password-reset links come out with `https://`.** They take the host from the
-  request but hard-code the scheme. Hand-edit the `https://` to `http://` when using one.
+  request but hard-code the scheme. **Hand-edit the `https://` to `http://`** when using one.
+  Registration is closed anyway, so in practice this only bites on a password reset.
+
+### Surviving a reboot
+
+`webserver`, `php-fpm`, `sse` and `redis` are `restart: unless-stopped` and `mariadb` is
+`restart: always`, so the stack comes back by itself — this replaces the earlier note that it did
+not. A full `down`/`up` was verified: all containers running, no `host not found in upstream "sse"`,
+`READY` present, and the `admin` account and all 21 users still in the database.
+
+`mailhog` and `phpmyadmin` are still `restart: no` and will not come back on their own; start them
+with the cold-start command in section 1. Also confirm Docker itself starts at boot:
+
+```sh
+systemctl is-enabled docker
+```
 
 ---
 

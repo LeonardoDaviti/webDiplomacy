@@ -30,8 +30,10 @@
 #
 #   docker compose --profile core --profile dev down && docker compose --profile core up -d
 #
-# Ports, all bound to localhost (see the comment on mariadb below):
+# Ports (see the comment on mariadb below):
 #   43000 the site   43001 mailhog   43003 mariadb   43005 redis   43006 sse   43009 phpmyadmin
+# LOCAL DEVIATION (issue 006): 43000 is bound to 0.0.0.0 so the site is reachable from the LAN at
+# http://<host-lan-ip>:43000/. Every other port above is still bound to 127.0.0.1 and must stay so.
 #
 # The 'reactdev' profile runs the board's React development server with hot reload instead of a build.
 #
@@ -88,6 +90,10 @@ services:
     profiles: ["core"]
     image: "mariadb:10.6"
     container_name: "webdiplomacy-db"
+    # LOCAL DEVIATION (issue 006/011): left as upstream's `always`, which already survives a host
+    # reboot. Issue 006's step asked for `unless-stopped` here; `always` is the stronger of the two
+    # (it also restarts a container that was stopped by hand before the reboot), so downgrading it
+    # would only lose coverage. sse and redis below are already `unless-stopped` upstream.
     restart: always
     working_dir: /application
     environment:
@@ -130,8 +136,18 @@ services:
       - "./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf"
     # Drop the 127.0.0.1 to open the dev site to the network, e.g. to try it on a phone. It has no
     # real data, but it does hand out an admin account to anyone who asks for gamemaster.php.
+    #
+    # LOCAL DEVIATION (issue 006): the 127.0.0.1 prefix is dropped here, and ONLY here, so the site
+    # answers on the host's LAN address as well as on localhost. Every other published port in this
+    # file stays on 127.0.0.1 — see the paragraph on the mariadb service for why that matters.
+    # gamemaster.php's admin hand-out is closed off by issue 003: /register.php returns 404 at nginx
+    # and every account has a known password.
     ports:
-      - "127.0.0.1:43000:80"
+      - "43000:80"
+    # LOCAL DEVIATION (issue 006/011): restart policy, so the stack comes back after a host reboot.
+    # The runbook recorded that webserver and php-fpm had restart=no, which left the database and the
+    # gamemaster loop running after a reboot with nothing to serve or call.
+    restart: unless-stopped
     depends_on:
       - "php-fpm"
 
@@ -176,6 +192,8 @@ services:
     profiles: ["core"]
     command: /bin/sh -c "install/gamemaster-entrypoint.sh > /application/gamemaster-entrypoint.txt"
     build: phpdocker/php-fpm
+    # LOCAL DEVIATION (issue 006/011): restart policy, so the stack comes back after a host reboot.
+    restart: unless-stopped
     working_dir: /application
     environment: 
       - PHP_IDE_CONFIG="serverName=Docker"
