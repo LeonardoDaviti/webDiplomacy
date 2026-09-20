@@ -1,0 +1,6 @@
+# Account credentials for the LAN instance are never committed.
+credentials/
+
+# The root .gitignore hides all *.md as working notes; this directory IS the tracker,
+# so its markdown must be versioned. credentials/ above still wins for its contents.
+!*.md
