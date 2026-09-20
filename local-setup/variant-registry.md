@@ -67,11 +67,15 @@ config's variant array.
   008 starts from these rather than from nothing.
 - **The draft spec's harvest list was wrong.** Chaos, Build Anywhere, Cold War, France vs
   Austria and Germany vs Italy were all listed as things to fetch. They are all here.
-- **Taken after issues 007, 008 and 009 (waves 0, 1 and 3):** variant and map IDs 1–9, 11–17, 19–26, 28, 30–33, 35–43, 45–50, 54–56, 58, 61–63, 65, 67–70, 72–80, 82, 87–91, 93, 97–99, 101, 103, 107–108, 110, 112–113, 116–118, 122–123, 127–128, 130, 132–134, 137, 141, 145, 149, 208, 251, 253–254, 1900.
-  Variants 3, 4, 5 and 50 share map 1; **30, 32, 55, 65, 134, 208, 253 and 1900 are
-  reserved-but-deferred** and are the only entries here that are not in
-  `Config::$variants`. Everything else up to 255 is still free — but treat those numbers as
-  *upstream's to allocate*, and take a renumbered port from 254 downwards as described above.
+- **Taken after issues 007, 008 and 009 (all five waves)** — 143 IDs, enabled plus
+  reserved-but-deferred: **1–103, 105–110, 112–123, 127–134, 136–138, 141, 145, 149, 155, 171,
+  208, 250–254**, and 1900 (Baron1900's upstream number, above the `tinyint` ceiling).
+- **Still free below 255:** 104, 111, 124–126, 135, 139–140, 142–144, 146–148, 150–154, 156–170,
+  172–207, 209–249, 255. Treat the low ones as *upstream's to allocate* and take a renumbered
+  port from 249 downwards (250, 251 and 254 are already used).
+- Variants 3, 4, 5 and 50 share map 1. **30, 32, 55, 65, 85, 94, 134, 208, 252, 253 and 1900 are
+  reserved-but-deferred** and are the only taken entries that are not in `Config::$variants`.
+  **ID 57 is reserved and permanently unusable** — core hard-codes it out of every dropdown.
 
 ## Ported and harvested variants
 
@@ -204,86 +208,43 @@ Rows are added by issues 007, 008 and 009 as work lands. Issues 007 (Westeros) a
 | Europa_Renovatio | 155 | 155 | **36** | Sleepcap/vDiplomacy @ `72c81f0` (Technostar; version 1, code 1.1) | playable (render-only) | Issue 009 wave 5. "Europa Renovatio" — Europe at the dawn of the Renaissance and **the largest map in the tree: 852 territories / 308 SCs**, declared solo target 155, thirty-six powers. Its cold install is the slowest here (see the `variants.php` gotcha in `RUNBOOK.md` §8). Ships an inert `classes/OrderArchiv.php`. **Render-only.** Legacy board only. |
 | Divided_States | 105 | 105 | **50** | Sleepcap/vDiplomacy @ `72c81f0` (Technostar; version 1, code 1.3) | playable (render-only) | Issue 009 wave 5. "Divided States" — the fifty US states against each other, 699 territories / 279 SCs, declared solo target 140. **Fifty powers, the largest player count in the tree** — more than `ClassicChaos`'s 34. Its installer is also the one that broke the row-counting one-liner: twenty-nine of its territory names contain a **comma** (`'Augusta, Maine (AUM)'`), so splitting the row on `,` and reading field 2 undercounts the supply centres by 25. Count with a quote-aware parse. Ships an inert `classes/OrderArchiv.php`. **Render-only.** Legacy board only. |
 
-**Config line** (`config.php` is gitignored, so this is the only versioned record):
+**Config line** (`config.php` is gitignored, so this is the only versioned record — and it is
+also copied verbatim into the tracked file `local-setup/config.variants.php.txt`, so it can be
+restored from git):
 
 ```php
-public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',27=>'Sengoku5',28=>'Classic1897',29=>'Rinascimento',31=>'Alacavre',33=>'Empire1on1',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',44=>'FantasyWorld',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',59=>'YoungstownRedux',61=>'War2020',62=>'ClassicEvT',63=>'Viking',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',71=>'Colonial1885',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',81=>'Imperial2',82=>'DarkAges',83=>'Africa',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',92=>'YoungstownWWII',93=>'Chromatic',96=>'GobbleEarth',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',100=>'Sengoku6',101=>'Napoleonic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',109=>'Machiavelli',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',114=>'Crusades1201',115=>'MachiavelliTTR',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',130=>'Edwardian3',131=>'EastIndies',132=>'Chesspolitik',133=>'Classic1898',137=>'TiglathPileser',138=>'MongolianEmpire',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',171=>'WorldAtWar1937',250=>'KnownWorld_901',251=>'Karibik',254=>'BalkanWarsVI');
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',10=>'ClassicMilan',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',18=>'ClassicSevenIslands',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',27=>'Sengoku5',28=>'Classic1897',29=>'Rinascimento',31=>'Alacavre',33=>'Empire1on1',34=>'Classic1880',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',44=>'FantasyWorld',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',51=>'Haven',52=>'WWIV',53=>'ClassicEconomic',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',59=>'YoungstownRedux',60=>'ClassicPilot',61=>'War2020',62=>'ClassicEvT',63=>'Viking',64=>'ClassicTouchy',66=>'Pirates',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',71=>'Colonial1885',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',81=>'Imperial2',82=>'DarkAges',83=>'Africa',84=>'ClassicCataclysm',86=>'ClassicLayered',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',92=>'YoungstownWWII',93=>'Chromatic',95=>'WWIVsealanes',96=>'GobbleEarth',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',100=>'Sengoku6',101=>'Napoleonic',102=>'WWIV_V6',103=>'Balkans1860',105=>'Divided_States',106=>'Classic1913',107=>'Renaissance1453',108=>'Canton',109=>'Machiavelli',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',114=>'Crusades1201',115=>'MachiavelliTTR',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',119=>'ClassicCroatia',120=>'ClassicEgypt',121=>'ClassicFlorence',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',129=>'World10',130=>'Edwardian3',131=>'EastIndies',132=>'Chesspolitik',133=>'Classic1898',136=>'A_Modern_Europe',137=>'TiglathPileser',138=>'MongolianEmpire',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',155=>'Europa_Renovatio',171=>'WorldAtWar1937',250=>'KnownWorld_901',251=>'Karibik',254=>'BalkanWarsVI');
 ```
 
-**111 variants**, every key unique:
+**132 variants** after issue 009 wave 5, every key unique:
 
 ```sh
-sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d    # prints nothing
+python3 -c "import re;l=re.search(r'public static \\\$variants=array\\(.*?\\);',open('config.php').read(),re.S).group(0);i=re.findall(r\"(\\d+)=>'\",l);print(len(i),'variants','OK' if len(i)==len(set(i)) else 'DUPLICATES')"
 ```
 
 (Do **not** use `grep -o '[0-9]\+=>' config.php` on the whole file, as issue 009's verification
 block suggests — it also matches `Config::$serverMessages` and the bot/variant-mod arrays and
 reports duplicates that are not duplicate variant IDs.)
 
-**Notes on both Westeros variants**
+**Notes from issue 009 wave 5**
 
-- Both maps are the same 135 territories / 51 supply centres; only supply-centre *ownership*
-  (and `The North`, `Maidenpool` and two border rows) differs, so they must not share a
-  `$mapID`.
-- `WDVariant::initialize()` unconditionally overwrites `$supplyCenterCount` and
-  `$supplyCenterTarget` from the database, computing the target as
-  `round(18/34 * 51) = 27`. Both variants declare their own solo target (20 for GoT2, 35 for
-  GoT), so each now restores it in an `initialize()` override, exactly as `ColdWar` does.
-- They are named `GoT` / `GoT2` in the New Game dropdown, **not** "Westeros" — grep for `GoT`,
-  not `Westeros`.
-- **IDs 45 and 46 (variant and map) are now reserved permanently.**
-
-**Notes on the three variants harvested from vDiplomacy (issue 008)**
-
-- Source: `git clone https://github.com/Sleepcap/vDiplomacy` at
-  `72c81f0dd73bedccc11f13a750dfcc62f580549a` (2025-04-21). Only the three folders below were
-  copied in; nothing else from that tree is present.
-- **Security review: clean.** Every `.php` file in all three packages was read in full. Zero hits
-  across all of them for `eval`, `assert`, `create_function`, `preg_replace`, `exec`,
-  `shell_exec`, `system`, `passthru`, `proc_open`, `popen`, backticks, `base64_decode`,
-  `gzinflate`, `str_rot13`, `unserialize`, `curl_*`, `fsockopen`, sockets, stream wrappers, any
-  file read or write, remote includes, `wD_Users` / `wD_Sessions` / `wD_ApiKeys`, `$_SESSION`,
-  `$_GET` / `$_POST` / `$_COOKIE` / `$_REQUEST` / `$_SERVER`, `Config::`, `$$`,
-  `call_user_func`, or any obfuscated or dynamically-built executed string. The only
-  `require_once` in any of them is `variants/install.php`, the in-tree base installer. The four
-  SQL statements in Duo interpolate only internal integer IDs.
-- **Every one kept its upstream `$id` and `$mapID`** — 22, 26 and 62 were all free, so nothing
-  was renumbered into the 900 block and no incumbent was displaced.
-- **ClassicEvT and ClassicFGvsRT must not share Classic's `$mapID` 1.** Their territory *names*
-  match ours exactly, but their `install.php` files are full installers with their own IDs and
-  coordinates: 73 of the 81 rows land on a different numeric `id` than our map 1. They also ship
-  their own `resources/map.png`, which differs from ours.
-- **Missing dark-mode stylesheets were added.** None of the three shipped
-  `resources/darkMode/style.css`, which `lib/html.php:646-647` links unconditionally for every
-  enabled variant when the viewer has dark mode on. Each now has one, derived from its own
-  `resources/style.css` with the colours lightened. The light-mode selector prefixes were checked
-  and are already correct (`.variantDuo`, `.variantClassicEvT`, `.variantClassicFGvsRT`).
-- **One PHP 8.4 fix**, in `variants/Duo/classes/drawMap.php`: `$width` was
-  `fleet_width + fleet_width/2`, i.e. 37.5 (or 19.5 on the small map), passed straight to
-  `imagefilledellipse()`'s int parameters — an implicit-float-to-int deprecation on every render
-  of a Duo transform order. Now `(int)round($this->fleet['width']*1.5)`.
-- **Duo registers `$variantClasses['OrderArchiv']`, and no `OrderArchiv` base class exists in
-  this codebase.** Left alone deliberately: the in-tree, upstream `variants/Zeus5` does exactly
-  the same thing, the class is loaded lazily by `variant_autoloader()`, and nothing ever asks for
-  it — so it is inert on both. The same goes for `variants/Duo/interactiveMap/interactiveMap.php`
-  (extends a nonexistent `IAmap`; the interactive-map subsystem was never part of webDiplomacy,
-  and the file is not under `classes/` so the autoloader could not reach it anyway).
-- **IDs 22, 26 and 62 (variant and map) are now reserved permanently.**
-
-**Notes from issue 009 wave 4**
-
-- **ID 57 must never be used.** Core hard-codes `if($variantID != 57)` in five places —
-  `locales/English/gamecreate.php` (twice), `locales/English/gamecreateSandbox.php` (three
-  times, one of which also excludes 70) and `gamelistings.php:334` — so a variant registered as
-  57 installs cleanly, renders on `map.php` and `variants.php`, and is **silently absent from
-  every New Game dropdown, the sandbox dropdown and the game-list variant filter**. `KnownWorld_901`
-  was found this way (111 config entries, 110 options) and renumbered **57 → 250**. 57 stays
-  reserved and unusable.
-- **The renumber band is now 250, 251, 254.** Wave 3 took 254 (BalkanWarsVI) and 251 (Karibik);
-  wave 4 takes 250 (KnownWorld_901). 252 and 253 are reserved to the deferred Baron1900 and
-  SpeedEuropa. Count downwards from 250 next.
-- **`171` is the highest upstream ID kept as-is** (WorldAtWar1937), and it is still well under
-  the `tinyint` 255 ceiling.
+- **No renumbering.** All 21 upstream `$id`s were free; the renumber band is untouched and still
+  stands at 250 (KnownWorld_901), 251 (Karibik) and 254 (BalkanWarsVI), with 252 and 253 reserved
+  to the deferred Baron1900 and SpeedEuropa. Count downwards from **249** next.
+- **`155` is now the highest upstream ID kept as-is** (Europa_Renovatio), and **`10`**
+  (ClassicMilan) the lowest this harvest has taken.
+- **`STATICSRV` is a red flag, not a verdict.** `Haven` (51) uses it in one place — a small-map
+  URL prefix — with no `Maps` subclass, no `OrderArchiv` subclass and no `resources/*.php` front
+  controller. It is not a fog variant, and a two-line in-folder edit cleared it. The fog family
+  is the *trio* (`STATICSRV` + `extends Maps` + `extends OrderArchiv`), not any one of them.
+- **A cold `variants.php` now 504s.** It instantiates every directory under `variants/` and
+  installing the wave-5 giants (525–852 territories) in one request exceeds nginx's 60-second
+  `proxy_read_timeout`. Re-request two or three times to warm every `cache/data.php`. **Do not
+  run `admincp actionName=wipeVariants` casually any more**, and when installing a new variant
+  cool only *its* `cache/data.php`, not everyone's. See `RUNBOOK.md` §8.
+- **Counting supply centres by splitting the row on commas is wrong** for `Divided_States` (105):
+  twenty-nine of its territory names contain a comma (`'Augusta, Maine (AUM)'`). Skip the quoted
+  name first. It is the only one of vDiplomacy's 146 packages that does this.
 
 ## Deferred
 
@@ -302,8 +263,14 @@ later attempt starts from the failure rather than repeating it.
 | SpeedEuropa | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **253** | 2026-09-20, issue 009 wave 3 | **Rejected by the security review; never placed.** Its `classes/adjudicatorPreGame.php` both `SELECT`s from and `UPDATE`s **`wD_Users`** — vDiplomacy's country-balancing feature keeps a `Chance<CountryName>` column per power on the user row. Touching the user table is on the reject list regardless, and those columns do not exist on this schema. | "Speed Europa", seven powers, 104 territories / 35 SCs. A variant that wants per-user columns is a schema change plus a policy exception, which is two reasons not to. **ID 253 stays reserved.** |
 | RatWars | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **65** | 2026-09-20, issue 009 wave 3 | The fog family again: `STATICSRV`, `extends Maps`, `extends OrderArchiv`, and `resources/{fogmap,jsonBoardData}.php`. **Never placed.** | "Rat Wars", four powers, 191 territories / 31 SCs — the largest board wave 3 looked at. Revisit with the other four fog variants. **ID 65 stays reserved.** |
 
-Five of the eight deferrals are the same root cause: **vDiplomacy's fog-of-war subsystem depends on core
+| TenSixtySix_V2 | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **85** | 2026-09-20, issue 009 wave 5 | **The fog family again, by inheritance.** `class TenSixtySix_V2Variant extends TenSixtySixVariant`, the deferred `TenSixtySix` (55), and it inherits that class's whole `variantClasses` map — `OrderArchiv`, `Maps`, `drawMapXML` and the `STATICSRV` order interface — without redeclaring any of them. Its own changelog line is *"Fixed supportMove option from foggy multi-coast territory"*. **Rejected by the security read; never placed.** | "1066 (V2.0)", 70 territories / 19 SCs. It declares **no `$countries` array of its own** — which is why waves 3 and 4 could not read a player count for it: it inherits the parent's. Revisit with the other six fog variants; one fix unblocks all seven. **ID 85 stays reserved.** |
+| TenSixtySix_V3 | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **94** | 2026-09-20, issue 009 wave 5 | Identical to `TenSixtySix_V2`: `extends TenSixtySixVariant`, same inherited fog stack, same changelog line, no `$countries` of its own. **Never placed.** | "1066 (V3.0)", 70 territories / 19 SCs. **ID 94 stays reserved.** |
+
+Seven of the ten deferrals are the same root cause: **vDiplomacy's fog-of-war subsystem depends on core
 classes and constants that webDiplomacy does not have** — `STATICSRV`, `Maps` and `OrderArchiv`.
 Grepping a candidate for `STATICSRV` before anything else is the cheapest possible triage, and is
-now the first thing the wave-3 procedure does. Everything else attempted in issues 008 and 009
-came in under the twenty-minute budget.
+now the first thing the procedure does — but wave 5 showed it is a red flag, **not a verdict**:
+`Haven` (51) uses `STATICSRV` in one small-map URL and is not a fog variant at all, and a
+two-line in-folder edit cleared it. Look for the *trio* (`STATICSRV` **and** `extends Maps`
+**and** `extends OrderArchiv`), and for a `resources/*.php` front controller. Everything else
+attempted in issues 008 and 009 came in under the twenty-minute budget.

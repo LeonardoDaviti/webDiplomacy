@@ -315,21 +315,28 @@ about what broke and move on.
    `mkdir -p variants/<Name>/cache`
 4. **Check resources.** It must ship `resources/style.css` (**not** `variant.css`) and dark-mode
    resources.
-5. **Register the ID** in `config.php`, in `Config::$variants` — one hundred and eleven entries
-   after issue 009 wave 4; the current line is recorded in `local-setup/variant-registry.md`,
-   because `config.php` is gitignored and git will not record it. **Every ID must be ≤ 255**:
+5. **Register the ID** in `config.php`, in `Config::$variants` — one hundred and thirty-two
+   entries after issue 009 wave 5. The current line is recorded in the tracked file
+   **`local-setup/config.variants.php.txt`** (and in `local-setup/variant-registry.md`), because
+   `config.php` is gitignored and git will not record it. **Every ID must be ≤ 255**:
    `wD_Games.variantID` and `wD_Territories.mapID` are `tinyint unsigned` and silently clamp
-   anything larger. Renumber a colliding port from **254 downwards** (250, 251 and 254 are taken;
+   anything larger. Renumber a colliding port from **249 downwards** (250, 251 and 254 are taken;
    252 and 253 are reserved to deferred variants). **ID 57 must never be used** — core hard-codes
    `if($variantID != 57)` in five places and a variant registered as 57 never appears in any
    dropdown.
-6. **Admin panel**, logged in as `admin`, in this order:
-   - <http://localhost:43000/admincp.php?actionName=wipeVariants#wipeVariants> to cool the caches;
+6. **Cool only the newcomer's cache**, then drive the install from the admin panel, logged in as
+   `admin`:
+   - `rm -f variants/<Name>/cache/data.php` — **not** `admincp actionName=wipeVariants` and
+     **not** `variants/*/cache/data.php`. Since issue 009 wave 5 put five maps of 500–850
+     territories in the tree, a fully cold `variants.php` no longer finishes inside nginx's
+     60-second timeout (see the gotcha table). The newcomer's `data.php` is the only one that has
+     to be absent for its installer to run.
    - then <http://localhost:43000/admincp.php?actionName=updateVariantInfo&variantID=#updateVariantInfo>,
      which is what actually installs the map, because it is a normal page that reaches
      `libHTML::footer()`;
-   - then `updateVariantInfo` **once more**, because `wD_VariantInfo` is written from the variant
-     object and a run made while the map was still empty writes nothing.
+   - then `updateVariantInfo` **once or twice more**, because `wD_VariantInfo` is written from the
+     variant object and a run made while the map was still empty writes nothing. Repeat until the
+     row exists *and* the counts match.
    **Then count the rows** — see the gotcha table. Enabling maintenance mode around this is
    optional on a quiet LAN box, and note that maintenance mode also stops processing.
 7. **Acceptance checklist** — the five items in `SPEC.md`. Note that every harvested variant is
@@ -352,12 +359,19 @@ docker compose logs --tail=200 php-fpm | grep -iE 'fatal|deprecated'
 docker compose exec -T mariadb mysql -u root --password=mypassword123 -N -e \
   "use webdiplomacy; select mapID,count(*),sum(supply='Yes') from wD_Territories where mapID=<id>;"
 # NB: count only the $territoryRawData block — $bordersRawData rows also start with array('
+# NB: skip the quoted territory name before reading the supply flag. Splitting the row on ','
+#     and taking field 2 is wrong for any variant with a comma in a territory name; issue 009
+#     wave 5 found one (Divided_States, 'Augusta, Maine (AUM)'), and it undercounts by 25.
 python3 - <<'EOF'
 import re
 t=open('variants/<Name>/install.php',encoding='utf-8',errors='replace').read()
-i=t.find('$territoryRawData=array(');j=t.find('$bordersRawData',i)
+i=t.find('$territoryRawData=array(')
+j=t.find('foreach($territoryRawData',i)
+if j<0: j=t.find('$bordersRawData',i)
 rows=re.findall(r"^\s*array\((.*?)\),?\s*$",t[i:j],re.M)
-print(len(rows),'territories,',sum(1 for r in rows if "'Yes'" in r.split(',')[2]),'supply centres')
+sc=sum(1 for r in rows
+       if (re.match(r"\s*'(?:[^']|\\')*'\s*,\s*'[^']*'\s*,\s*'([^']*)'",r) or [None,'No'])[1]=='Yes')
+print(len(rows),'territories,',sc,'supply centres')
 EOF
 ```
 
@@ -549,6 +563,11 @@ Everything below has bitten this install at least once. In the order you are lik
 | **Core hard-codes variant ID 57 out of every dropdown** (issue 009 wave 4). `if($variantID != 57)` appears twice in `locales/English/gamecreate.php`, three times in `locales/English/gamecreateSandbox.php` and once in `gamelistings.php:334` | A variant registered as 57 installs, row-counts correctly, draws on `map.php` and lists on `variants.php` — and is **invisible** in New Game, Start a Sandbox Game and the games-list variant filter. No error anywhere | Never use ID 57. `KnownWorld_901` was renumbered 57 → 250. Catch it by counting: the `<option>`s in the New Game variant select must equal `count(Config::$variants)` |
 | **Forcing a phase that is not Ready NMRs everyone, draws the game and temp-bans the accounts** (issue 009 wave 4). Setting `wD_Games.processTime` into the past and calling `gamemaster.php` processes regardless of order status; `gamemaster/game.php:786` draws a game where no member is left `Playing`, and the reliability system writes `wD_Users.tempBan` with `tempBanReason='System'` | The game ends `Drawn` out of nowhere, and afterwards `board.php` shows those accounts **no Join button and no error** — only the banner *"You are blocked from joining, rejoining, or creating new games for 4 days"* (`lib/html.php:758-762`) | Only ever force `processTime` on a **Pre-game** phase, to end the join period. For every other phase, confirm `wD_Members.orderStatus LIKE '%Ready%'` for all members and then wait — the SSE gamemaster driver polls once a second and `needsProcess()` fires on its own. To clear a ban: `UPDATE wD_Users SET tempBan=NULL, tempBanReason=NULL WHERE tempBanReason='System';` |
 | **`admincp actionName=cancelGame` refuses a `Finished` game** | Nothing happens and the game stays in the listings | `cancelGame` only handles `Diplomacy`/`Retreats`/`Builds`. A finished game has to be removed by hand: delete its rows from `wD_Orders`, `wD_Moves`, `wD_Units`, `wD_TerrStatus`, `wD_Members`, `wD_GameMessages` and `wD_Games` |
+| **A cold `variants.php` 504s** (issue 009 wave 5). The page `glob`s `variants/*` and constructs every variant, and constructing one whose `cache/data.php` is absent **runs its installer**. With Europa_Renovatio (852 territories), Divided_States (699), WWIVsealanes (691), WWIV_V6 (584) and WWIV (525) in the tree, that no longer fits in nginx's 60-second `proxy_read_timeout` | `GET /variants.php` returns **504 Gateway Time-out**; a second request returns a short page saying *"A database lock (VariantInstall) is required to complete this page safely"* — core's `GET_LOCK('VariantInstall', 8)` serialising the installs | Not fatal: PHP carries on after nginx gives up and each request warms a few more `cache/data.php`. **Just request it two or three more times** until it comes back 200 (≈400 KB with all 132 variants). The prevention is to stop cooling every cache at once: **do not run `admincp actionName=wipeVariants`** as a matter of routine, and when installing a variant delete only *its* `cache/data.php` |
+| **`STATICSRV` is a red flag, not a verdict** (issue 009 wave 5). Waves 1 and 3 deferred five variants for the trio `STATICSRV` + `extends Maps` + `extends OrderArchiv` and the shorthand became "grep `STATICSRV` and reject" | `Haven` (51) would have been deferred for one line — a small-map URL prefix in `panelGameBoard.php`, behind a `file_exists()` that is false here — despite being an ordinary nineteen-power map with no fog code at all | Reject on the **trio**, plus a `resources/*.php` front controller. `STATICSRV` alone, or `extends OrderArchiv` alone (Zeus5, Duo, Pirates, A_Modern_Europe, Europa_Renovatio, Divided_States all carry it inertly), is a two-line in-folder fix |
+| **Counting a variant's supply centres by splitting the row on `,`** is wrong when a territory name contains a comma (issue 009 wave 5) | `Divided_States` reads as 254 supply centres from `install.php` and 279 from the database — a 25-row gap that looks exactly like a half-finished install, and is not | Skip the quoted name before reading field 3. The corrected snippet is in [§4](#4-adding-a-variant). Twenty-nine Divided_States territories are named like `'Augusta, Maine (AUM)'`; it is the only one of vDiplomacy's 146 packages that does it |
+| **`implode($array, $glue)` hides behind an object property** (issue 009 wave 5). Wave 3's grep was written for `implode($var, '...')` | Five more PHP-8-fatal call sites were missed by it, all written `implode($Variant->convoyCoasts, '","')` or `implode($Variant->landTerrs, '","')` | Grep for `implode\s*\(\s*\$[A-Za-z_>-]+.*,\s*['\"]` — it catches both forms. The fatal is at the **board**, not at install time: every member's `board.php` dies and the game can never leave its first Diplomacy phase |
+| **A `Move` order needs `viaConvoy` set, or the member never goes `Ready`** (issue 009 wave 5, met while scripting acceptance games) | `ajax.php` saves the order and reports success, `wD_Members.orderStatus` stays `Saved` without `Completed`, `needsProcess()` never fires and the game sits in the phase for ever — the same silent shape as wave 3's typeless-order stall | When submitting orders programmatically, send `viaConvoy` as `'No'` (or `'Yes'`) on every `Move`. After submitting, re-read the board and treat *any* order that is typeless **or** a `Move` with a null `toTerrID`/`viaConvoy` as broken, and replace it with a `Hold` (`Wait` in Builds, `Destroy` in Retreats) |
 | **`wD_TerrStatus` has no row for a territory nobody has ever owned** | A query that finds neutral supply centres by joining `wD_TerrStatus` returns almost nothing, and any tooling built on it thinks the map is full | Find them from `wD_Territories` with a `LEFT JOIN wD_TerrStatus`, treating a missing row as unowned |
 | **Start a Sandbox Game loads every variant's classes into one request**, which core never expects: the CustomStart-style variants declare no `$countryUnits`, and dozens of variants ship same-named helper classes (`MoveFlags_drawMap`, `CustomIcons_drawmap`, `Transform_drawMap`) | `gamecreateSandbox.php` died with *"Undefined property: Classic1897Variant_adjudicatorPreGame::$countryUnits"*, and after that with *"Cannot redeclare class MoveFlags_drawMap"* at the 27th variant | **Fixed**: `getCountryUnits()` falls back to an empty preset, and `libVariant::sandboxLoadConflict()` leaves colliding variants out of the sandbox page (83 of 112 are offered; see `UPGRADE.md` §2.2). A variant missing from the sandbox dropdown but present in New Game is this, not a broken install |
 

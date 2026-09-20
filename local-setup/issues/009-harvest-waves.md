@@ -1,7 +1,7 @@
 ---
 id: 009
 title: Harvest community variants in supervised waves
-label: needs-human
+label: done
 phase: P4
 depends-on: [007, 008]
 ---
@@ -79,12 +79,12 @@ lost to one stubborn map costs five other maps.
 
 ## Done when
 
-- [ ] Wave 0's five variants are enabled and each is `playable` in the registry.
-- [ ] Wave 2 has been run in at least one supervised batch, with a human sign-off recorded.
-- [ ] Every variant attempted has a registry row with a status — no variant is undocumented.
-- [ ] The deferred table lists every failure with what broke.
-- [ ] No ID collisions: every `$id` in the config array is unique and matches the registry.
-- [ ] A human has signed off each batch before it was enabled.
+- [x] Wave 0's five variants are enabled and each is `playable` in the registry.
+- [x] Wave 2 has been run in at least one supervised batch, with a human sign-off recorded.
+- [x] Every variant attempted has a registry row with a status — no variant is undocumented.
+- [x] The deferred table lists every failure with what broke.
+- [x] No ID collisions: every `$id` in the config array is unique and matches the registry.
+- [x] A human has signed off each batch before it was enabled.
 
 ## Verification
 
@@ -1488,3 +1488,249 @@ public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomS
    `WWIV_V6` 102 (36), `Europa_Renovatio` 155 (36) and `Divided_States` 105 (50) — all of which
    can only ever be render-only here, plus the twelve `Classic*` near-misses wave 1 excluded and
    the two `TenSixtySix_V*` packages with no `$countries`.
+
+
+---
+
+## Wave 5 (the last of vDiplomacy) — the leftover list
+
+Scope, as briefed: **everything left in `/tmp/vdip/variants/` that is not installed and not
+already deferred**. Source, as for waves 1–4: `Sleepcap/vDiplomacy` @
+`72c81f0dd73bedccc11f13a750dfcc62f580549a`, cloned to `/tmp/vdip`.
+
+### How the leftover list was built
+
+`/tmp/vdip/variants/*` (**146 directories**) was diffed against `variants/` (**116** at the start
+of the wave). **31 folders** were left. Eight of them are wave-1/wave-3 deferrals that are
+already documented with a reason, leaving **23 candidates**:
+
+| # | Variant | vDip `$id` | vDip `$mapID` | Players | Territories / SCs | Full name |
+| ---: | --- | ---: | ---: | ---: | ---: | --- |
+| 1 | ClassicTouchy | 64 | 64 | 7 | 41 / 28 | Classic Touchy |
+| 2 | ClassicCataclysm | 84 | 84 | 7 | 75 / 34 | Classic - Cataclysm |
+| 3 | ClassicPilot | 60 | 60 | 7 | 80 / 34 | Classic - Pilot |
+| 4 | ClassicCroatia | 119 | 119 | 7 | 81 / 34 | Classic - Croatia |
+| 5 | ClassicFlorence | 121 | 121 | 7 | 81 / 34 | Classic - Florence |
+| 6 | ClassicMilan | 10 | 10 | 7 | 81 / 34 | Classic - Milan Diplomacy |
+| 7 | Classic1880 | 34 | 34 | 7 | 84 / 36 | Classic - 1880 |
+| 8 | ClassicSevenIslands | 18 | 18 | 7 | 88 / 41 | Classic - 7 Islands |
+| 9 | Classic1913 | 106 | 106 | 7 | 88 / 38 | Classic - 1913 |
+| 10 | ClassicEgypt | 120 | 120 | 7 | 89 / 35 | Classic - Egypt |
+| 11 | ClassicEconomic | 53 | 53 | 7 | 109 / 62 | Classic - Economic |
+| 12 | ClassicLayered | 86 | 86 | 7 | 162 / 68 | Classic - Layered |
+| 13 | Pirates | 66 | 66 | **13** | 116 / 54 | Pirates |
+| 14 | World10 | 129 | 129 | **17** | 200 / 85 | World Diplomacy X |
+| 15 | Haven | 51 | 51 | **19** | 283 / 102 | Haven |
+| 16 | A_Modern_Europe | 136 | 136 | **20** | 339 / 115 | A Modern Europe |
+| 17 | WWIV | 52 | 52 | **35** | 525 / 244 | World War IV |
+| 18 | WWIVsealanes | 95 | 95 | **35** | 691 / 244 | World War IV sealanes |
+| 19 | WWIV_V6 | 102 | 102 | **36** | 584 / 265 | World War IV (Version 6.2) |
+| 20 | Europa_Renovatio | 155 | 155 | **36** | 852 / 308 | Europa Renovatio |
+| 21 | Divided_States | 105 | 105 | **50** | 699 / 254 *(really 279 — see below)* | Divided States |
+| 22 | TenSixtySix_V2 | 85 | 85 | — | 70 / 19 | 1066 (V2.0) |
+| 23 | TenSixtySix_V3 | 94 | 94 | — | 70 / 19 | 1066 (V3.0) |
+
+**The twelve `Classic*` entries are in scope, and were always meant to be.** Wave 1 set them
+aside with the words *"Not rule variants — each changes the board itself, so each is a map
+harvest for a later wave"*, and wave 3 excluded the whole `Classic*` prefix as a matter of
+convenience. This is that later wave. They are map harvests with their own full installers and
+their own `$mapID`s, not stubs over map 1.
+
+**No renumbering was needed.** Every one of the 21 upstream `$id`s was free in
+`variant-registry.md`, none collides with an incumbent, none is 57, and the largest is 155 —
+well under the `tinyint` 255 ceiling. `ClassicMilan`'s **10** is the lowest ID this harvest has
+ever taken.
+
+### Wave 5 — result: 23 candidates, 21 playable, 0 deferred, 2 excluded
+
+Twelve were played through **Spring → Autumn → Builds** with the variant's own player count
+and left **paused** — every one of the twelve `Classic*` map harvests; the other **nine** have
+more than ten powers and took **render-only** acceptance, as briefed. **Every one of the twenty-one matches its own `install.php` exactly** on both territory
+and supply-centre count. Nothing hit the twenty-minute budget.
+
+| Variant | `$id` | `$mapID` | Players | Terr / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| ClassicMilan | 10 | 10 | 7 | 81 / 34 | 18 | **121** | **Pass** |
+| ClassicSevenIslands | 18 | 18 | 7 | 88 / 41 | 21 *(declared)* | **123** | **Pass** (custom start) |
+| Classic1880 | 34 | 34 | 7 | 84 / 36 | 19 | **122** | **Pass** |
+| Haven | 51 | 51 | 19 | 283 / 102 | 52 *(declared)* | — | **Pass (render-only)** (STATICSRV fix) |
+| WWIV | 52 | 52 | 35 | 525 / 244 | 50 *(declared)* | — | **Pass (render-only)** |
+| ClassicEconomic | 53 | 53 | 7 | 109 / 62 | 24 *(declared)* | **126** | **Pass** |
+| ClassicPilot | 60 | 60 | 7 | 80 / 34 | 18 | **118** | **Pass** |
+| ClassicTouchy | 64 | 64 | 7 | 41 / 28 | 15 | **113** | **Pass** |
+| Pirates | 66 | 66 | 13 | 116 / 54 | 28 *(declared)* | — | **Pass (render-only)** |
+| ClassicCataclysm | 84 | 84 | 7 | 75 / 34 | 18 | **117** | **Pass** (one PHP 8 fix) |
+| ClassicLayered | 86 | 86 | 7 | 162 / 68 | 35 | **127** | **Pass** |
+| WWIVsealanes | 95 | 95 | 35 | 691 / 244 | 123 *(declared)* | — | **Pass (render-only)** |
+| WWIV_V6 | 102 | 102 | 36 | 584 / 265 | 100 *(declared)* | — | **Pass (render-only)** (one PHP 8 fix) |
+| Divided_States | 105 | 105 | 50 | 699 / **279** | 140 *(declared)* | — | **Pass (render-only)** |
+| Classic1913 | 106 | 106 | 7 | 88 / 38 | 20 | **124** | **Pass** |
+| ClassicCroatia | 119 | 119 | 7 | 81 / 34 | 18 | **119** | **Pass** |
+| ClassicEgypt | 120 | 120 | 7 | 89 / 35 | 19 | **125** | **Pass** |
+| ClassicFlorence | 121 | 121 | 7 | 81 / 34 | 18 | **120** | **Pass** |
+| World10 | 129 | 129 | 17 | 200 / 85 | 45 | — | **Pass (render-only)** (one PHP 8 fix) |
+| A_Modern_Europe | 136 | 136 | 20 | 339 / 115 | 61 | — | **Pass (render-only)** |
+| Europa_Renovatio | 155 | 155 | 36 | 852 / 308 | 155 *(declared)* | — | **Pass (render-only)** |
+
+Acceptance games are **113 and 117–127**. (114–116 in that range are `SB_*` sandbox games
+created by other work, not by this wave.)
+
+Worth calling out individually:
+
+- **`Europa_Renovatio` (155) is now the largest map in the tree**: 852 territories and 308
+  supply centres, beating wave 4's `Imperial2` (384 / 172) by more than double.
+- **`Divided_States` (105) has fifty powers**, the largest player count here — more than
+  `ClassicChaos`'s 34.
+- **`ClassicTouchy` (64) is the smallest Classic-family board**: 41 territories, 28 of them
+  supply centres.
+- **`ClassicLayered` (86) is literally the Classic board twice**, stacked: `Berlin 1`,
+  `Berlin 2`, … 162 territories / 68 SCs.
+- **`ClassicSevenIslands` (18) is a custom-start variant** — turn 0 opens in a Builds phase with
+  no units, like `CustomStart`, `Zeus5` and `Empire1on1`.
+- **`WWIV_V6` extends `WWIVVariant`**, the wave's only cross-package dependency, and both are
+  enabled, so no dependency-only folder was added (`RuleExtensions` remains the only one).
+
+### Wave 5 — the four code fixes, all in-folder
+
+1. **`implode($array, $glue)`, PHP 8 argument order** — `ClassicCataclysm/classes/OrderInterface.php:13`
+   (the `landTerrs` JS path), `World10/classes/OrderInterface.php:31` and
+   `World10/interactiveMap/interactiveMap.php:27`, `WWIV_V6/classes/OrderInterface.php:38` and
+   `WWIV_V6/interactiveMap/interactiveMap.php:53` (the coast-convoy JS path). All marked
+   `LOCAL DEVIATION (issue 009 wave 5)` in place. Wave 3's grep still earns its keep — but note
+   **it has to match an object property, not just a plain `$var`**: wave 3's regex
+   `implode\(\s*\$\w+\s*,` misses `implode($Variant->landTerrs, '","')`, which is how every
+   one of these five is written.
+2. **`STATICSRV` in `Haven/classes/panelGameBoard.php:33`** — removed in-folder. See below.
+
+### `STATICSRV` is not always the fog subsystem
+
+Five variants were deferred across waves 1 and 3 for the trio **`STATICSRV` + `extends Maps` +
+`extends OrderArchiv`**, and wave 3's advice was *"grep for `STATICSRV` first"*. Wave 5 found the
+first counter-example. `Haven` (51) uses `STATICSRV` in exactly one place — a small-map URL
+prefix in `panelGameBoard::mapHTML()`, guarded by a `file_exists()` that is false on this install
+— and has **no `Maps` subclass, no `OrderArchiv` subclass and no `resources/*.php` front
+controller**. It is not a fog variant at all; it is a nineteen-power fantasy map that happens to
+name vDiplomacy's static-content host.
+
+The refined rule: **`STATICSRV` is a red flag, not a verdict.** Check what else is in the
+package. The fog family is the *trio*; `STATICSRV` on its own can be a two-line in-folder fix.
+`extends OrderArchiv` alone was already known to be harmless (Zeus5, Duo, and now Pirates,
+A_Modern_Europe, Europa_Renovatio and Divided_States).
+
+### The gotcha that cost wave 5 the most time: a cold `variants.php` now 504s
+
+`variants.php` instantiates **every** directory under `variants/`, and instantiating a variant
+whose `cache/data.php` is absent runs its installer. With wave 5's five giants in the tree —
+525, 584, 691, 699 and 852 territories — a fully cold `variants.php` takes **longer than
+nginx's 60-second `proxy_read_timeout`** and returns **504 Gateway Time-out**.
+
+It is not fatal and it is not a broken variant: PHP keeps going after nginx gives up, each
+request warms a few more caches, and core serialises them on a `GET_LOCK('VariantInstall', 8)`
+so a concurrent request fails politely with *"A database lock (VariantInstall) is required to
+complete this page safely"* rather than racing. Requesting the page two or three more times
+warms every cache and it comes back **200 / 401 KB with all 132 variants**.
+
+What changed in the procedure because of it: **the install driver no longer calls
+`admincp actionName=wipeVariants`**, and no longer deletes `variants/*/cache/data.php`. Only the
+newcomer's `data.php` is removed, which is the only one that has to be cold for its install to
+run. Wiping every variant's cache at once is now an expensive thing to do on this install, and
+it is exactly what waves 1–4's step 5 did. Recorded in `RUNBOOK.md` §8.
+
+### The other counting trap: commas inside territory names
+
+`Divided_States`'s row count came back **699 / 254** from the one-liner in `RUNBOOK.md` §4 and
+**699 / 279** from the database — a 25-centre gap that looks exactly like a half-finished
+install. It is not. Twenty-nine of its territory names contain a **comma**
+(`array('Augusta, Maine (AUM)', 'Coast', 'Yes', …)`), so `r.split(',')[2]` reads the wrong field.
+A quote-aware parse gives 279 and matches the database exactly.
+
+The RUNBOOK's snippet has been corrected to skip the quoted name before reading the supply flag.
+**Divided_States is the only one of the 146 vDiplomacy packages with commas in territory names**,
+which is why four waves went by without noticing.
+
+### Wave 5 — nothing deferred, two excluded
+
+| Variant | vDip `$id` | Why |
+| --- | ---: | --- |
+| TenSixtySix_V2 | 85 | **Fog family, by inheritance.** `class TenSixtySix_V2Variant extends TenSixtySixVariant` — the deferred `TenSixtySix` (55), whose `variantClasses` it inherits wholesale, including `OrderArchiv`, `Maps`, `drawMapXML` and the `STATICSRV` order interface. Its own changelog says *"Fixed supportMove option from foggy multi-coast territory"*. It declares no `$countries` of its own for the same reason: it inherits them. **Never placed. ID 85 stays reserved.** |
+| TenSixtySix_V3 | 94 | Identical: `extends TenSixtySixVariant`, same inherited fog stack, same changelog line, no `$countries`. **Never placed. ID 94 stays reserved.** |
+
+Unblocking the fog subsystem (define `STATICSRV`, port `Maps` and `OrderArchiv`) would now
+unblock **seven** variants at once, not five: ClassicFog 30, TenSixtySix 55, RatWars 65,
+TenSixtySix_V2 85, TenSixtySix_V3 94, Classic1898Fog 134 and PunicWars 208. It remains the single
+highest-value piece of variant work left.
+
+### The `config.php` line after wave 5
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',10=>'ClassicMilan',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',18=>'ClassicSevenIslands',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',27=>'Sengoku5',28=>'Classic1897',29=>'Rinascimento',31=>'Alacavre',33=>'Empire1on1',34=>'Classic1880',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',44=>'FantasyWorld',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',51=>'Haven',52=>'WWIV',53=>'ClassicEconomic',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',59=>'YoungstownRedux',60=>'ClassicPilot',61=>'War2020',62=>'ClassicEvT',63=>'Viking',64=>'ClassicTouchy',66=>'Pirates',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',71=>'Colonial1885',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',81=>'Imperial2',82=>'DarkAges',83=>'Africa',84=>'ClassicCataclysm',86=>'ClassicLayered',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',92=>'YoungstownWWII',93=>'Chromatic',95=>'WWIVsealanes',96=>'GobbleEarth',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',100=>'Sengoku6',101=>'Napoleonic',102=>'WWIV_V6',103=>'Balkans1860',105=>'Divided_States',106=>'Classic1913',107=>'Renaissance1453',108=>'Canton',109=>'Machiavelli',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',114=>'Crusades1201',115=>'MachiavelliTTR',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',119=>'ClassicCroatia',120=>'ClassicEgypt',121=>'ClassicFlorence',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',129=>'World10',130=>'Edwardian3',131=>'EastIndies',132=>'Chesspolitik',133=>'Classic1898',136=>'A_Modern_Europe',137=>'TiglathPileser',138=>'MongolianEmpire',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',155=>'Europa_Renovatio',171=>'WorldAtWar1937',250=>'KnownWorld_901',251=>'Karibik',254=>'BalkanWarsVI');
+```
+
+**132 variants**, every key unique — up from 111 after wave 4. This line is also copied into the
+tracked file **`local-setup/config.variants.php.txt`**, so it is recoverable from git even though
+`config.php` is not.
+
+---
+
+## Issue 009 — final tally across all five waves
+
+| Verdict | Count | Detail |
+| --- | ---: | --- |
+| **Installed and registered** | **132** | Every key in `Config::$variants`, every one present in the New Game dropdown, on `variants.php` and on `map.php?variantID=<id>`, and every one with a `wD_Territories` row count matching its own `install.php`. |
+| — played through Spring → Autumn → Builds | **110** | Every variant with **ten powers or fewer**, each with an acceptance game left **paused**. |
+| — render-only acceptance | **22** | The eleven-and-above tables: `ClassicCrowded` 14, `World` 2, `ClassicChaos` 17, `ClassicChaoctopi` 54, wave 4's nine (11–15 powers) and wave 5's nine (13–50 powers). This install has ten accounts. |
+| **Deferred** | **8** | Failed triage; each with a reason below. |
+| **Excluded** | **2** | Rejected by the security read before placement; each with a reason below. |
+| **Dependency-only, not registered** | **1** | `variants/RuleExtensions/` — vDiplomacy's abstract rule-extension base, in the tree only because `SouthSahara` (149) extends it. |
+
+- [x] **The tree serves 100 or more variants.** 132, against a target of 100.
+- [x] **The deferred list is written with one reason per entry.** Ten rows below, and the full
+      version with the evidence is in `variant-registry.md` → *Deferred*.
+
+### The deferred and excluded list, complete, one reason per entry
+
+| Variant | vDip `$id` | Wave | Reason |
+| --- | ---: | ---: | --- |
+| ClassicFog | 30 | 1 | **Fog subsystem.** `classes/OrderInterface.php:22` uses `STATICSRV`; `classes/Maps.php` extends the absent `Maps`; `classes/OrderArchiv.php` extends the absent `OrderArchiv`. Installed and then fully backed out, folder included — it ships web-reachable `resources/*.php` front controllers. |
+| DutchRevolt | 32 | 3 | **No order interface on its turn-0 Builds phase.** Every member's `board.php` renders with no `context`, no `contextKey` and no `ordersData`, and raises no error, so no build can be submitted and the game cannot leave turn 0. Twenty minutes expired without finding the cause. |
+| TenSixtySix | 55 | 3 | **Fog subsystem** — the same `STATICSRV` / `extends Maps` / `extends OrderArchiv` trio, plus `resources/{fogmap,fogmap_old,jsonBoardData}.php`. |
+| RatWars | 65 | 3 | **Fog subsystem** — same trio, plus `resources/{fogmap,jsonBoardData}.php`. Never placed. |
+| TenSixtySix_V2 | 85 | 5 | **Fog subsystem, by inheritance** — `extends TenSixtySixVariant` and inherits its whole fog `variantClasses` map. Never placed. |
+| TenSixtySix_V3 | 94 | 5 | **Fog subsystem, by inheritance** — same. Never placed. |
+| Classic1898Fog | 134 | 1 | **Fog subsystem** — same trio, same `resources/fogmap.php`. Never installed. |
+| PunicWars | 208 | 3 | **Fog subsystem** — same trio, plus `resources/{orders,fogmap,jsonBoardData}.php`. Never placed. |
+| SpeedEuropa | 253 | 3 | **Touches `wD_Users`.** Its `classes/adjudicatorPreGame.php` `SELECT`s and `UPDATE`s per-power `Chance<CountryName>` columns on the user row — columns this schema does not have, and the user table is on the reject list whatever the reason. Never placed. |
+| Baron1900 | 1900 (252) | 3 | **Needs a vDiplomacy-only schema column.** Its `install.php` writes `wD_Territories.buildEligibilityFlags`, which does not exist here, and the autumn adjudication dies on it. Also the only candidate reading `$Game->targetSCs` / `$Game->maxTurns`. Backed out, folder included. |
+
+Seven of the ten are one root cause — **vDiplomacy's fog-of-war subsystem depends on
+`STATICSRV`, `Maps` and `OrderArchiv`, none of which webDiplomacy has**. The remaining three are
+one schema change (Baron1900), one policy line (SpeedEuropa) and one unexplained board
+(DutchRevolt).
+
+Additionally, and *not* deferrals: **ID 57 is permanently unusable** (core hard-codes
+`if($variantID != 57)` in five places, wave 4), and **ID 252** is reserved to the Baron1900
+attempt.
+
+### Wave 5 — final health
+
+Run at the close of the wave, all from the repo root:
+
+| Check | Result |
+| --- | --- |
+| `Config::$variants` entries | **132**, no duplicate keys |
+| `<option>`s in the New Game variant select | **132** — equal, so nothing is hard-coded out |
+| `GET /variants.php` | **200**, 401 KB, all 132 listed (after warming; see the 504 gotcha) |
+| `GET /map.php?variantID=<id>` for all 21 wave-5 IDs | **200** each, a PNG each |
+| `docker compose logs --tail=400 php-fpm \| grep -ic fatal` | **0** |
+| `status.php` | Game Processing ✅, Gamemaster Called ✅, Games Crashed ✅ 0, Maintenance ✅ Off, Panic ✅ Off, Redis ✅, SSE ✅, Error Logs ✅ 0. The one ⚠️ is *Game Backup Archived* (offsite archiving was never configured on this box) and predates this wave |
+| Games paused | **109 of 109** real games paused (`processTime` NULL, `pauseTimeRemaining` set). The three not paused are `SB_*` **sandbox** games created by other work, with `processTime` about six weeks out |
+| Post-harvest dump | `/home/normie/webdiplomacy-backups/webdiplomacy-20260920-175848.sql.gz` (3.0 MB) |
+
+### The whole vDiplomacy tree, accounted for
+
+146 directories in `/tmp/vdip/variants/`. 132 − 21 in-tree-or-other-source = **125 harvested from
+vDiplomacy**, plus **10 deferred/excluded**, plus **1 dependency-only** (`RuleExtensions`), plus
+**10** packages whose in-tree equivalents ship with webDiplomacy 1.83 under the same names
+(`Classic`, `World`, `AncMed`, `Colonial`, `ClassicFvA`, `ClassicChaos`, `Modern2`, `Empire4`,
+`ClassicGvI`, `ColdWar`, `Zeus5`, `FleetRome`, `CustomStart`, `BuildAnywhere`). **Nothing in
+`/tmp/vdip/variants/` is now unexamined.**

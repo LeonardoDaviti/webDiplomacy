@@ -210,10 +210,11 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`, and is also in
 `wD_VariantInfo.countryCount`. "Enabled" means the ID is in `Config::$variants` in the gitignored
-`config.php`, which after issues 007, 008 and 009 (waves 0, 1, 3 and 4) is **all one hundred and
-eleven below**. Every variant with ten powers or fewer has been installed and played through at
-least one adjudicated phase; the eight with more powers than this install has accounts are
-installed and verified to render, but have never been sat at a table (see *Above ten players*). The React
+`config.php`, which after issues 007, 008 and 009 (all five waves) is **all one hundred and
+thirty-two below**. Every variant with ten powers or fewer has been installed and played through
+at least one adjudicated phase; the twenty-two with more powers than this install has accounts
+are installed and verified to render, but have never been sat at a table (see *Above ten
+players*). The React
 (point-and-click) board is whitelisted to exactly three variants — `Game::isClassicGame()`,
 `objects/game.php:565-568`, is `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything
 else renders on the legacy `board.php` drop-down board, **including the two-player variants that
@@ -289,6 +290,18 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **7** | Edwardian3 (*Edwardian - 3rd Edition*) | 130 | legacy |
 | **7** | Classic1898 (*Classic - 1898*) | 133 | legacy |
 | **7** | Scottish_Clan_Wars (*Scottish Clan Wars*) | 141 | legacy |
+| **7** | ClassicTouchy (*Classic Touchy*) | 64 | legacy |
+| **7** | ClassicCataclysm (*Classic - Cataclysm*) | 84 | legacy |
+| **7** | ClassicPilot (*Classic - Pilot*) | 60 | legacy |
+| **7** | ClassicCroatia (*Classic - Croatia*) | 119 | legacy |
+| **7** | ClassicFlorence (*Classic - Florence*) | 121 | legacy |
+| **7** | ClassicMilan (*Classic - Milan Diplomacy*) | 10 | legacy |
+| **7** | Classic1880 (*Classic - 1880*) | 34 | legacy |
+| **7** | ClassicSevenIslands (*Classic - 7 Islands*) | 18 | legacy |
+| **7** | Classic1913 (*Classic - 1913*) | 106 | legacy |
+| **7** | ClassicEgypt (*Classic - Egypt*) | 120 | legacy |
+| **7** | ClassicEconomic (*Classic - Economic*) | 53 | legacy |
+| **7** | ClassicLayered (*Classic - Layered*) | 86 | legacy |
 | **7** | MachiavelliTTR (*Machiavelli - To the Renaissance*) | 115 | legacy |
 | **8** | Migraine | 21 | legacy |
 | **8** | SouthAmerica8 (*South American Supremacy*) | 24 | legacy |
@@ -328,15 +341,24 @@ play on Classic's own geography**, because the whitelist matches by name, not by
 | **13** | Imperial2 (*Imperial Diplomacy II*) | 81 | legacy |
 | **14** | EastIndies (*East Indies*) | 131 | legacy |
 | **14** | GobbleEarth (*Gobble-Earth*) | 96 | legacy |
+| **13** | Pirates | 66 | legacy |
 | **15** | KnownWorld_901 (*Known World 901*) | 250 | legacy |
 | **17** | World (*World Diplomacy IX*) | 2 | legacy |
+| **17** | World10 (*World Diplomacy X*) | 129 | legacy |
+| **19** | Haven | 51 | legacy |
+| **20** | A_Modern_Europe (*A Modern Europe*) | 136 | legacy |
 | **34** | ClassicChaos (*Classic - Chaos*) | 17 | legacy |
 | **34** | ClassicChaoctopi (*Classic - Chaoctopi*) | 54 | legacy |
+| **35** | WWIV (*World War IV*) | 52 | legacy |
+| **35** | WWIVsealanes (*World War IV sealanes*) | 95 | legacy |
+| **36** | WWIV_V6 (*World War IV (Version 6.2)*) | 102 | legacy |
+| **36** | Europa_Renovatio (*Europa Renovatio*) | 155 | legacy |
+| **50** | Divided_States (*Divided States*) | 105 | legacy |
 
-**Every player count from 2 to 15 is now servable**, and 17 and 34 as well — though only up to
-ten can actually be seated from this install's ten accounts without adding more (§A.4). The gaps that
-issue 009 wave 1 could only fill with `ClassicVS`'s name trick are gone: four, five and six
-players all have real maps now.
+**Every player count from 2 to 15 is now servable**, and 17, 19, 20, 34, 35, 36 and 50 as well —
+though only up to ten can actually be seated from this install's ten accounts without adding more
+(§A.4). The gaps that issue 009 wave 1 could only fill with `ClassicVS`'s name trick are gone:
+four, five and six players all have real maps now.
 
 **Picking one for two people.** Ten two-player variants. Six of them (FvA, GvI, EvT, FGvsRT, GvR
 and, near enough, ClassicVS with a two-letter code) are the same Classic board with different
@@ -383,22 +405,58 @@ rules, and both change how a game feels:
   do the same.
 - **Custom-start variants open in a Builds phase with no units**, and everybody has to place
   their own before the game really begins: `CustomStart`, `Zeus5`, `Classic1897`,
-  `ClassicChaoctopi`, `War2020`, `Migraine`, `Fubar`, `Mars` and `Empire1on1`. Budget five
-  minutes of game night for it, and note that fleets can only go on coastal home centres.
+  `ClassicChaoctopi`, `War2020`, `Migraine`, `Fubar`, `Mars`, `Empire1on1` and (issue 009 wave 5)
+  `ClassicSevenIslands`. Budget five minutes of game night for it, and note that fleets can only
+  go on coastal home centres.
 
-**Bigger tables.** Seven players has thirty-two choices, eight has fifteen, nine has seven and
-ten has seven (`Modern2`, `Empire4`, `War2020`, `Enlightenment`, `Napoleonic`,
-`YoungstownRedux`, `Colonial1885`). Ten is the largest table this install can seat as it stands.
+**Bigger tables.** Seven players has **forty-four** choices after issue 009 wave 5, eight has
+fifteen, nine has seven and ten has seven (`Modern2`, `Empire4`, `War2020`, `Enlightenment`,
+`Napoleonic`, `YoungstownRedux`, `Colonial1885`). Ten is the largest table this install can seat
+as it stands.
 
-**Above ten players.** `ClassicCrowded` is eleven, `World` is seventeen and `ClassicChaos` /
-`ClassicChaoctopi` are thirty-four; issue 009 wave 4 added nine more between eleven and fifteen
-— `Crusades1201` (11), `MongolianEmpire` (11), `FantasyWorld` (12), `Rinascimento` (12),
-`WorldAtWar1937` (12), `Imperial2` (13), `EastIndies` (14), `GobbleEarth` (14) and
-`KnownWorld_901` (15). **All nine are installed and drawn but have never been played here**:
-they need more seats than the ten accounts provide, so add accounts first (§A.4). Two are worth
-the trouble if you ever do — `Imperial2` is **384 territories and 172 supply centres**, the
-biggest board in the tree, and `Colonial1885` (271 / 122) is the biggest that ten people can
-actually sit at.
+**The Classic board, twelve more ways.** Issue 009 wave 5 finished the `Classic*` family: these
+are not rule tweaks on Classic's map but twelve **different boards** that happen to look like it,
+each with its own installer and its own `$mapID`. Worth knowing which is which:
+
+- **`ClassicPilot` (60)** is the smallest change anyone has made to Classic: it removes
+  **Heligoland Bight** and nothing else, which rewrites German and English openings.
+- **`ClassicCroatia` (119)**, **`ClassicFlorence` (121)** and **`ClassicMilan` (10)** each swap a
+  handful of provinces in and out and stay at 81 / 34 — Croatia and Sarajevo for Trieste and
+  Tuscany; a rebuilt Italian peninsula; Milan and Savoy for Piedmont, Venice and Tuscany.
+- **`Classic1880` (34)** and **`Classic1913` (106)** enlarge the board (84 / 36 and 88 / 38) —
+  1880 reaches into Morocco, Algeria, Persia, Siberia and Dagestan; 1913 adds Egypt and Cyrenaica.
+- **`ClassicEgypt` (120)** adds Egypt, Libya, Suez and the Red Sea (89 / 35).
+- **`ClassicSevenIslands` (18)** turns Sicily, Sardinia, Corsica, Crete, Cyprus, Ireland and
+  Iceland into supply centres (88 / 41) — and it is a **custom-start** variant, so budget the
+  extra unit-placement phase.
+- **`ClassicCataclysm` (84)** deletes the sea: **every territory is land**, coasts and all, 75 / 34.
+  Fleets have nowhere to be.
+- **`ClassicTouchy` (64)** is a compressed 41-territory board where 28 of them are supply centres
+  — the fastest Classic-shaped game here.
+- **`ClassicEconomic` (53)** lays twenty-odd resource territories (Coal, Beer, Cotton…) over the
+  map: 109 / 62, and a solo target of 24 rather than the usual 18.
+- **`ClassicLayered` (86)** is the Classic board **twice, stacked** — `Berlin 1` and `Berlin 2` —
+  162 territories, 68 supply centres, solo on 35. The longest of the twelve by a distance.
+
+**Above ten players.** Twenty-two variants need more than ten seats, and **none of them has ever
+been played here** — they are installed and verified to draw, nothing more. Add accounts first
+(§A.4).
+
+- **Eleven to fifteen** (issue 009 waves 1 and 4): `ClassicCrowded` (11), `Crusades1201` (11),
+  `MongolianEmpire` (11), `FantasyWorld` (12), `Rinascimento` (12), `WorldAtWar1937` (12),
+  `Imperial2` (13), `EastIndies` (14), `GobbleEarth` (14), `KnownWorld_901` (15).
+- **Thirteen to twenty** (wave 5): `Pirates` (13, the Caribbean with hurricanes and unit
+  transforms), `World10` (17, the successor to `World`), `Haven` (19, a fantasy world of 283
+  territories) and `A_Modern_Europe` (20, Europe in the 21st century, 339 / 115).
+- **Thirty-four and up**: `ClassicChaos` and `ClassicChaoctopi` (34 — one power per supply
+  centre), `WWIV` (35), `WWIVsealanes` (35), `WWIV_V6` (36), `Europa_Renovatio` (36) and
+  `Divided_States` (50).
+
+Three are worth the trouble if you ever assemble the people. **`Europa_Renovatio` (155) is the
+largest map in the tree — 852 territories and 308 supply centres**, solo on 155, for thirty-six
+players. **`Divided_States` (105)** puts the fifty US states against each other and is the
+largest *table* here. And `Colonial1885` (271 / 122) remains the biggest board that ten people
+can actually sit at.
 
 ### B.2 Creating the game, step by step
 
