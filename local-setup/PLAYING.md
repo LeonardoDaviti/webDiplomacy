@@ -8,7 +8,7 @@ Two constants:
 
 | | |
 | --- | --- |
-| Site | <http://localhost:43000/> — replace with the LAN address once issue 006 lands it in RUNBOOK §7 |
+| Site | LAN: <http://10.13.101.254:43000/> · on this host: <http://localhost:43000/>. The LAN address is DHCP and can move — RUNBOOK §7 is authoritative |
 | Repo / compose dir | `/home/normie/Documents/Projects/webDiplomacy` (every `docker compose` command is run from here) |
 | Credentials | `local-setup/credentials/accounts.md` — **gitignored**; no password appears in this file |
 
@@ -442,9 +442,9 @@ through immediately and **NMRs anyone without orders**. Rarely what you want.
 
 ### B.9 Game-night checklist
 
-1. **Everyone bookmarks the LAN URL** — `http://<host-lan-ip>:43000/`. That address does not exist
-   yet: the site is still bound to `127.0.0.1` only. Issue [`006-lan-access.md`](issues/006-lan-access.md)
-   opens it and writes the real address into RUNBOOK §7; until then this is a one-machine site.
+1. **Everyone bookmarks the LAN URL** — currently `http://10.13.101.254:43000/` (issue
+   [`006-lan-access.md`](issues/006-lan-access.md)). It is a DHCP address and can change, so
+   **RUNBOOK §7 is authoritative**; re-read it if the bookmark stops working.
 2. **Each player logs in on their own device**, at `/logon.php`, with **remember me** ticked, and
    confirms the name in the top corner is theirs. One browser profile per player.
    (On plain HTTP, push notifications will not work — a secure context is required. The live board
