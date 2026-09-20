@@ -97,9 +97,16 @@ services:
       - MYSQL_PASSWORD=mypassword123
     volumes:
       - "./:/application"
-    # The database lives in the container, with no volume behind it, so deleting this container
-    # throws the dev database away and the next start installs a fresh one. php-fpm notices an
-    # empty database within a minute and reinstalls, so this container can be recreated alone.
+      # LOCAL DEVIATION (issue 002): the database's data directory is on a named volume,
+      # webdiplomacy_dbdata, so `docker compose down` and recreating this container keep the
+      # data. Upstream keeps nothing here; see the paragraph below, which no longer applies to
+      # this checkout. Destroying the data now means deleting the volume explicitly:
+      #   docker compose down && docker volume rm webdiplomacy_dbdata
+      - "dbdata:/var/lib/mysql"
+    # Upstream: the database lives in the container, with no volume behind it, so deleting this
+    # container throws the dev database away and the next start installs a fresh one. php-fpm
+    # notices an empty database within a minute and reinstalls, so this container can be
+    # recreated alone.
     #
     # Published ports are bound to localhost throughout this file. Docker's firewall rules sit in
     # front of ufw's, so "43003:3306" really does offer this database, whose password is written
@@ -253,3 +260,8 @@ services:
 #UPDATE wd_apikeys SET apiKey = 'bot4' WHERE userID = 108980;
 #UPDATE wd_apikeys SET apiKey = 'bot5' WHERE userID = 108982;
 #UPDATE wd_apikeys SET apiKey = 'bot6' WHERE userID = 108983
+
+# LOCAL DEVIATION (issue 002): the mariadb data directory above. Named rather than anonymous so
+# it survives `docker compose down` and is obvious in `docker volume ls` (webdiplomacy_dbdata).
+volumes:
+  dbdata:
