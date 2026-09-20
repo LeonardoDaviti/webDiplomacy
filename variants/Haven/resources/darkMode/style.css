@@ -1,0 +1,43 @@
+@CHARSET "ISO-8859-1";
+
+.variantHaven .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantHaven .country1 { color: rgb(153, 153, 255) ! important; } /* Archers */
+.variantHaven .country2 { color: rgb(170, 170, 73) ! important; } /* Barbarians */
+.variantHaven .country3 { color: rgb(199, 149, 177) ! important; } /* Centaurs   */
+.variantHaven .country4 { color: rgb(102, 179, 179) ! important; } /* Dwarves */
+.variantHaven .country5 { color: rgb(30, 196, 196) ! important; } /* Elves   */
+.variantHaven .country6 { color: rgb(172, 172, 6) ! important; } /* Faeries  */
+.variantHaven .country7 { color: rgb(168, 168, 69) ! important; } /* Gnomes  */
+.variantHaven .country8 { color: rgb(255, 139, 98) ! important; } /* Hobbits  */
+.variantHaven .country9 { color: rgb(161, 161, 161) ! important; } /* Knights  */
+.variantHaven .country10 { color: rgb(99, 186, 99) ! important; } /* Leprechauns */
+.variantHaven .country11 { color: rgb(255, 123, 255) ! important; } /* Magicians   */
+.variantHaven .country12 { color: rgb(255, 135, 135) ! important; } /* Nomads      */
+.variantHaven .country13 { color: rgb(213, 152, 106) ! important; } /* Ogres       */
+.variantHaven .country14 { color: rgb(161, 161, 161) ! important; } /* Pirates  */
+.variantHaven .country15 { color: rgb(203, 151, 148) ! important; } /* Rogues  */
+.variantHaven .country16 { color: rgb(155, 155, 255) ! important; } /* Samurai  */
+.variantHaven .country17 { color: rgb(33, 212, 33) ! important; } /* Trolls  */
+.variantHaven .country18 { color: rgb(161, 161, 161) ! important; } /* Undead  */
+.variantHaven .country19 { color: rgb(217, 141, 217) ! important; } /* Wizards  */
+
+.variantHaven .occupationBar1 { background-color: #0000FE; } /* Archers */
+.variantHaven .occupationBar2 { background-color: #D4D480; } /* Barbarians   */
+.variantHaven .occupationBar3 { background-color: #94667F; } /* Centaurs  */
+.variantHaven .occupationBar4 { background-color: #007F7F; } /* Dwarves */
+.variantHaven .occupationBar5 { background-color: #00FFFF; } /* Elves   */
+.variantHaven .occupationBar6 { background-color: #FFFF00; } /* Faeries  */
+.variantHaven .occupationBar7 { background-color: #7E7E00; } /* Gnomes  */
+.variantHaven .occupationBar8 { background-color: #FF6633; } /* Hobbits  */
+.variantHaven .occupationBar9 { background-color: #545454; } /* Knights  */
+.variantHaven .occupationBar10 { background-color: #007E00; } /* Leprechauns  */
+.variantHaven .occupationBar11 { background-color: #FF00FF; } /* Magicians  */
+.variantHaven .occupationBar12 { background-color: #FF0000; } /* Nomads  */
+.variantHaven .occupationBar13 { background-color: #CD9366; } /* Ogres  */
+.variantHaven .occupationBar14 { background-color: #ABABAB; } /* Pirates  */
+.variantHaven .occupationBar15 { background-color: #FCD5D3; } /* Rogues  */
+.variantHaven .occupationBar16 { background-color: #8080FC; } /* Samurai  */
+.variantHaven .occupationBar17 { background-color: #00FF00; } /* Trolls  */
+.variantHaven .occupationBar18 { background-color: #999999; } /* Undead  */
+.variantHaven .occupationBar19 { background-color: #800080; } /* Wizards  */
+
