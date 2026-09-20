@@ -210,8 +210,8 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`. "Enabled" means the
 ID is in `Config::$variants` in the gitignored `config.php`, which after issues 007, 008 and 009
-is all twenty-seven of `1, 2, 3, 4, 5, 9, 12, 14, 15, 17, 19, 20, 22, 23, 25, 26, 38, 45, 46, 48, 49,
-50, 62, 70, 91, 122, 123`. The
+is all thirty-one of `1, 2, 3, 4, 5, 9, 12, 14, 15, 17, 19, 20, 22, 23, 25, 26, 28, 38, 40, 45, 46, 48,
+49, 50, 62, 70, 90, 91, 122, 123, 133`. The
 React (point-and-click) board is whitelisted to exactly three variants —
 `Game::isClassicGame()`, `objects/game.php:565-568`, is
 `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything else renders on the legacy
@@ -243,6 +243,10 @@ geography**, because the whitelist matches by name, not by map.
 | **7** | ClassicBrazilian (*Classic — Brazilian*) | 123 | enabled | legacy |
 | **7** | ClassicNoNeutrals (*Classic — NoNeutrals*) | 38 | enabled | legacy |
 | **7** | ClassicGreyPress (*Classic — GreyPress*) | 50 | enabled | legacy |
+| **7** | Classic1897 (*Classic — 1897*) | 28 | enabled | legacy |
+| **7** | Classic1898 (*Classic — 1898*) | 133 | enabled | legacy |
+| **7** | ClassicOctopus (*Classic — Octopus*) | 40 | enabled | legacy |
+| **7** | ClassicAnkaraCrescent (*Classic — Ankara Crescent*) | 90 | enabled | legacy |
 | **8** | GoT (*Game of Thrones*) | 45 | enabled | legacy |
 | **11** | ClassicCrowded (*Classic — Crowded*) | 14 | enabled | legacy |
 

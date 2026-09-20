@@ -501,3 +501,89 @@ and coordinates and keep their own `$mapID`.
 `gamecreate.php` bets 5 points, and after a dozen acceptance games `admin` and `player2` were on
 zero and creation failed with *"5 is an invalid bet size"*. Fixed with the admin panel's own
 **`givePoints`** action (`userID`, `points`) for each of the ten accounts — not with SQL.
+
+### Wave 1 batch 3 — Classic1897, ClassicOctopus, ClassicAnkaraCrescent, Classic1898
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs / borders | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | --- | ---: | ---: | --- |
+| Classic1897 | 28 | 28 | 7 | 81 / 34 / 431 | 18 | **27** | **Pass** |
+| ClassicOctopus | 40 | 40 | 7 | 81 / 34 / **1,205** | 18 | **25** | **Pass** |
+| ClassicAnkaraCrescent | 90 | 90 | 7 | 81 / 34 / **1,691** | 18 | **26** | **Pass** |
+| Classic1898 | 133 | 133 | 7 | 81 / 34 / 431 | 18 | **28** | **Pass** |
+
+Classic's own map has 431 border rows, so the two "everyone is your neighbour" variants are
+almost entirely *data*: same 81 territories, three to four times the adjacency.
+
+**Security review — clean, all four.** 19 `.php` files, the largest set in this wave, because
+these four hook more of the engine than batches 1 and 2:
+
+| Variant | Classes it subclasses |
+| --- | --- |
+| Classic1897 | `adjudicatorPreGame`, `drawMap`, **`processGame`**, `processOrderBuilds`, `OrderInterface`, `userOrderBuilds`, **`panelGameBoard`** |
+| ClassicOctopus | `adjudicatorPreGame`, `drawMap`, `OrderInterface` |
+| ClassicAnkaraCrescent | `adjudicatorPreGame`, `drawMap`, `OrderInterface` (empty), `userOrderDiplomacy` (empty) |
+| Classic1898 | `adjudicatorPreGame`, `drawMap`, `OrderInterface`, **`processOrderBuilds`**, **`userOrderBuilds`** |
+
+The same negative checklist as the earlier batches holds: no `eval`/`exec`/`system`/`passthru`,
+no network calls, no file access, no user or session tables, no dynamically-built executed
+string, and `defined('IN_CODE')` in every file. These four *do* contain SQL — `processGame`,
+`processOrderBuilds`, `userOrderBuilds` and `Classic1897`'s `OrderInterface` all run queries —
+and every one was read: they interpolate only `$Game->id`, `$this->gameID`, `$this->countryID`,
+`$this->toTerrID`, `MAPID` and `$GLOBALS['GAMEID']`, all internal integers, never request data.
+The two `OrderInterface` subclasses do a `str_replace` on `libHTML::$footerScript` to chain an
+extra JS call, and the JS they add (`convoydisplayfix.js`, `supplycenterscorrect*.js`) makes no
+network calls.
+
+**Base-class check.** Every method these four override or call still exists in this tree with a
+compatible signature: `processGame::{changePhase,setPhase,archiveTerrStatus,updateOwners}`
+(`gamemaster/game.php`), `processOrderBuilds::{create,apply}` (`gamemaster/orders/builds.php`),
+`userOrderBuilds::toTerrIDCheck` (`board/orders/builds.php`), `OrderInterface::jsLoadBoard`, and
+`datetxt($turn=false)` — which is **not** on `panelGameBoard` but on `Game`, from which
+`panelGame` inherits, so `Classic1897`'s `parent::datetxt()` resolves. `MAPID` and
+`$GLOBALS['GAMEID']` both exist. One thing worth flagging for the future:
+**`Classic1898`'s `processOrderBuilds::apply()` is a copy of the *pre-2024* core implementation**
+— upstream has since split `apply()` (2024 Renegade rules for choosing which unit a failed
+`Destroy` removes) from `apply_pre2024Rules()`. The variant therefore keeps the old disband-choice
+behaviour. It is not a fault and it does not break anything, but a later upstream merge should
+re-read it.
+
+**Dependencies:** none beyond core. **IDs 28, 40, 90 and 133 were all free**; all four kept their
+upstream `$id`/`$mapID`. None may share map 1 — all four ship full installers.
+
+**No code fixes were needed** beyond the generated dark-mode stylesheets.
+
+**Acceptance:**
+
+- **ClassicOctopus (40) — gameID 25.** Standard Classic start. The rule is "double movement",
+  and it is visible in the very first phase: **`A Moscow → Norway`** was a legal, submitted order
+  — two hops on the Classic map — and it bounced against England's `F Edinburgh → Norway`, a
+  cross-power **bounce** between units that are nowhere near each other on the real board.
+  Supports succeeded (`F London → Yorkshire` supported by `A Liverpool`). Autumn and builds
+  processed; **Spring 1902**, 3/6/3/3/5/4/5 centres. 21 KB map PNG.
+- **ClassicAnkaraCrescent (90) — gameID 26.** Standard start, 1,691 borders. Spring 1901:
+  England `F London → English Channel` vs France `F Brest → English Channel` **bounced**; two
+  supported moves succeeded. Autumn and builds processed; **Spring 1902**, 3/3/3/3/4/5/4. 20 KB
+  map PNG.
+- **Classic1897 (28) — gameID 27.** The variant's shape is confirmed exactly:
+  `classes/adjudicatorPreGame.php` **disables** `assignUnits()` and `assignUnitOccupations()`, so
+  the game opens with **no units at all**, in a **Builds phase at turn 0** that
+  `processGame::changePhase()` inserts and `panelGameBoard::datetxt()` renames *"Autumn, 1897"*.
+  All seven powers placed their one opening unit (A Edinburgh, A Brest, A Naples, A Kiel,
+  A Vienna, A Constantinople, A Sevastopol), the phase processed into Spring 1898, a
+  cross-power **bounce** followed at Venice (Italy vs Austria), and later turns produced
+  successful **supported** moves (`A Liverpool → Clyde` supported by `A Edinburgh`, and two
+  others) and a second builds phase. Played to **turn 5**. 19 KB map PNG.
+- **Classic1898 (133) — gameID 28.** Each power starts with **one unit and one home centre** —
+  `wD_Territories` for map 133 has exactly one territory per country and **74 neutrals**, which
+  is why the variant has to bring its own build rule. Start matched `adjudicatorPreGame.php`
+  unit for unit. Spring/Autumn 1899 produced a **bounce** (Italy `A Rome → Tuscany` vs Austria
+  `A Venice → Tuscany`) and, once powers had two units, successful **supported** moves
+  (`A Brest → Picardy` supported by `A Paris`; `A Smyrna → Constantinople` supported by
+  `A Bulgaria`). Builds processed twice. **The build-anywhere rule was exercised deliberately**:
+  at turn 5's builds, Germany built **`A Sweden`**, Austria **`A Venice`** and Turkey
+  **`A Bulgaria`** — all conquered neutrals, none a home centre, all accepted by the variant's
+  own `userOrderBuilds::toTerrIDCheck()`. On unmodified Classic every one of those is illegal.
+  19 KB map PNG.
+
+All four appear in the New Game dropdown, render in `variants.php` with their player counts, and
+answer `board.php?gameID=…` with **200** (legacy board).
