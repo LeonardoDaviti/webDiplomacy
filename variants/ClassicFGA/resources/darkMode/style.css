@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicFGA .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global */
+.variantClassicFGA .country1 { color: rgb(111, 180, 204) ! important; } /* France */
+.variantClassicFGA .country2 { color: rgb(231, 134, 134) ! important; } /* Austria */
+.variantClassicFGA .country3 { color: rgb(189, 151, 126) ! important; } /* German */
+
+.variantClassicFGA .occupationBar1 { background-color: rgb(121, 175, 198); } /* France */
+.variantClassicFGA .occupationBar2 { background-color: rgb(196, 143, 133); } /* Austria */
+.variantClassicFGA .occupationBar3 { background-color: rgb(183, 167, 151); } /* German */

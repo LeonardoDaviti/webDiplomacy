@@ -1,0 +1,8 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicGvR .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global */
+.variantClassicGvR .country1 { color: rgb(189, 151, 126) ! important; } /* Germany */
+.variantClassicGvR .country2 { color: rgb(194, 147, 186) ! important; } /* Russia*/
+
+.variantClassicGvR .occupationBar1 { background-color: rgb(183, 167, 151); } /* Germany */
+.variantClassicGvR .occupationBar2 { background-color: rgb(189, 158, 183); } /* Russia*/

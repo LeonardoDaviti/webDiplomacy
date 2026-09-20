@@ -210,7 +210,8 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`. "Enabled" means the
 ID is in `Config::$variants` in the gitignored `config.php`, which after issues 007, 008 and 009
-is all nineteen of `1, 2, 3, 4, 5, 9, 12, 15, 17, 19, 20, 22, 23, 26, 45, 46, 62, 70, 91`. The
+is all twenty-three of `1, 2, 3, 4, 5, 9, 12, 15, 17, 19, 20, 22, 23, 25, 26, 45, 46, 48, 49, 62, 70,
+91, 122`. The
 React (point-and-click) board is whitelisted to exactly three variants —
 `Game::isClassicGame()`, `objects/game.php:565-568`, is
 `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything else renders on the legacy
@@ -226,7 +227,9 @@ geography**, because the whitelist matches by name, not by map.
 | **2** | ColdWar | 91 | enabled | legacy |
 | **2** | Duo | 22 | enabled | legacy |
 | **2** | GoT2 (*Game of Thrones — Tully vs Lannister*) | 46 | enabled | legacy |
-| **3** | — none installed | | | |
+| **2** | ClassicGvR (*Classic — Germany vs Russia*) | 25 | enabled | legacy |
+| **3** | ClassicFGA (*Classic — France vs Germany vs Austria*) | 48 | enabled | legacy |
+| **3** | ClassicIER (*Classic — Italy+ vs England+ vs Russia*) | 49 | enabled | legacy |
 | **4** | — none installed | | | |
 | **5** | AncMed (*The Ancient Mediterranean*) | 9 | enabled | legacy |
 | **6** | — none installed | | | |
@@ -236,6 +239,7 @@ geography**, because the whitelist matches by name, not by map.
 | **7** | BuildAnywhere (*Classic, but build anywhere*) | 5 | enabled | legacy |
 | **7** | Colonial (*Colonial Diplomacy*) | 12 | enabled | legacy |
 | **7** | Zeus5 (*Zeus 5*) | 70 | enabled | legacy |
+| **7** | ClassicBritain (*Classic — Britain*) | 122 | enabled | legacy |
 | **8** | GoT (*Game of Thrones*) | 45 | enabled | legacy |
 
 Also installed, outside the 2–8 range: **World** (`$id` 2, **17** players, legacy),
@@ -252,7 +256,8 @@ USSR vs USA), **Duo** (an original symmetric map, with eight static neutral unit
 that both sides have to chew through) and **GoT2** (Westeros). Suggested defaults: **ClassicFvA**
 if you want the nice board, **Duo** or **ColdWar** if you want a new map.
 
-**Three, four and six players are still not servable.** For an awkward number the practical
+**Four and six players are still not servable** (three now is — ClassicFGA or ClassicIER).
+For an awkward number the practical
 answers are: play Classic (or one of its five seven-player cousins) with the spare people
 spectating or sharing a seat, or run two of the two-player maps in parallel.
 

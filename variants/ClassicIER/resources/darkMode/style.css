@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicIER .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantClassicIER .country1 { color: rgb(229, 124, 205) ! important; } /* England */
+.variantClassicIER .country2 { color: rgb(132, 197, 111) ! important; } /* Italy   */
+.variantClassicIER .country3 { color: rgb(194, 147, 186) ! important; } /* Russia  */
+
+.variantClassicIER .occupationBar1 { background-color: rgb(239, 196, 228); } /* England */
+.variantClassicIER .occupationBar2 { background-color: rgb(164, 196, 153); } /* Italy   */
+.variantClassicIER .occupationBar3 { background-color: rgb(189, 158, 183); } /* Russia  */

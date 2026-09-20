@@ -247,3 +247,180 @@ a dark background. Nothing else in any of the five folders was touched.
   `N=>` in the file, including `Config::$serverMessages` and the bot/variant-mod arrays, so it
   prints duplicates that are not duplicate variant IDs. Scope it to the one line instead:
   `sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d` — which prints nothing.
+
+---
+
+## Wave 1 (Classic-map rule variants) — candidate set
+
+Scope, as briefed: **every vDiplomacy variant that is a Classic-map *rule* variant** — one that
+plays on the standard 34-supply-centre Classic board, or whose `install.php` is a stub relying on
+another variant's map — and that is not already in `variant-registry.md`.
+
+Source: `Sleepcap/vDiplomacy` @ `72c81f0dd73bedccc11f13a750dfcc62f580549a`, cloned to `/tmp/vdip`.
+
+### How the set was determined
+
+Every `/tmp/vdip/variants/*/variant.php` was read for `$id`/`$mapID`/`$countries`, and every
+`install.php` was parsed for its territory-name set and compared, name for name, against this
+install's `variants/Classic/install.php` (81 territories, 34 supply centres). Three outcomes:
+
+- **exact name-set match** with our Classic → Classic-map rule variant → **candidate**;
+- **stub installer** (`require_once('variants/Classic/install.php')`) → **candidate**, and the
+  only kind allowed to share `$mapID` 1;
+- anything else (extra or missing territories, changed terrain) → **not a rule variant**, out of
+  scope for this wave.
+
+### Candidates (16)
+
+| Variant | vDip `$id` | vDip `$mapID` | Players | What the rule change is | Installer |
+| --- | ---: | ---: | ---: | --- | --- |
+| ClassicCrowded | 14 | 14 | 11 | Classic for 11 — four extra powers (Balkan, Lowland, Norway, Spain) | full |
+| ClassicGvR | 25 | 25 | 2 | Germany vs Russia | full |
+| Classic1897 | 28 | 28 | 7 | Starts in Winter 1897 with a build phase | full |
+| ClassicFog | 30 | 30 | 7 | Fog of war | full |
+| ClassicNoNeutrals | 38 | 38 | 7 | No neutral centres; solo target 12 | full |
+| ClassicOctopus | 40 | 40 | 7 | Extra "octopus" borders between sea spaces | full |
+| ClassicVS | 42 | 42 | 2–7 | "Pick your countries" — powers chosen from the game *name* | full |
+| ClassicFGA | 48 | 48 | 3 | France vs Germany vs Austria | full |
+| ClassicIER | 49 | 49 | 3 | Italy+ vs England+ vs Russia | full |
+| ClassicGreyPress | 50 | **1** | 7 | Classic, plus anonymous ("grey") press | **stub** |
+| ClassicChaoctopi | 54 | 54 | 34 | Chaos (one power per centre) with Octopus borders | full |
+| ClassicAnkaraCrescent | 90 | 90 | 7 | Rule-change chaos variant after the forum game | full |
+| ClassicBritain | 122 | 122 | 7 | England starts with six armies | full |
+| ClassicBrazilian | 123 | 123 | 7 | The Brazilian edition's starting units | full |
+| Classic1898 | 133 | 133 | 7 | Each power starts with one unit | full |
+| Classic1898Fog | 134 | 134 | 7 | 1898 plus fog of war | full |
+
+**Every upstream `$id` and `$mapID` above is free** in `variant-registry.md` (taken: 1–5, 9, 12,
+15, 17, 19, 20, 22, 23, 26, 45, 46, 62, 70, 91), so no 900-block renumbering is needed for any of
+them. ClassicGreyPress is the only one that may share `$mapID` 1, because its installer is a
+one-line stub with no territory data of its own and its only class is a `Chatbox` subclass that
+never names a territory.
+
+### Explicitly considered and **excluded** from this wave
+
+Not rule variants — each changes the board itself, so each is a map harvest for a later wave:
+
+| Variant | vDip `$id` | Why excluded |
+| --- | ---: | --- |
+| Classic1880 | 34 | Adds Morocco, Algeria, Persia, Siberia, Dagestan; drops North Africa and Tuscany |
+| Classic1913 | 106 | Adds Milan, Cologne, Egypt, Cyrenaica…; drops Venice, Ruhr, Tunis, Tuscany |
+| ClassicCataclysm | 84 | Every territory is `Land`; all six coast children removed |
+| ClassicCroatia | 119 | Adds Croatia and Sarajevo; drops Trieste and Tuscany |
+| ClassicEconomic | 53 | Adds 20-odd resource territories (Coal, Beer, Cotton…) |
+| ClassicEgypt | 120 | Adds Egypt, Libya, Suez, Red Sea and two new coasts |
+| ClassicFlorence | 121 | Replaces the Italian peninsula (Florence, Campania, Taranto, Venetia) |
+| ClassicLayered | 86 | Two stacked copies of the whole board (`Berlin 1`, `Berlin 2`, …) |
+| ClassicMilan | 10 | Adds Milan and Savoy; drops Piedmont, Venice, Tuscany |
+| ClassicPilot | 60 | Drops Heligoland Bight — 80 territories, not 81 |
+| ClassicSevenIslands | 18 | Adds seven islands (Sicily, Sardinia, Corsica, Crete, Cyprus, Ireland, Iceland) |
+| ClassicTouchy | 64 | Its own smaller board and coordinates |
+| GobbleEarth, USofA | 96, 56 | World maps that happen to reuse many Classic names |
+| Pure | 11 | Named in the brief, but it is **not** the Classic board: its own 82-line installer, no sea spaces, one territory per home centre |
+| SailHo2 | 16 | Named in the brief, but its own four-power map, not Classic |
+
+### Wave 1 — how each install was run
+
+Identical for every variant, following issue 008's proven order:
+
+1. Folder copied from `/tmp/vdip/variants/<Name>/`; `variants/<Name>/cache/` created `chmod 777`
+   (gitignored at `.gitignore:23`, so it never arrives with a download).
+2. `resources/darkMode/style.css` generated from the variant's own `resources/style.css` with the
+   colours lightened for a dark background — none of them ships one, and `lib/html.php:646-647`
+   links it **unconditionally** for every enabled variant when the viewer has dark mode on. The
+   light-mode selector prefixes were checked first and are correct in every case
+   (`.variantClassicGvR`, `.variantClassicFGA`, …), so the issue-007 `GoT2` wrong-selector bug
+   does not recur.
+3. ID added to `Config::$variants`.
+4. `POST admincp.php actionName=wipeVariants` **before** the first page load, then one
+   authenticated `GET /gamecreate.php` as `admin`, which auto-installs the map.
+5. `POST admincp.php actionName=updateVariantInfo variantID=<id>`.
+6. Acceptance game, then `POST admincp.php actionName=togglePause gameID=<id>`.
+
+**Maintenance mode was on throughout** (a DATC run owns it) and was **not touched**. Two
+consequences, both worked around rather than fixed: the gamemaster only processes for an admin's
+own request, so every phase was driven by `GET /gamemaster.php` as `admin`; and `playerN`
+accounts cannot log in at all while it is on, so every player action was issued from the admin
+session with `?auid=<userID>`, the admin user-switch at `header.php:244` /
+`libAuth::adminUserSwitch()`. That branch is taken **before** the maintenance check, which is why
+it works.
+
+### Wave 1 batch 1 — ClassicGvR, ClassicFGA, ClassicIER, ClassicBritain
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| ClassicGvR | 25 | 25 | 2 | 81 / 34 | 18 | **18** | **Pass** |
+| ClassicFGA | 48 | 48 | 3 | 81 / 34 | 18 | **19** | **Pass** |
+| ClassicIER | 49 | 49 | 3 | 81 / 34 | 18 | **20** | **Pass** |
+| ClassicBritain | 122 | 122 | 7 | 81 / **37** | 20 | **21** | **Pass** |
+
+**Security review — clean, all four.** Every `.php` file read in full (8 files: a `variant.php`,
+an `install.php` and `classes/{adjudicatorPreGame,drawMap}.php` each). Zero hits anywhere for
+`eval`, `assert`, `create_function`, `preg_replace`, `exec`, `shell_exec`, `system`, `passthru`,
+`proc_open`, `popen`, backticks, `base64_decode`, `gzinflate`, `str_rot13`, `unserialize`,
+`curl_*`, `fsockopen`, sockets, stream wrappers, any file read or write, remote includes,
+`wD_Users` / `wD_Sessions` / `wD_ApiKeys`, `$_SESSION`, `$_GET` / `$_POST` / `$_COOKIE` /
+`$_REQUEST` / `$_SERVER`, `Config::`, `$$`, `call_user_func`, or any obfuscated or
+dynamically-built executed string. The only `require_once` in any of them is
+`variants/install.php`, the in-tree base installer. All eight files carry the standard
+`defined('IN_CODE') or die(...)` guard.
+
+**Dependencies:** none. All four extend `WDVariant`, `adjudicatorPreGame` and `drawMap` directly,
+all of which exist in this tree with compatible signatures. **None may share `$mapID` 1**: each
+ships a full 570-odd-line installer with its own territory IDs and pixel coordinates (the same
+finding as issue 008's ClassicEvT / ClassicFGvsRT), so each keeps its own upstream `$mapID`.
+
+**IDs:** 25, 48, 49 and 122 were all free, so all four kept their upstream `$id` and `$mapID`.
+No 900-block renumbering; nothing displaced.
+
+**One compatibility fix, inside a variant folder:**
+
+- **`variants/ClassicIER/variant.php` — an apostrophe in `$description` broke the admin panel.**
+  The text read `Russia\'s four builds`, and `admincp`'s `updateVariantInfo` interpolates the
+  description straight into SQL without escaping it, so the action died with
+  *"You have an error in your SQL syntax … near 's four builds"* and the variant never got a
+  `wD_VariantInfo` row. Reworded to *"the four Russian builds"*, with a comment saying why.
+  The underlying escaping bug is in core `admin/`, not in the variant, and was deliberately
+  **not** patched here — **any future harvest whose description contains an apostrophe will hit
+  it.**
+
+**Acceptance, per variant:**
+
+- **ClassicGvR (25) — gameID 18.** `admin` = Germany, `player2` = Russia. Start matches
+  `classes/adjudicatorPreGame.php` exactly: Germany F Kiel, A Berlin, A Munich; Russia
+  F Sevastopol, A Warsaw, A Moscow, F St. Petersburg (South Coast). Spring 1901: Russia
+  `F St. Petersburg (SC) → Livonia` **supported** by `A Moscow` succeeded. Autumn 1901 and the
+  Winter builds processed (Germany built A Kiel, Russia A Sevastopol). Played on to **Spring
+  1902**, which produced the cross-power **bounce**: Germany `F Denmark → Baltic Sea` and Russia
+  `F Prussia → Baltic Sea` both failed, while both sides' supported moves succeeded. Ends 4 SCs /
+  4 units vs 5 / 5. `board.php?gameID=18` → 200 (legacy); `map.php?gameID=18&turn=1` → an 18 KB
+  PNG. The two powers are not adjacent in 1901, which is why the bounce had to wait for 1902.
+- **ClassicFGA (48) — gameID 19.** France / Austria / Germany, three units each, matching
+  `adjudicatorPreGame.php`. Spring 1901 contained **both** required cases in the same phase:
+  France `A Paris → Burgundy` and Germany `A Munich → Burgundy` **bounced**, and France
+  `F Brest → Gascony` **supported** by `A Marseilles`, Austria `A Vienna → Galicia` supported by
+  `A Budapest` and (in autumn) Germany `F Denmark → Kiel` supported by `A Berlin` all succeeded.
+  Autumn and builds processed; 4 / 4 / 3 centres at **Spring 1902**. 19 KB map PNG.
+- **ClassicIER (49) — gameID 20.** England / Italy / Russia, **four units each** — England's
+  extra is `A Holland` and Italy's is `F Trieste`, exactly as the description says. Spring 1901:
+  supported moves succeeded for all three (e.g. England `F London → Yorkshire` supported by
+  `A Liverpool`). **No bounce is reachable in 1901** — no two of England, Italy and Russia have a
+  unit adjacent to a common free territory — so the game was played to **Spring 1903**, where
+  England `A Sweden → Finland` and Russia `F St. Petersburg (SC) → Finland` **bounced**. Ends
+  6 / 4 / 5 centres. 19 KB map PNG.
+- **ClassicBritain (122) — gameID 21.** Seven accounts, `admin` = England. The variant's whole
+  point is visible at once: England starts **six armies** on Clyde, Edinburgh, Liverpool, London,
+  Wales and Yorkshire, and all six are supply centres — hence **37 SCs** on the board and a solo
+  target of 20 rather than 18, both confirmed in `wD_VariantInfo`. Spring 1901: France
+  `A Paris → Burgundy` vs Germany `A Munich → Burgundy` **bounced**; five supported moves
+  succeeded. Autumn and builds processed; England reaches 6 centres / 6 units at **Spring 1902**.
+  20 KB map PNG.
+
+All four: the New Game dropdown shows them, `variants.php` renders each with its full name and
+player count ("Classic - Britain (7 Players)"…), and `board.php?gameID=…` returns **200 without
+redirecting** — legacy board, as expected off the React whitelist.
+
+**PHP 8.4:** `php -l` clean on all eight files, and `docker compose logs php-fpm` shows no fatal,
+deprecation, warning or "undefined" attributable to any of them across install, four games and
+every phase. (The `sql_tabl() on null` fatals in the log are the known error-page artefact from
+repeated `POST /logon.php` during tooling setup — `RUNBOOK.md` §8 — not variant code.)
