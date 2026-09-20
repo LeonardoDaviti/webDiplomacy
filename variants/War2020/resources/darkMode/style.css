@@ -1,0 +1,24 @@
+@CHARSET "ISO-8859-1";
+
+.variantWar2020 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global */
+.variantWar2020 .country1 { color: rgb(228, 117, 203) ! important; }  /* Australia */
+.variantWar2020 .country2 { color: rgb(139, 177, 126) ! important; }  /* USA   */
+.variantWar2020 .country3 { color: rgb(107, 179, 203) ! important; }  /* OAS  */
+.variantWar2020 .country4 { color: rgb(189, 152, 126) ! important; }  /* EU */
+.variantWar2020 .country5 { color: rgb(121, 192, 98) ! important; }  /* South Africa   */
+.variantWar2020 .country6 { color: rgb(231, 130, 130) ! important; }  /* India  */
+.variantWar2020 .country7 { color: rgb(190, 140, 182) ! important; }  /* OPEC  */
+.variantWar2020 .country8 { color: rgb(206, 149, 96) ! important; }  /* China   */
+.variantWar2020 .country9 { color: rgb(186, 176, 9) ! important; }  /* Russia  */
+.variantWar2020 .country10 { color: rgb(161, 160, 160) ! important; } /* Japan */
+
+.variantWar2020 .occupationBar1 { background-color: #EFC4E4; }  /* Australia */
+.variantWar2020 .occupationBar2 { background-color: rgb(147, 171, 138); }  /* USA   */
+.variantWar2020 .occupationBar3 { background-color: #79AFC6; }  /* OAS  */
+.variantWar2020 .occupationBar4 { background-color: rgb(175, 156, 139); }  /* EU */
+.variantWar2020 .occupationBar5 { background-color: #A4C499; }  /* South Africa   */
+.variantWar2020 .occupationBar6 { background-color: rgb(197, 146, 136); }  /* India  */
+.variantWar2020 .occupationBar7 { background-color: rgb(182, 146, 174); }  /* OPEC  */
+.variantWar2020 .occupationBar8 { background-color: #ce9967; }  /* China   */
+.variantWar2020 .occupationBar9 { background-color: #EAEAAF; }  /* Russia  */
+.variantWar2020 .occupationBar10 { background-color: rgb(161, 160, 160); } /* Japan */

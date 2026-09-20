@@ -11,9 +11,15 @@ See `SPEC.md` → Implementation Decisions → *Variants* for the rules. In shor
   Derivative variants deliberately share a parent's map ID — four Classic derivatives below
   share map ID 1. That is correct; do not "fix" it.
 - Every ID below is **reserved permanently**, enabled or not.
-- **IDs 900 and above are reserved for renumbered ports.** When a harvested variant's upstream
-  ID collides with a row here, renumber the newcomer into the 900 block and record its original
-  ID in Notes. Never displace an incumbent.
+- **Renumbered ports take an ID from the 250-down band, not the 900 block.** When a harvested
+  variant's upstream ID collides with a row here, renumber the newcomer and record its original
+  ID in Notes. Never displace an incumbent. **Correction, issue 009 wave 3: the 900 block cannot
+  be used on this schema.** `wD_Games.variantID` and `wD_Territories.mapID` are both
+  `tinyint(3) unsigned`, so any ID above 255 is silently clamped to 255 — a variant registered as
+  900 installs its map as 255 and its games are created against variant 255. The first renumber
+  here (BalkanWarsVI) was allocated **254**, and later ones count downwards from there, skipping
+  anything an incumbent already holds. `wD_VariantInfo.mapID` is a `smallint`, which is why the
+  mismatch does not announce itself: the variant info row says 900 while the map says 255.
 - Author attribution is copied from the variant's own definition and must be preserved.
 
 ## Status vocabulary
@@ -61,10 +67,12 @@ config's variant array.
   008 starts from these rather than from nothing.
 - **The draft spec's harvest list was wrong.** Chaos, Build Anywhere, Cold War, France vs
   Austria and Germany vs Italy were all listed as things to fetch. They are all here.
-- **Taken after issues 007, 008 and 009:** variant and map IDs 1–5, 9, 12, 15, 17, 19, 20, 22,
-  23, 26, 45, 46, 62, 70, 91 (variant 3, 4 and 5 share map 1). Still free: 6, 7, 8, 10, 11, 13,
-  14, 16, 18, 21, 24, 25, 27–44, 47–61, 63–69, 71–90, 92–99 — but treat them as *upstream's to
-  allocate*, and prefer the 900 block for anything ported in here whose own ID collides.
+- **Taken after issues 007, 008 and 009 (waves 0, 1 and 3):** variant and map IDs 1–9, 11, 12,
+  14–17, 19, 20, 22, 23, 25, 26, 28, 30, 31, 38, 40, 42, 43, 45, 46, 48–50, 54, 55, 58, 61, 62,
+  70, 73, 79, 90, 91, 93, 118, 122, 123, 132, 133, 134, 149, 208, 254 (variants 3, 4, 5 and 50
+  share map 1; 30, 55, 134 and 208 are reserved-but-deferred). Everything else up to 255 is still
+  free — but treat those numbers as *upstream's to allocate*, and take a renumbered port from
+  254 downwards as described above.
 
 ## Ported and harvested variants
 
@@ -93,13 +101,31 @@ Rows are added by issues 007, 008 and 009 as work lands. Issues 007 (Westeros) a
 | ClassicVS | 42 | 42 | 2–7 | Sleepcap/vDiplomacy @ `72c81f0` (Oliver Auth, version 1, code 1.1.1) | playable | Issue 009 wave 1. "Classic - Pick your countries" — the **powers are chosen from the game's name**: a name containing `(EFG)` makes it a three-player England/France/Germany game, `?` adds a random power, and a name with no parenthesised code falls back to all seven. Implemented with a `__call()` override on the variant that rewrites `$countries` before `Members`, `processMembers`, `panelMembers` and `panelMembersHome` are built. Map 42 has **82 territories** — Classic's 81 plus a dummy `PreGameCheck` — and 34 SCs, target 18. Own installer and `$mapID`. gameIDs 29 (all seven) and 30 (three, from the name `ClassicVS pick (EFG) 009`). Legacy board only. |
 | ClassicChaoctopi | 54 | 54 | 34 | Sleepcap/vDiplomacy @ `72c81f0` (kaner406; adapter Emmanuele Ravaioli / Carey Jensen / Oliver Auth, version 1.0.1, code 1.0.2) | playable (render-only) | Issue 009 wave 1. "Classic - Chaoctopi" — **Chaos** (one power per supply centre, 34 of them) crossed with **Octopus** (double movement: 1,205 borders against Classic's 431). Like Classic1897 it disables `assignUnits()` and opens in a turn-0 Builds phase. 81 territories / 34 SCs, each owned by its own power, target 18. Own installer and `$mapID`. **Acceptance is render-only** — 34 players against this install's ten accounts. Legacy board only. |
 
+| Pure | 11 | 11 | 7 | Sleepcap/vDiplomacy @ `72c81f0` (Danny Loeb, version 1.7.4) | playable | Issue 009 wave 3. "Pure" — the smallest board in the tree: **7 territories, 7 supply centres**, one per power, all land, no sea and no neutrals. Solo target 4. Named in the original draft as a Classic variant and excluded from wave 1 because it is not the Classic board; it is its own 49-line installer. gameID 35 — two Diplomacy phases; **a Builds phase is unreachable in year one by construction**, as with ClassicNoNeutrals, because every centre is someone's home centre. Legacy board only. |
+| SouthAmerica5 | 6 | 6 | 5 | Sleepcap/vDiplomacy @ `72c81f0` (Joe Janbu, version 5.1, code 1.6.3) | playable | Issue 009 wave 3. "South America (5 players)" — 56 territories / 24 SCs, solo target 13. gameID 43. Legacy board only. |
+| SouthAmerica4 | 7 | 7 | 4 | Sleepcap/vDiplomacy @ `72c81f0` (Joe Janbu, version 1.6.3) | playable | Issue 009 wave 3. "South America (4 players)" — the smaller cut of the same map: 48 territories / 24 SCs, solo target 13. **The tree's first four-player variant.** gameID 41. Legacy board only. |
+| Hundred | 8 | 8 | 3 | Sleepcap/vDiplomacy @ `72c81f0` (Andy Schwarz, version 1, code 1.8) | playable | Issue 009 wave 3. "Hundred" — the Hundred Years' War, three powers, 45 territories / 17 SCs, solo target 9. gameID 40. Legacy board only. |
+| SailHo2 | 16 | 16 | 4 | Sleepcap/vDiplomacy @ `72c81f0` (Michael "Tarzan" Golbe, version 1.3) | playable | Issue 009 wave 3. "Sail Ho II" — a four-power mythological-Greece map, 64 territories / 16 SCs, solo target 9. Named in the draft as a Classic variant and excluded from wave 1 because it is its own board. gameID 47. Legacy board only. |
+| Alacavre | 31 | 31 | 7 | Sleepcap/vDiplomacy @ `72c81f0` (Figlesquidge, assisted by Ghostmaker; code 1.0.1) | playable | Issue 009 wave 3. "Alacavre" — an invented seven-power world, **81 territories / 34 SCs like Classic but an entirely different map** (Oz, Quiom, Payashk…), solo target 18. Its `install.php` uses an eight-column row format whose last column is the owning country's *name*, not an ID. gameID 50. Legacy board only. |
+| WhoControlsAmerica | 43 | 43 | 8 | Sleepcap/vDiplomacy @ `72c81f0` (Gavin Atkinson, version 1.0.2) | playable | Issue 009 wave 3. "Who controls America" — eight powers on North America, 50 territories / 26 SCs, solo target 14. gameID 42. Legacy board only. |
+| TreatyOfVerdun | 58 | 58 | 3 | Sleepcap/vDiplomacy @ `72c81f0` (Milan Mach, version 1.0, code 1.0) | playable | Issue 009 wave 3. "843: Treaty of Verdun" — the three Carolingian kingdoms, 38 territories / 15 SCs, solo target 8. gameID 37, which also exercised **declining a build**: country 1 had a build due with every home centre occupied and submitted `Wait`. Legacy board only. |
+| War2020 | 61 | 61 | 10 | Sleepcap/vDiplomacy @ `72c81f0` (Jason B., version 1, code 1.1) | playable | Issue 009 wave 3. "War in 2020" — **ten powers on 43 territories / 17 SCs**, the densest map here, solo target 9. A **custom-start variant**: the game opens at turn 0 in a Builds phase with no units, like CustomStart and Classic1897. Uses all ten accounts. gameID 39. Legacy board only. |
+| NorthSeaWars | 73 | 73 | 4 | Sleepcap/vDiplomacy @ `72c81f0` (sqrg, version 1, code 1.0.1) | playable | Issue 009 wave 3. "NorthSea Wars" — Britons, Romans, Frisians and Norse, 34 territories / 15 SCs, solo target 8; three of the supply centres are trade goods (`wood`, `iron`, `grains`). gameID 36. Legacy board only. |
+| AnarchyInTheUK | 79 | 79 | 6 | Sleepcap/vDiplomacy @ `72c81f0` (amisond and Evansevern, code 1.1.2) | playable | Issue 009 wave 3. "Anarchy in the UK" — six powers on the British Isles, 78 territories / 34 SCs, solo target 18. gameID 51. Legacy board only. |
+| Chromatic | 93 | 93 | 5 | Sleepcap/vDiplomacy @ `72c81f0` (Jimmy Millington, Robs Schone and Lynsey Smith; version 1, code 1.1) | playable | Issue 009 wave 3. "Chromatic" — an abstract five-power map of gemstone territories, 56 territories / 21 SCs, solo target 11. gameID 44, played to **Winter 1903** because its neutrals are far from the starting positions and year one produced no ownership change; the builds phase there placed `A Sapphire`, `A Royal` and `A Topaz` and destroyed `A Alabaster`. Legacy board only. |
+| Caucasia | 118 | 118 | 5 | Sleepcap/vDiplomacy @ `72c81f0` (Christian Dreyer, version 1, code 1.0) | playable | Issue 009 wave 3. "Caucasia" — 37 territories / 23 SCs, solo target 12. The only wave-3 package with **four PHP files and nothing under `resources/` but images and CSS**. gameID 38. Legacy board only. |
+| Chesspolitik | 132 | 132 | 4 | Sleepcap/vDiplomacy @ `72c81f0` (Alex Ronke, version 1.0, code 0.9) | playable | Issue 009 wave 3. "Chesspolitik" — a chessboard: 64 territories, **32 of them supply centres**, 756 borders, four powers, solo target 17. gameID 49. Its `classes/OrderArchiv.php` extends the absent `OrderArchiv` base class — the same inert dangling reference the in-tree Zeus5 and Duo carry, left alone for the same reason. Legacy board only. |
+| SouthSahara | 149 | 149 | 5 | Sleepcap/vDiplomacy @ `72c81f0` (David E. Cohen, version 1.0, code 1.0) | playable | Issue 009 wave 3. "South of Sahara" — 60 territories / 25 SCs, solo target 13. **The only wave-3 variant with a package dependency**: its variant class and two of its classes extend `RuleExtensionsVariant*`, so `variants/RuleExtensions/` had to be placed as well. gameID 48. Legacy board only. |
+| BalkanWarsVI | **254** | **254** | 6 | Sleepcap/vDiplomacy @ `72c81f0` (Brad Wilson, after Fred Davis and others; version 6, code 1.1) | playable | Issue 009 wave 3. "Balkan Wars VI" — 52 territories / 26 SCs, solo target 14. **Renumbered**: its upstream `$id`/`$mapID` are both **46**, which GoT2 holds. Renumbered to **254, not into the 900 block** — see the note below; `$id` and `$mapID` were edited in its own `variant.php` and nowhere else. gameID 46. Legacy board only. |
+| RuleExtensions | — | — | — | Sleepcap/vDiplomacy @ `72c81f0` | present (dependency) | Issue 009 wave 3. **Not a playable variant and never registered in `Config::$variants`**: it is vDiplomacy's shared rule-extension base package (custom maps, custom icons, build-anywhere, transform orders), with a `variant.php` but **no `install.php` and no `$id`**. `SouthSahara` extends `RuleExtensionsVariant`, so the folder has to be on disk for the autoloader to find it. Nothing else in the tree references it. |
+
 **Config line** (`config.php` is gitignored, so this is the only versioned record):
 
 ```php
-public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',9=>'AncMed',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',45=>'GoT',46=>'GoT2',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',62=>'ClassicEvT',70=>'Zeus5',90=>'ClassicAnkaraCrescent',91=>'ColdWar',122=>'ClassicBritain',123=>'ClassicBrazilian',133=>'Classic1898');
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',79=>'AnarchyInTheUK',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',132=>'Chesspolitik',133=>'Classic1898',149=>'SouthSahara',254=>'BalkanWarsVI');
 ```
 
-Thirty-three variants, every key unique:
+**49 variants**, every key unique:
 
 ```sh
 sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d    # prints nothing
@@ -169,6 +195,11 @@ later attempt starts from the failure rather than repeating it.
 | ClassicFog | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **30** | 2026-09-20, issue 009 wave 1 | **`Undefined constant "STATICSRV"`** — `variants/ClassicFog/classes/OrderInterface.php:22` uses a vDiplomacy-only constant that does not exist in webDiplomacy. Every board load by a member of a fog game dies with it, so the game is unplayable. | It installed cleanly (91 territories — Classic's 81 plus ten fog pseudo-territories — and 34 SCs) and appeared in the dropdown; the failure is at the board. Two further blockers behind it: `classes/Maps.php` extends **`Maps`**, a vDiplomacy-only base class absent here, and `classes/OrderArchiv.php` extends **`OrderArchiv`**, also absent — and in vDip that class is what hides other players' orders, so even with `STATICSRV` defined the fog would be incomplete. **The folder was removed rather than left in place** (a deliberate departure from the usual "leave the folder"): it ships `resources/{fogmap,orders,jsonBoardData}.php`, front controllers that `require_once('header.php')`, and they were confirmed **web-reachable and executing** at `/variants/ClassicFog/resources/fogmap.php` while the folder was present. Orphan rows for map 30 were deleted from `wD_Territories`/`wD_Borders`/`wD_CoastalBorders`. **ID 30 stays reserved.** |
 | Classic1898Fog | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **134** | 2026-09-20, issue 009 wave 1 | Same as ClassicFog, **not installed at all**: its `classes/OrderInterface.php:22` is the same line with the same `STATICSRV`, and it ships the same `Maps`/`OrderArchiv` subclasses and the same `resources/fogmap.php` front controller. | Classic 1898's one-unit start combined with fog. Revisit only together with ClassicFog — one fix (define `STATICSRV`, port `Maps` and `OrderArchiv`) unblocks both. **ID 134 stays reserved.** |
 
-Both deferrals are the same root cause: **vDiplomacy's fog-of-war subsystem depends on core
-classes and constants that webDiplomacy does not have.** Everything else attempted in issues 008
-and 009 came in under the twenty-minute budget.
+| TenSixtySix | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **55** | 2026-09-20, issue 009 wave 3 | **The fog-of-war family again.** `classes/OrderInterface.php:22` uses `STATICSRV`, `classes/Maps.php` extends the absent `Maps` and `classes/OrderArchiv.php` extends the absent `OrderArchiv` — the identical trio that deferred ClassicFog. | "1066", three powers, 69 territories / 18 SCs. It was placed and its map installed before the security read finished, then **backed out completely**: removed from `Config::$variants`, its `wD_Territories`/`wD_Borders`/`wD_CoastalBorders` rows for map 55 deleted, its `wD_VariantInfo` row deleted and **the folder removed** — it ships `resources/{fogmap,fogmap_old,jsonBoardData}.php`, front controllers of the same kind that got `variants/ClassicFog/` deleted in wave 1. **ID 55 stays reserved.** |
+| PunicWars | Sleepcap/vDiplomacy @ `72c81f0`, `$id`/`$mapID` **208** | 2026-09-20, issue 009 wave 3 | Same fog trio: `STATICSRV`, `extends Maps`, `extends OrderArchiv`, plus `resources/{orders,fogmap,jsonBoardData}.php`. **Not installed at all** — the security read runs before the folder is placed now, so nothing was copied and nothing has to be backed out. | Four powers, 60 territories / 17 SCs. Revisit with ClassicFog, Classic1898Fog and TenSixtySix; one fix unblocks all four. **ID 208 stays reserved.** |
+
+All four deferrals are the same root cause: **vDiplomacy's fog-of-war subsystem depends on core
+classes and constants that webDiplomacy does not have** — `STATICSRV`, `Maps` and `OrderArchiv`.
+Grepping a candidate for `STATICSRV` before anything else is the cheapest possible triage, and is
+now the first thing the wave-3 procedure does. Everything else attempted in issues 008 and 009
+came in under the twenty-minute budget.

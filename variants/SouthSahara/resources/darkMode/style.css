@@ -1,0 +1,14 @@
+@CHARSET "ISO-8859-1";
+
+.variantSouthSahara .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantSouthSahara .country1 { color: rgb(254, 121, 115) ! important; } /* Benin */
+.variantSouthSahara .country2 { color: rgb(107, 179, 203) ! important; } /* Bonoman */
+.variantSouthSahara .country3 { color: rgb(121, 192, 98) ! important; } /* Bornu */
+.variantSouthSahara .country4 { color: rgb(181, 145, 181) ! important; } /* Jolof */
+.variantSouthSahara .country5 { color: rgb(180, 171, 53) ! important; } /* Mali */
+
+.variantSouthSahara .occupationBar1 { background-color: rgb(253, 121, 117); } /* Benin */
+.variantSouthSahara .occupationBar2 { background-color: #79AFC6; } /* Bonoman */
+.variantSouthSahara .occupationBar3 { background-color: #A4C499; } /* Bornu */
+.variantSouthSahara .occupationBar4 { background-color: rgb(192, 138, 191); } /* Jolof */
+.variantSouthSahara .occupationBar5 { background-color: #EAEAAF; } /* Mali */

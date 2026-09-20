@@ -1,0 +1,16 @@
+@CHARSET "ISO-8859-1";
+	
+.variantAnarchyInTheUK .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global      */
+.variantAnarchyInTheUK .country1 { color: rgb(255, 100, 220) ! important; } /* Merseyside  */
+.variantAnarchyInTheUK .country2 { color: rgb(94, 175, 255) ! important; } /* Up North    */
+.variantAnarchyInTheUK .country3 { color: rgb(255, 119, 119) ! important; } /* London      */
+.variantAnarchyInTheUK .country4 { color: rgb(186, 176, 9) ! important; } /* Bristol     */
+.variantAnarchyInTheUK .country5 { color: rgb(84, 213, 84) ! important; } /* Wales       */
+.variantAnarchyInTheUK .country6 { color: rgb(170, 142, 227) ! important; } /* East-Anglia */
+
+.variantAnarchyInTheUK .occupationBar1 { background-color: rgb(255, 100, 220); } /* Merseyside  */
+.variantAnarchyInTheUK .occupationBar2 { background-color: rgb(94, 175, 255); } /* Up North    */
+.variantAnarchyInTheUK .occupationBar3 { background-color: rgb(255, 119, 119); } /* London      */
+.variantAnarchyInTheUK .occupationBar4 { background-color: rgb(186, 176, 9); } /* Bristol     */
+.variantAnarchyInTheUK .occupationBar5 { background-color: rgb(84, 213, 84); } /* Wales       */
+.variantAnarchyInTheUK .occupationBar6 { background-color: rgb(159, 148, 223); } /* East-Anglia */

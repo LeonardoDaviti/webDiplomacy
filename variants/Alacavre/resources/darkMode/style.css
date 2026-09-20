@@ -1,0 +1,58 @@
+@CHARSET "ISO-8859-1";
+
+/*
+All variant HTML will be stored within an element with a classname variant[variantName]. Using this all variant CSS 
+can be loaded at the same time, and will apply itself appropriately. 
+
+This is convenient and efficient, but does make it one of the only things that can't be inherited. Each variant 
+needs to define these CSS values even if they're the same as another variant using the same map.
+
+Occupation bars and country text colors need to be defined here.
+*/
+
+.variantAlacavre .country0 {
+	color: rgb(217, 151, 58) ! important;
+}
+.variantAlacavre .country1 {
+	color: rgb(121, 192, 98) ! important;
+}
+.variantAlacavre .country2 {
+	color: rgb(107, 179, 203) ! important;
+}
+.variantAlacavre .country3 {
+	color: rgb(228, 117, 203) ! important;
+}
+.variantAlacavre .country4 {
+	color: rgb(189, 152, 126) ! important;
+}
+.variantAlacavre .country5 {
+	color: rgb(231, 130, 130) ! important;
+}
+.variantAlacavre .country6 {
+	color: rgb(186, 176, 9) ! important;
+}
+.variantAlacavre .country7 {
+	color: rgb(190, 140, 182) ! important;
+}
+
+.variantAlacavre .occupationBar1 {
+	background-color: #EFC4E4;
+}
+.variantAlacavre .occupationBar2 {
+	background-color: #79AFC6;
+}
+.variantAlacavre .occupationBar3 {
+	background-color: #A4C499;
+}
+.variantAlacavre .occupationBar4 {
+	background-color: rgb(175, 156, 139);
+}
+.variantAlacavre .occupationBar5 {
+	background-color: rgb(197, 146, 136);
+}
+.variantAlacavre .occupationBar6 {
+	background-color: #EAEAAF;
+}
+.variantAlacavre .occupationBar7 {
+	background-color: rgb(182, 146, 174);
+}

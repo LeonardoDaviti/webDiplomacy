@@ -1,0 +1,12 @@
+@CHARSET "ISO-8859-1";
+
+.variantChesspolitik .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantChesspolitik .country1 { color: rgb(135, 163, 211) ! important; } /* Russians */
+.variantChesspolitik .country2 { color: rgb(242, 124, 132) ! important; } /* Ottomans */
+.variantChesspolitik .country3 { color: rgb(142, 170, 154) ! important; } /* Mughals */
+.variantChesspolitik .country4 { color: rgb(198, 151, 105) ! important; } /* Chinese */
+
+.variantChesspolitik .occupationBar1 { background-color: #79AFC6; } /* Russians */
+.variantChesspolitik .occupationBar2 { background-color: rgb(208, 138, 147); } /* Ottomans */
+.variantChesspolitik .occupationBar3 { background-color: #B1B063; } /* Mughals */
+.variantChesspolitik .occupationBar4 { background-color: #F5D376; } /* Chinese */

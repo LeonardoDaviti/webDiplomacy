@@ -1,0 +1,11 @@
+@CHARSET "ISO-8859-1";
+
+.variantHundred .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global   */
+.variantHundred .country1 { color: rgb(189, 152, 126) ! important; } /* Burgundy */
+.variantHundred .country2 { color: rgb(228, 117, 203) ! important; } /* England  */
+.variantHundred .country3 { color: rgb(107, 179, 203) ! important; } /* France   */
+
+.variantHundred .occupationBar1 { background-color: rgb(175, 156, 139); } /* Burgundy */
+.variantHundred .occupationBar2 { background-color: #EFC4E4; } /* England  */
+.variantHundred .occupationBar3 { background-color: #79AFC6; } /* France   */
+

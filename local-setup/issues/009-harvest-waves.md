@@ -723,3 +723,261 @@ nothing.
 - **Every wave-1 variant is legacy-board only**, as the issue predicts: `Game::isClassicGame()`
   whitelists by *name*, so even the fourteen that play on Classic's own geometry render on
   `board.php`. All of them return 200 there without redirecting.
+
+---
+
+## Wave 3 (top non-Classic maps) — candidate set
+
+Scope, as briefed: vDiplomacy's **standalone maps with ten players or fewer** that are not
+already in `variant-registry.md`, not Classic-board rule variants (wave 1) and not in the wave
+4/5 lists.
+
+Source, as for waves 1 and 2: `Sleepcap/vDiplomacy` @
+`72c81f0dd73bedccc11f13a750dfcc62f580549a`, cloned to `/tmp/vdip`.
+
+### The four headline maps named in the brief
+
+| Named | Outcome |
+| --- | --- |
+| **Ancient Mediterranean** | Already ours — `AncMed` 9, enabled since before issue 009. **Skipped.** |
+| **Modern Diplomacy II** | Already ours — `Modern2` 19. vDip's `Modern2` was diffed against ours: **same `$id` 19, same `$mapID` 19, and an exact 143-for-143 territory-name match**, so it is the same map. **Skipped.** Only `variant.php`, `install.php`, `classes/OrderInterface.php` and `resources/supplycenterscorrect.js` differ at all, and vDip additionally ships an `interactiveMap/` directory that this codebase has no subsystem for. |
+| **World War II** | `WWII` 87, 5 players, 186 territories / 74 SCs — in the candidate list below. |
+| **South America** | vDip has **three** South America maps, not one: `SouthAmerica4` (7, 4 players), `SouthAmerica5` (6, 5 players) and `SouthAmerica8` (24, 8 players). All three are candidates. |
+| **Greek Diplomacy** | `GreekDip` 35, 6 players, 110 territories / 34 SCs — in the candidate list below. |
+
+### How the set was determined
+
+Every `/tmp/vdip/variants/*/variant.php` was read for `$id`, `$mapID` and `$countries`, and every
+`install.php` for its `$territoryRawData` row count and supply-centre count. A variant is a
+wave-3 candidate when all of these hold:
+
+- it has its own full `install.php` (not a stub `require_once` of another variant's);
+- `count($countries) <= 10`, so an acceptance game is servable from this install's ten accounts;
+- its name does not begin with `Classic` — the whole `Classic*` family, including wave 1's
+  sixteen and the twelve near-misses wave 1 explicitly excluded (Classic1880, Classic1913,
+  ClassicCataclysm, ClassicCroatia, ClassicEconomic, ClassicEgypt, ClassicFlorence,
+  ClassicLayered, ClassicMilan, ClassicPilot, ClassicSevenIslands, ClassicTouchy), is out of
+  scope here;
+- it is not already in `variant-registry.md` (AncMed, ColdWar, Colonial, Duo, Empire4, Modern2,
+  World, Zeus5 and the three Classic-map derivatives);
+- it is not in the wave 4/5 lists: Machiavelli and MachiavelliTTR, KnownWorld_901, Colonial1885,
+  YoungstownRedux and YoungstownWWII, Sengoku5 and Sengoku6, Africa, and everything with more
+  than ten players (GobbleEarth, EastIndies, World10, Haven, A_Modern_Europe, the WWIV family,
+  Divided_States, Pirates, Imperial2, FantasyWorld, Rinascimento, WorldAtWar1937, Crusades1201,
+  MongolianEmpire).
+
+`TenSixtySix_V2` (85) and `TenSixtySix_V3` (94) fall out of the list because neither declares a
+`$countries` array in its own `variant.php` at all; they are left for a later wave.
+
+**67 candidates**, ordered as they were worked — smallest territory count first:
+
+| # | Variant | vDip `$id` | vDip `$mapID` | Players | Territories / SCs | Full name |
+| ---: | --- | ---: | ---: | ---: | ---: | --- |
+| 1 | Pure | 11 | 11 | 7 | 7 / 7 | Pure |
+| 2 | NorthSeaWars | 73 | 73 | 4 | 34 / 15 | NorthSea Wars |
+| 3 | Caucasia | 118 | 118 | 5 | 37 / 23 | Caucasia |
+| 4 | TreatyOfVerdun | 58 | 58 | 3 | 38 / 15 | 843: Treaty of Verdun |
+| 5 | War2020 | 61 | 61 | 10 | 43 / 17 | War in 2020 |
+| 6 | Hundred | 8 | 8 | 3 | 45 / 17 | Hundred |
+| 7 | SouthAmerica4 | 7 | 7 | 4 | 48 / 24 | South America (4 players) |
+| 8 | WhoControlsAmerica | 43 | 43 | 8 | 50 / 26 | Who controls America |
+| 9 | BalkanWarsVI **(collision)** | 46 | 46 | 6 | 52 / 26 | Balkan Wars VI |
+| 10 | Chromatic | 93 | 93 | 5 | 56 / 21 | Chromatic |
+| 11 | SouthAmerica5 | 6 | 6 | 5 | 56 / 24 | South America (5 players) |
+| 12 | SouthSahara | 149 | 149 | 5 | 60 / 25 | South of Sahara |
+| 13 | Chesspolitik | 132 | 132 | 4 | 64 / 32 | Chesspolitik |
+| 14 | PunicWars | 208 | 208 | 4 | 64 / 17 | Punic Wars |
+| 15 | SailHo2 | 16 | 16 | 4 | 64 / 16 | Sail Ho II |
+| 16 | TenSixtySix | 55 | 55 | 3 | 69 / 18 | 1066 |
+| 17 | Baron1900 | 1900 | 1900 | 7 | 72 / 16 | 1900 |
+| 18 | WesternEurope1300 | 145 | 145 | 5 | 73 / 36 | Western Europe 1300 |
+| 19 | AnarchyInTheUK | 79 | 79 | 6 | 78 / 34 | Anarchy in the UK |
+| 20 | Alacavre | 31 | 31 | 7 | 81 / 34 | Alacavre |
+| 21 | Renaissance1453 | 107 | 107 | 7 | 82 / 35 | Renaissance - 1453 |
+| 22 | Balkans1860 | 103 | 103 | 7 | 84 / 37 | Balkans 1860 |
+| 23 | Maharajah | 74 | 74 | 7 | 84 / 37 | Maharajah |
+| 24 | Scottish_Clan_Wars | 141 | 141 | 7 | 86 / 33 | Scottish Clan Wars |
+| 25 | CelticBritain | 75 | 75 | 8 | 88 / 43 | Celtic Britain |
+| 26 | ManifestDestiny | 112 | 112 | 5 | 88 / 39 | Manifest Destiny |
+| 27 | Canton | 108 | 108 | 7 | 89 / 36 | Canton Diplomacy |
+| 28 | Hussite | 47 | 47 | 9 | 90 / 47 | Hussite Wars |
+| 29 | SpiceIslands | 116 | 116 | 7 | 90 / 35 | Spice Islands |
+| 30 | AgeOfPericles | 78 | 78 | 7 | 91 / 39 | Age of Pericles |
+| 31 | Imperium | 13 | 13 | 6 | 91 / 28 | Imperium Diplomacy |
+| 32 | Karibik **(collision)** | 45 | 45 | 8 | 93 / 38 | Karibik |
+| 33 | USofA | 56 | 56 | 8 | 93 / 38 | USA |
+| 34 | Fubar | 39 | 39 | 6 | 95 / 34 | Fubar |
+| 35 | Migraine | 21 | 21 | 8 | 95 / 38 | Migraine |
+| 36 | SouthAmerica8 | 24 | 24 | 8 | 96 / 40 | South American Supremacy |
+| 37 | HeptarchyIV | 89 | 89 | 7 | 98 / 38 | HeptarchyIV |
+| 38 | Lepanto | 41 | 41 | 2 | 98 / 38 | Lepanto |
+| 39 | DarkAges | 82 | 82 | 7 | 100 / 37 | Dark Ages |
+| 40 | ColdWarRedux | 128 | 128 | 4 | 103 / 28 | Cold War Redux |
+| 41 | DutchRevolt **(no `$id`)** | None | None | 5 | 103 / 40 | The Dutch Revolt |
+| 42 | EmpiresCoalitions | 113 | 113 | 9 | 104 / 44 | 1800 - Empires and Coalitions |
+| 43 | SpeedEuropa | 253 | 253 | 7 | 104 / 35 | Speed Europa |
+| 44 | Germany1648 | 36 | 36 | 7 | 106 / 53 | Germany 1648 |
+| 45 | AustrianSuccession | 117 | 117 | 9 | 108 / 51 | War of Austrian Succession |
+| 46 | GreekDip | 35 | 35 | 6 | 110 / 34 | Greek Diplomacy |
+| 47 | GreatLakes | 77 | 77 | 9 | 116 / 52 | Indians of the Great Lakes |
+| 48 | MateAgainstMate | 37 | 37 | 8 | 116 / 47 | Mate Against Mate |
+| 49 | Napoleonic | 101 | 101 | 10 | 116 / 35 | Napoleonic |
+| 50 | Edwardian3 | 130 | 130 | 7 | 117 / 51 | Edwardian - 3rd Edition |
+| 51 | Edwardian | 110 | 110 | 7 | 118 / 50 | Edwardian |
+| 52 | Enlightenment | 76 | 76 | 10 | 120 / 57 | Enlightenment & Succession |
+| 53 | AtlanticColonies | 99 | 99 | 4 | 121 / 49 | Atlantic Colonies |
+| 54 | Habelya | 68 | 68 | 8 | 121 / 43 | Habelya |
+| 55 | Abstraction3 | 67 | 67 | 7 | 122 / 48 | Abstraction III |
+| 56 | TiglathPileser | 137 | 137 | 8 | 127 / 52 | Tiglath-Pileser |
+| 57 | Europe1600 | 97 | 97 | 9 | 129 / 53 | 1600 |
+| 58 | Mars | 80 | 80 | 6 | 130 / 40 | Mars |
+| 59 | FirstCrusade | 98 | 98 | 7 | 134 / 52 | First Crusade |
+| 60 | Europe1939 | 72 | 72 | 8 | 150 / 55 | Europe 1939 |
+| 61 | AberrationV | 88 | 88 | 9 | 152 / 53 | Aberration V |
+| 62 | WesternWorld_901 | 127 | 127 | 9 | 167 / 64 | Western World 901 |
+| 63 | AmericanConflict | 69 | 69 | 6 | 173 / 56 | American Conflict |
+| 64 | Empire1on1 | 33 | 33 | 2 | 180 / 59 | Fall of the American Empire: Civil War! |
+| 65 | Viking | 63 | 63 | 8 | 184 / 85 | Viking Diplomacy IV |
+| 66 | WWII | 87 | 87 | 5 | 186 / 74 | World War II |
+| 67 | RatWars | 65 | 65 | 4 | 191 / 31 | Rat Wars |
+
+Three of them cannot keep their upstream numbers: **BalkanWarsVI** wants 46 (GoT2 holds it),
+**Karibik** wants 45 (GoT holds it), and **DutchRevolt** declares no `$id` at all.
+
+### The 900 block does not work on this schema
+
+Wave 3's first renumber, BalkanWarsVI 46 → **946**, installed a map with **zero territories** and
+then created a game whose `variantID` came back as **255**. Both columns are
+`tinyint(3) unsigned`:
+
+```
+wD_Games.variantID       tinyint(3) unsigned
+wD_Territories.mapID     tinyint(3) unsigned
+wD_VariantInfo.mapID     smallint(4) unsigned     <- which is why it looked fine in one place
+```
+
+MySQL clamps 946 to 255 on the way in, silently, so the variant info row says 946, the map rows
+say 255 and nothing matches. `variant-registry.md`'s 900-block rule has been **corrected**:
+renumbered ports take an ID from **254 downwards**. BalkanWarsVI is 254. The same limit rules out
+three upstream IDs outright — `Baron1900` (1900), `SpeedEuropa` (253, which is fine) and
+`PunicWars` (208, also fine); only Baron1900 needs renumbering for this reason.
+
+### Wave 3 — how each install was run
+
+Per variant, inside the twenty-minute budget:
+
+1. **Security read first, before the folder is copied.** Every `.php` in the package is scanned
+   for the usual negative list (`eval`, `exec`/`system`/`shell_exec`/`passthru`, backticks,
+   `base64_decode`, remote includes, file writes, `wD_Users`/`wD_Sessions`, `$_GET`/`$_POST`/
+   `$_REQUEST`/`$_SESSION`, `call_user_func`, `$$`) **plus the three wave-1 tells**: `STATICSRV`,
+   `extends Maps` and `extends OrderArchiv`. Anything that hits is not copied at all.
+   `extends OrderArchiv` **on its own** is not a blocker — it is the same inert dangling
+   reference the in-tree, upstream Zeus5 and Duo already carry.
+2. **Dependency check**: grep the package for `extends <Something>Variant` naming a variant that
+   is not in the tree. This is what caught `SouthSahara` → `RuleExtensions`.
+3. Folder copied; `cache/` created `chmod 777`; `resources/darkMode/style.css` generated from the
+   variant's own `resources/style.css` (**none of the 67 ships one**, and `lib/html.php:646-647`
+   links it unconditionally for every enabled variant in dark mode) by mixing each colour towards
+   white until its luminance reaches 160, and rewriting `.country0` to
+   `rgba(255, 255, 255, 0.8)`.
+4. ID added to `Config::$variants`.
+5. `POST admincp.php actionName=wipeVariants`, then
+   `POST admincp.php actionName=updateVariantInfo variantID=<id>` **on a cold cache** — see the
+   gotcha below — then the same action once more after the rows are committed.
+6. `wD_Territories` row and supply-centre counts compared against the variant's own
+   `install.php`; dropdown, `variants.php` and `map.php?variantID=<id>` checked.
+7. Acceptance game with exactly the variant's player count (`admin` plus `player2..playerN`),
+   driven through **Spring → Autumn → Builds** and left **paused**.
+
+Maintenance mode was **off** for all of wave 3, so every player acted from their own logged-in
+session rather than through wave 1's `?auid=N` admin switch.
+
+### The gotcha that cost wave 3 the most time
+
+**A variant can end up registered, cached, in the dropdown and drawing a map while
+`wD_Territories` holds not one row for it.** `Alacavre`, `AnarchyInTheUK` and `Chesspolitik` all
+did. The mechanism:
+
+- the map rows are written by `WDVariant::initialize()`, which only runs when
+  `variants/<X>/cache/data.php` is **absent** (`lib/variant.php:150`);
+- the only `COMMIT` in a web request is in `close()` (`header.php:304`), reached from
+  `libHTML::footer()`. A request that builds the variant object but exits another way —
+  `map.php`, which writes a PNG and dies — writes `data.php` and commits **nothing**;
+- `admincp actionName=wipeVariants` deletes *every* variant's `data.php` at once, and the SSE
+  server's gamemaster driver is hitting the site once a second, so the window for some other
+  request to rebuild `data.php` without committing is wide open.
+
+Once `data.php` exists the install never runs again, and the variant is permanently half-installed.
+The fix in the procedure: drive the install with `updateVariantInfo` (a normal page that reaches
+the footer) on a **cold** `data.php`, then **verify the row count against `install.php` instead of
+assuming it**, and delete `data.php` and retry if it is zero. `wD_VariantInfo` also has to be
+written *after* the rows exist, because it is built from the variant object — Chesspolitik's info
+row was empty until a second `updateVariantInfo` pass.
+
+### Wave 3 batch 1 — sixteen maps
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Pure | 11 | 11 | 7 | 7 / 7 | 4 | **35** | **Pass** |
+| SouthAmerica5 | 6 | 6 | 5 | 56 / 24 | 13 | **43** | **Pass** |
+| SouthAmerica4 | 7 | 7 | 4 | 48 / 24 | 13 | **41** | **Pass** |
+| Hundred | 8 | 8 | 3 | 45 / 17 | 9 | **40** | **Pass** |
+| SailHo2 | 16 | 16 | 4 | 64 / 16 | 9 | **47** | **Pass** |
+| Alacavre | 31 | 31 | 7 | 81 / 34 | 18 | **50** | **Pass** |
+| WhoControlsAmerica | 43 | 43 | 8 | 50 / 26 | 14 | **42** | **Pass** |
+| TreatyOfVerdun | 58 | 58 | 3 | 38 / 15 | 8 | **37** | **Pass** |
+| War2020 | 61 | 61 | 10 | 43 / 17 | 9 | **39** | **Pass** |
+| NorthSeaWars | 73 | 73 | 4 | 34 / 15 | 8 | **36** | **Pass** |
+| AnarchyInTheUK | 79 | 79 | 6 | 78 / 34 | 18 | **51** | **Pass** |
+| Chromatic | 93 | 93 | 5 | 56 / 21 | 11 | **44** | **Pass** |
+| Caucasia | 118 | 118 | 5 | 37 / 23 | 12 | **38** | **Pass** |
+| Chesspolitik | 132 | 132 | 4 | 64 / 32 | 17 | **49** | **Pass** |
+| SouthSahara | 149 | 149 | 5 | 60 / 25 | 13 | **48** | **Pass** |
+| BalkanWarsVI | **254** | **254** | 6 | 52 / 26 | 14 | **46** | **Pass** (renumbered from 46) |
+
+**Every one of the sixteen matches its own `install.php` exactly** on both territory and
+supply-centre count. None declares a `$supplyCenterTarget` of its own, so all sixteen take
+`WDVariant::initialize()`'s `round(18/34 * supplyCenterCount)` — the issue-007 target trap does
+not arise for any of them.
+
+Worth calling out individually:
+
+- **Pure (11)** is the smallest map this install has ever run: seven land territories, each a
+  home supply centre, no sea and no neutrals. Like ClassicNoNeutrals, **it cannot reach a Builds
+  phase in year one** — nobody gains a centre without dislodging a rival — so gameID 35 is two
+  adjudicated Diplomacy phases and no builds.
+- **War2020 (61)** is a **custom-start** variant like CustomStart, Classic1897 and
+  ClassicChaoctopi: the game opens at turn 0 in a Builds phase with zero units, and all ten
+  powers placed their opening units there. It is also the only wave-3 map that uses **all ten
+  accounts**.
+- **Chesspolitik (132)** is a chessboard — 64 territories, 32 of them supply centres, **756
+  borders**, four powers, solo on 17.
+- **Alacavre (31)** has the same 81 territories / 34 supply centres as Classic and is not
+  remotely the Classic board; its `install.php` also uses an eight-column row format whose last
+  column is the owning country's *name*.
+- **SouthSahara (149)** is the only wave-3 variant with a **package dependency**: its variant
+  class and two of its classes extend `RuleExtensionsVariant*`. `variants/RuleExtensions/` is now
+  in the tree as a dependency only — it has a `variant.php` but no `install.php` and no `$id`,
+  and it is deliberately **not** in `Config::$variants`.
+- **Chromatic (93)** needed a third year: its neutrals are nowhere near the opening positions, so
+  gameID 44 was played to **Winter 1903**, where the builds phase placed three units and
+  destroyed one.
+- **TreatyOfVerdun (37)** exercised **declining a build** — a country with a build due and every
+  home centre occupied submitted `Wait`.
+
+### Wave 3 — deferred so far
+
+| Variant | vDip `$id` | Why |
+| --- | ---: | --- |
+| TenSixtySix | 55 | Fog family: `STATICSRV`, `extends Maps`, `extends OrderArchiv`, and `resources/{fogmap,fogmap_old,jsonBoardData}.php`. Placed and installed before the security read finished, then **fully backed out** — config entry, map 55 rows, `wD_VariantInfo` row and the folder itself. **ID 55 stays reserved.** |
+| PunicWars | 208 | The same fog trio plus `resources/{orders,fogmap,jsonBoardData}.php`. **Never placed** — the security read now runs first. **ID 208 stays reserved.** |
+
+Four fog variants are now deferred for one reason (ClassicFog 30, Classic1898Fog 134,
+TenSixtySix 55, PunicWars 208). Defining `STATICSRV` and porting `Maps` and `OrderArchiv` would
+unblock all four at once, and is the single highest-value piece of variant work left.
+
+### The `config.php` line after wave 3 batch 1
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',79=>'AnarchyInTheUK',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',132=>'Chesspolitik',133=>'Classic1898',149=>'SouthSahara',254=>'BalkanWarsVI');
+```
