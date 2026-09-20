@@ -527,7 +527,8 @@ Then, before declaring it done:
 5. **Re-check the deviations survived the merge**: registration still 404s, the named volume is
    still on mariadb, and the `/events` proxy still answers `403 Missing auth parameter`.
 
-Issue 012 owns the upgrade procedure in full; this is the short form.
+The full procedure — pre-flight, the schema walk, acceptance, rollback and cadence — is
+[`UPGRADE.md`](UPGRADE.md) (issue 012). The above is the short form.
 
 ---
 

@@ -12,6 +12,7 @@ upstream.
 | File | Purpose |
 | --- | --- |
 | `SPEC.md` | The corrected requirements spec for the LAN instance. Start here. |
+| `UPGRADE.md` | **Upgrade procedure**: how to take an upstream change — pre-flight backup, the `master`→`local` merge and its expected conflicts, the `install/*/update.sql` walk, rebuilds, acceptance, rollback, cadence. Read this *before* touching upstream. |
 | `RUNBOOK.md` | **Operations manual**: start/stop, health checks, backup and restore, adding a variant, accounts, LAN access, known gotchas, git workflow. Read this when something is broken or you have forgotten how. |
 | `scripts/` | `db-backup.sh` and `db-restore.sh` (issue 002), used by the runbook. |
 | `variant-registry.md` | Every variant known to this install: name, `$id`, `$mapID`, source, status. |
@@ -32,7 +33,8 @@ git checkout local && git merge master
 ```
 
 The full upgrade sequence — including the `install/*/update.sql` walk and the re-acceptance
-checks — is in [`RUNBOOK.md`](RUNBOOK.md) § 9, *Git workflow*.
+checks — is in [`UPGRADE.md`](UPGRADE.md); [`RUNBOOK.md`](RUNBOOK.md) § 9, *Git workflow*, is the
+short form.
 
 If a change is genuinely a fix to upstream code, make it on a topic branch off `master` and
 offer it upstream; do not smuggle it into `local` only.
