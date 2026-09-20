@@ -1,0 +1,20 @@
+@CHARSET "ISO-8859-1";
+
+.variantSouthAmerica8 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global    */
+.variantSouthAmerica8 .country1 { color: rgb(228, 117, 203) ! important; } /* Argentina */
+.variantSouthAmerica8 .country2 { color: rgb(190, 140, 182) ! important; } /* Bolivia   */
+.variantSouthAmerica8 .country3 { color: rgb(107, 179, 203) ! important; } /* Brazil    */
+.variantSouthAmerica8 .country4 { color: rgb(186, 176, 9) ! important; } /* Chile     */
+.variantSouthAmerica8 .country5 { color: rgb(121, 192, 98) ! important; } /* Colombia  */
+.variantSouthAmerica8 .country6 { color: rgb(206, 149, 96) ! important; } /* Paraquay  */
+.variantSouthAmerica8 .country7 { color: rgb(189, 152, 126) ! important; } /* Peru      */
+.variantSouthAmerica8 .country8 { color: rgb(231, 130, 130) ! important; } /* Venezuela */
+
+.variantSouthAmerica8 .occupationBar1 { background-color: #EFC4E4; } /* Argentina */
+.variantSouthAmerica8 .occupationBar2 { background-color: rgb(182, 146, 174); } /* Bolivia   */
+.variantSouthAmerica8 .occupationBar3 { background-color: #79AFC6; } /* Brazil    */
+.variantSouthAmerica8 .occupationBar4 { background-color: #EAEAAF; } /* Chile     */
+.variantSouthAmerica8 .occupationBar5 { background-color: #A4C499; } /* Colombia  */
+.variantSouthAmerica8 .occupationBar6 { background-color: #ce9967; } /* Paraquay  */
+.variantSouthAmerica8 .occupationBar7 { background-color: rgb(175, 156, 139); } /* Peru      */
+.variantSouthAmerica8 .occupationBar8 { background-color: rgb(197, 146, 136); } /* Venezuela */

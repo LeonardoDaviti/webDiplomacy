@@ -1044,3 +1044,54 @@ Two operational traps met in this batch, both worth remembering:
 ```php
 public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',78=>'AgeOfPericles',79=>'AnarchyInTheUK',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',112=>'ManifestDestiny',116=>'SpiceIslands',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',132=>'Chesspolitik',133=>'Classic1898',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',254=>'BalkanWarsVI');
 ```
+
+### Wave 3 batch 3 — eleven more, one renumber, two deferrals
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Imperium | 13 | 13 | 6 | 91 / 28 | 15 | **64** | **Pass** (not with Sum-of-squares) |
+| Migraine | 21 | 21 | 8 | 95 / 38 | 20 | **68** | **Pass** |
+| SouthAmerica8 | 24 | 24 | 8 | 96 / 40 | 18 | **69** | **Pass** |
+| Fubar | 39 | 39 | 6 | 95 / 34 | 18 | **67** | **Pass** |
+| Lepanto | 41 | 41 | **2** | 98 / 38 | 2 | **72** | **Pass** |
+| USofA | 56 | 56 | 8 | 93 / 38 | 18 | **70** | **Pass** |
+| DarkAges | 82 | 82 | 7 | 100 / 37 | 19 | **73** | **Pass** |
+| HeptarchyIV | 89 | 89 | 7 | 98 / 38 | 20 | **71** | **Pass** |
+| EmpiresCoalitions | 113 | 113 | 9 | 104 / 44 | 23 | **76** | **Pass** |
+| ColdWarRedux | 128 | 128 | 4 | 103 / 28 | 15 | **74** | **Pass** |
+| Karibik | **251** | **251** | 8 | 93 / 38 | 20 | **65** | **Pass** (renumbered from 45) |
+| DutchRevolt | 32 | 32 | 5 | 103 / 40 | — | — | **Deferred** |
+
+**Imperium found a core bug, not a variant bug.** Its installer demotes every home supply centre
+to a plain territory, so all 28 centres start neutral and **every power owns none**. Core's
+sum-of-squares scoring then divides by the sum of squares of supply-centre counts —
+`ScoringSoS::pointsForDraw()`, `objects/scoringsystem.php:136` — and **every** board load of such
+a game is *"Division by zero"*. Any pot type other than Sum-of-squares works; gameID 64 is
+Winner-takes-all, and `PLAYING.md` now warns about it. A variant where nobody starts on a supply
+centre is unusual but perfectly legal, and the fix belongs in core.
+
+**Lepanto found a silent stall worth knowing about.** Its `userOrderDiplomacy::typeCheck()`
+rejects `Move` from four specific territories. A rejected order does not become an error — it
+comes back with **no type at all**, the member never reaches `Completed`, and because
+`Game::needsProcess()` only fires when every member is `Ready`, the game sits in its first
+Diplomacy phase forever with nothing in any log to say why. The general rule, now part of the
+procedure: after submitting orders, re-read the board context and give anything that came back
+typeless a `Hold` (or a `Wait` in a Builds phase).
+
+**DutchRevolt is deferred** after the budget expired: on its turn-0 Builds phase every member's
+`board.php` renders with **no `context`, no `contextKey` and no `ordersData` and no error**, so
+no build can be submitted and the game cannot leave turn 0. Its `classes/OrderInterface.php`
+rewrites `libHTML::$footerScript` with `str_replace` to inject four JS hooks, which is the
+obvious suspect but was not proven; `load()`'s write into `$GLOBALS['Variants']` is *not* the
+cause, because that global does exist in this codebase (`variants/variant.php:379-381`).
+Backed out; folder kept.
+
+Its upstream `$id` is also a reminder to read the source rather than a regex: DutchRevolt
+declares **`public $id = '32';`** — quoted — so the first pass over the tree read it as having no
+`$id` at all and renumbered it needlessly. 32 was free; it is reserved to DutchRevolt.
+
+### The `config.php` line after wave 3 batch 3
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',78=>'AgeOfPericles',79=>'AnarchyInTheUK',82=>'DarkAges',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',112=>'ManifestDestiny',113=>'EmpiresCoalitions',116=>'SpiceIslands',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',128=>'ColdWarRedux',132=>'Chesspolitik',133=>'Classic1898',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',251=>'Karibik',254=>'BalkanWarsVI');
+```

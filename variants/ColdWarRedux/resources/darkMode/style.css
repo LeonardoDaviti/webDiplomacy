@@ -1,0 +1,12 @@
+@CHARSET "ISO-8859-1";
+
+.variantColdWarRedux .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantColdWarRedux .country1 { color: rgb(223, 133, 133) ! important; } /* USSR */
+.variantColdWarRedux .country2 { color: rgb(74, 193, 219) ! important; } /* NATO */
+.variantColdWarRedux .country3 { color: rgb(161, 141, 255) ! important; } /* USA */
+.variantColdWarRedux .country4 { color: rgb(255, 134, 47) ! important; } /* PRC */
+
+.variantColdWarRedux .occupationBar1 { background-color: rgb(223, 133, 133); } /* USSR */
+.variantColdWarRedux .occupationBar2 { background-color: rgb(74, 193, 219); } /* NATO */
+.variantColdWarRedux .occupationBar3 { background-color: rgb(161, 141, 255); } /* USA */
+.variantColdWarRedux .occupationBar4 { background-color: rgb(255, 134, 47); } /* PRC */

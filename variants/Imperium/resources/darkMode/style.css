@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+.variantImperium .country0 { color: rgba(255, 255, 255, 0.8) ! important;} /* Global   */
+.variantImperium .country1 { color: rgb(189, 152, 126) ! important;} /* Alamanni */
+.variantImperium .country2 { color: rgb(107, 179, 203) ! important;} /* Franci   */
+.variantImperium .country3 { color: rgb(121, 192, 98) ! important;} /* Gothi    */
+.variantImperium .country4 { color: rgb(190, 140, 182) ! important;} /* Hunni    */
+.variantImperium .country5 { color: rgb(228, 117, 203) ! important;} /* Saxones  */
+.variantImperium .country6 { color: rgb(231, 130, 130) ! important;} /* Vandali  */
+
+.variantImperium .occupationBar1 { background-color: rgb(175, 156, 139); } /* Alamanni */
+.variantImperium .occupationBar2 { background-color: #79AFC6; } /* Franci   */
+.variantImperium .occupationBar3 { background-color: #A4C499; } /* Gothi    */
+.variantImperium .occupationBar4 { background-color: rgb(182, 146, 174); } /* Hunni    */
+.variantImperium .occupationBar5 { background-color: #EFC4E4; } /* Saxones  */
+.variantImperium .occupationBar6 { background-color: rgb(197, 146, 136); } /* Vandali  */
+
