@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicFlorence .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantClassicFlorence .country1 { color: rgb(119, 170, 204) ! important; } /* England */
+.variantClassicFlorence .country2 { color: rgb(54, 185, 229) ! important; } /* France */
+.variantClassicFlorence .country3 { color: rgb(82, 198, 46) ! important; } /* Italy */
+.variantClassicFlorence .country4 { color: rgb(161, 161, 161) ! important; } /* Germany */
+.variantClassicFlorence .country5 { color: rgb(255, 137, 137) ! important; } /* Austria */
+.variantClassicFlorence .country6 { color: rgb(181, 170, 21) ! important; } /* Turkey */
+.variantClassicFlorence .country7 { color: rgb(165, 162, 158) ! important; } /* Russia */
+
+.variantClassicFlorence .occupationBar1 { background-color: #1677BC; } /* England */
+.variantClassicFlorence .occupationBar2 { background-color: #9BC2E6; } /* France */
+.variantClassicFlorence .occupationBar3 { background-color: #94D354; } /* Italy */
+.variantClassicFlorence .occupationBar4 { background-color: #565656; } /* Germany */
+.variantClassicFlorence .occupationBar5 { background-color: #E7343F; } /* Austria */
+.variantClassicFlorence .occupationBar6 { background-color: #FFCD3A; } /* Turkey */
+.variantClassicFlorence .occupationBar7 { background-color: #FFF5E7; } /* Russia */

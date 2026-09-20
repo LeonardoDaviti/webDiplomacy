@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicCroatia .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantClassicCroatia .country1 { color: rgb(119, 170, 204) ! important; } /* England */
+.variantClassicCroatia .country2 { color: rgb(54, 185, 229) ! important; } /* France */
+.variantClassicCroatia .country3 { color: rgb(82, 198, 46) ! important; } /* Italy */
+.variantClassicCroatia .country4 { color: rgb(161, 161, 161) ! important; } /* Germany */
+.variantClassicCroatia .country5 { color: rgb(255, 137, 137) ! important; } /* Austria */
+.variantClassicCroatia .country6 { color: rgb(181, 170, 21) ! important; } /* Turkey */
+.variantClassicCroatia .country7 { color: rgb(165, 162, 158) ! important; } /* Russia */
+
+.variantClassicCroatia .occupationBar1 { background-color: #1677BC; } /* England */
+.variantClassicCroatia .occupationBar2 { background-color: #9BC2E6; } /* France */
+.variantClassicCroatia .occupationBar3 { background-color: #94D354; } /* Italy */
+.variantClassicCroatia .occupationBar4 { background-color: #565656; } /* Germany */
+.variantClassicCroatia .occupationBar5 { background-color: #E7343F; } /* Austria */
+.variantClassicCroatia .occupationBar6 { background-color: #FFCD3A; } /* Turkey */
+.variantClassicCroatia .occupationBar7 { background-color: #FFF5E7; } /* Russia */
