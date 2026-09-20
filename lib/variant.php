@@ -88,6 +88,76 @@ class libVariant {
 		}
 	}
 
+	/*
+	 * LOCAL DEVIATION (sandbox): variant class files are only ever meant to be loaded one variant
+	 * per request, and dozens of variants ship copies of the same helper classes under the same
+	 * name (MoveFlags_drawMap, CustomIcons_drawmap, Transform_drawMap, CustomStartVariant_-
+	 * adjudicatorPreGame...). gamecreateSandbox.php breaks that rule: it asks every enabled variant
+	 * for its canvas board config in one request, which loads each variant's drawMap and
+	 * adjudicatorPreGame classes, and the first duplicate name kills the page with
+	 * "Cannot redeclare class ...". With this install's large variant list that happens at the
+	 * 27th variant, so the page never renders.
+	 *
+	 * This predicts the collision instead of hitting it: it statically scans the class files a
+	 * variant would load (following their require()s and their "extends SomethingVariant_class"
+	 * autoloads) and reports whether any class they declare has already been declared from a
+	 * different file. The sandbox page skips those variants, so they simply aren't offered there;
+	 * every other page loads one variant and is unaffected.
+	 *
+	 * @param string $variantName
+	 * @return string|false The conflicting class name, or false if the variant is safe to load
+	 */
+	public static function sandboxLoadConflict($variantName) {
+		$classFiles = array(
+			'variants/'.$variantName.'/classes/drawMap.php',
+			'variants/'.$variantName.'/classes/adjudicatorPreGame.php'
+		);
+
+		$classes = array(); $scanned = array();
+		foreach($classFiles as $classFile)
+			self::sandboxScanClassFile($classFile, $classes, $scanned);
+
+		foreach($classes as $className=>$classFile)
+		{
+			if( !class_exists($className, false) ) continue;
+
+			// Already loaded from this same file; loading it again is a no-op, not a redeclaration
+			$Reflection = new ReflectionClass($className);
+			$declaredIn = $Reflection->getFileName();
+			if( $declaredIn && realpath($declaredIn) === realpath($classFile) ) continue;
+
+			return $className;
+		}
+
+		return false;
+	}
+
+	/**
+	 * LOCAL DEVIATION (sandbox): helper for sandboxLoadConflict(); collects the classes $file and
+	 * everything it pulls in would declare, keyed by the first file each name was seen in.
+	 */
+	private static function sandboxScanClassFile($file, array &$classes, array &$scanned) {
+		if( isset($scanned[$file]) || !file_exists($file) ) return;
+		$scanned[$file] = true;
+
+		$code = file_get_contents($file);
+		$dir = dirname($file);
+
+		preg_match_all('/^\s*(?:abstract\s+|final\s+)?class\s+([A-Za-z0-9_]+)/m', $code, $matches);
+		foreach($matches[1] as $className)
+			if( !isset($classes[$className]) ) $classes[$className] = $file;
+
+		// Files the variant's classes require directly, relative to their own folder
+		preg_match_all('/(?:require|include)(?:_once)?\s*\(\s*[\'"]([^\'"]+)[\'"]/', $code, $matches);
+		foreach($matches[1] as $relative)
+			self::sandboxScanClassFile($dir.'/'.$relative, $classes, $scanned);
+
+		// Parent classes from other variants, which the variant class autoloader will pull in
+		preg_match_all('/extends\s+([A-Za-z0-9_]+)Variant_([A-Za-z0-9_]+)/', $code, $matches, PREG_SET_ORDER);
+		foreach($matches as $match)
+			self::sandboxScanClassFile('variants/'.$match[1].'/classes/'.$match[2].'.php', $classes, $scanned);
+	}
+
 	/**
 	 * A variant's cache dir
 	 * @param string $variantName

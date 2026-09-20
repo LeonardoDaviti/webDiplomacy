@@ -148,6 +148,16 @@ class adjudicatorPreGame
 	}
 
 	public function getCountryUnits() {
+		/*
+		 * LOCAL DEVIATION (sandbox): variants which begin with no units at all (the
+		 * CustomStart-style variants: Classic1897, Empire1on1, Fubar, War2020, Zeus5, Mars)
+		 * override assignUnits() to do nothing and so never declare $countryUnits. The sandbox
+		 * board config (variants/variant.php::canvasBoardConfigJS) asks every enabled variant
+		 * for its starting units, so an undeclared property took the whole page down. Those
+		 * variants simply have no starting preset; hand back an empty one.
+		 */
+		if( !isset($this->countryUnits) ) return array();
+
 		return $this->countryUnits;
 	}
 	

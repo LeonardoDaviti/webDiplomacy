@@ -228,7 +228,8 @@ merge conflict tells you why the hunk exists. Regenerate this list before any up
 grep -rn "LOCAL DEVIATION" --include=*.yml --include=*.conf --include=*.php .
 ```
 
-As of 2026-09-20 that is **eleven markers in three files**:
+As of 2026-09-20 that is **sixteen markers in six files** (the harvested variant packages under
+`variants/` carry their own `issue 009 wave N` markers, which the registry covers and this list does not):
 
 **`docker-compose.yml`** (7)
 
@@ -256,8 +257,28 @@ As of 2026-09-20 that is **eleven markers in three files**:
 | ---: | --- | --- |
 | 35 | 009 | Skip any `variants/<X>/` with no `install.php` or an abstract variant class. This page instantiates **every** directory under `variants/`, enabled or not, and instantiating a variant runs its installer — `variants/RuleExtensions` is an abstract base package that `SouthSahara` extends, and `new RuleExtensionsVariant` took the whole page down with *"Cannot instantiate abstract class"*. The same scan is why a **deferred** variant's folder must be deleted, not left on disk |
 
+**`gamemaster/adjudicator/pregame.php`** (1)
+
+| Line | Issue | What it is |
+| ---: | --- | --- |
+| 150 | sandbox | `getCountryUnits()` returns an empty array when the variant's `adjudicatorPreGame` has no `$countryUnits`. The CustomStart-style variants (Classic1897, Empire1on1, Fubar, War2020, Zeus5, Mars) start with no units at all, so they override `assignUnits()` to do nothing and never declare the property; `gamecreateSandbox.php` asks every enabled variant for its starting units and the undeclared property ended the page with *"Undefined property: Classic1897Variant_adjudicatorPreGame::$countryUnits"*. Classic's behaviour is untouched |
+
+**`lib/variant.php`** (2)
+
+| Line | Issue | What it is |
+| ---: | --- | --- |
+| 96 | sandbox | `libVariant::sandboxLoadConflict()` — predicts "Cannot redeclare class …". Variant class files assume one variant is loaded per request; dozens ship same-named helper classes (`MoveFlags_drawMap`, `CustomIcons_drawmap`, `Transform_drawMap`, `CustomStartVariant_adjudicatorPreGame`…). It statically scans the `drawMap`/`adjudicatorPreGame` files a variant would load, following their `require()`s and `extends SomethingVariant_class` autoloads, and reports the first class name already declared from a different file |
+| 140 | sandbox | `sandboxScanClassFile()`, the private recursive helper for the above |
+
+**`locales/English/gamecreateSandbox.php`** (2)
+
+| Line | Issue | What it is |
+| ---: | --- | --- |
+| 28 | sandbox | The per-variant canvas board config is built at the top of the file instead of inline, and variants failing `sandboxLoadConflict()` are skipped. Building it first means the conflicting variants are known before the variant list and the `<select>` are printed, so they are left out of both rather than being offered with no board config. With this install's variant list 83 of 112 variants are offered; the other 29 would have killed the page at the 27th variant |
+| 181 | sandbox | Where the prepared string is printed |
+
 Line numbers drift; the marker text does not. After resolving the merge, re-run the grep and
-confirm the count is still nine (or that a deliberate change explains the difference).
+confirm the count is still sixteen (or that a deliberate change explains the difference).
 
 ### 2.3 Do not do these
 

@@ -24,6 +24,28 @@ defined('IN_CODE') or die('This script can not be run by itself.');
  * @package Base
  * @subpackage Forms
  */
+
+/*
+ * LOCAL DEVIATION (sandbox): build the per-variant canvas board config up-front, so that the
+ * variants which can't be loaded alongside the others are known before the variant list and the
+ * variant dropdown are printed, and can be left out of both. Variant class files are written on
+ * the assumption that one variant is loaded per request; this page loads all of them, and the
+ * first two variants shipping a same-named helper class would end the page with
+ * "Cannot redeclare class ..." (see libVariant::sandboxLoadConflict()).
+ */
+$sandboxVariantNames = array();
+$sandboxBoardConfigJS = '';
+foreach(Config::$variants as $variantID=>$variantName)
+{
+	// Exclude incompatible variants (TODO: put this in the config)
+	if( $variantID == 57 || $variantID == 70 ) continue;
+
+	if( libVariant::sandboxLoadConflict($variantName) !== false ) continue;
+
+	$Variant = libVariant::loadFromVariantName($variantName);
+	$sandboxBoardConfigJS .= 'canvasBoardConfigJS['.$Variant->id.'] = '.$Variant->canvasBoardConfigJS().';';
+	$sandboxVariantNames[$variantID] = $variantName;
+}
 ?>
 <div class="content-bare content-board-header content-title-header">
 	<div class="pageTitle barAlt1">Create a new sandbox game</div>
@@ -49,13 +71,10 @@ defined('IN_CODE') or die('This script can not be run by itself.');
 						<br /><br />
 						<strong>Available variants:</strong> </br>
 						<?php
-							foreach(Config::$variants as $variantID=>$variantName)
+							foreach($sandboxVariantNames as $variantID=>$variantName)
 							{
-								if($variantID != 57)
-								{
-									$Variant = libVariant::loadFromVariantName($variantName);
-									print $Variant->link().'</br>';
-								}
+								$Variant = libVariant::loadFromVariantName($variantName);
+								print $Variant->link().'</br>';
 							}
 						?>
 						<br/>
@@ -66,14 +85,11 @@ defined('IN_CODE') or die('This script can not be run by itself.');
 			<select id="variant" class="gameCreate" name="newGame[variantID]" onchange="variantSelectionChanged()">
 			<?php
 				$defaultVariantID = ( isset($_REQUEST['newGame']) && isset($_REQUEST['newGame']['variantID']) ) ? (int)$_REQUEST['newGame']['variantID'] : 1;
-				foreach(Config::$variants as $variantID=>$variantName)
+				foreach($sandboxVariantNames as $variantID=>$variantName)
 				{
-					if($variantID != 57)
-					{
-						$Variant = libVariant::loadFromVariantName($variantName);
-						if($variantID === $defaultVariantID ) { print '<option name="newGame[variantID]" selected value="'.$variantID.'">'.$variantName.'</option>'; }
-						else { print '<option name="newGame[variantID]" value="'.$variantID.'">'.$variantName.'</option>'; }
-					}
+					$Variant = libVariant::loadFromVariantName($variantName);
+					if($variantID === $defaultVariantID ) { print '<option name="newGame[variantID]" selected value="'.$variantID.'">'.$variantName.'</option>'; }
+					else { print '<option name="newGame[variantID]" value="'.$variantID.'">'.$variantName.'</option>'; }
 				}
 				print '</select>';
 			?>
@@ -162,15 +178,8 @@ defined('IN_CODE') or die('This script can not be run by itself.');
 	let canvasBoardConfigJS = {};
 <?php
 
-foreach(Config::$variants as $variantID=>$variantName)
-{
-	// Exclude incompatible variants (TODO: put this in the config)
-	if($variantID != 57 && $variantID != 70)
-	{
-		$Variant = libVariant::loadFromVariantName($variantName);
-		print 'canvasBoardConfigJS['.$Variant->id.'] = '.$Variant->canvasBoardConfigJS().';';
-	}
-}
+// LOCAL DEVIATION (sandbox): prepared at the top of this file, see the note there
+print $sandboxBoardConfigJS;
 ?>
 </script>
 
