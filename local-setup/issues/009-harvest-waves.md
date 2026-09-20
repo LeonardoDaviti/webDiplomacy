@@ -424,3 +424,80 @@ redirecting** — legacy board, as expected off the React whitelist.
 deprecation, warning or "undefined" attributable to any of them across install, four games and
 every phase. (The `sql_tabl() on null` fatals in the log are the known error-page artefact from
 repeated `POST /logon.php` during tooling setup — `RUNBOOK.md` §8 — not variant code.)
+
+### Wave 1 batch 2 — ClassicBrazilian, ClassicNoNeutrals, ClassicCrowded, ClassicGreyPress
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| ClassicCrowded | 14 | 14 | 11 | 81 / 35 | 18 | — | **Pass (render-only)** |
+| ClassicNoNeutrals | 38 | 38 | 7 | 81 / 22 | 12 | **23** | **Pass**, with a builds caveat |
+| ClassicGreyPress | 50 | **1** | 7 | 81 / 34 | 18 | **24** | **Pass** |
+| ClassicBrazilian | 123 | 123 | 7 | 81 / 35 | 19 | **22** | **Pass** |
+
+Territory and supply-centre counts were read from each `install.php`'s literal **and** from
+`wD_Territories` after install: **they match exactly** (81/35, 81/22, *stub*, 81/35).
+
+**Security review — clean, all four.** Nine `.php` files read in full. Same negative checklist as
+batch 1, with one deliberate exception worth recording:
+`variants/ClassicGreyPress/classes/Chatbox.php` reads `$_REQUEST['newmessage']` — it is a
+`Chatbox` subclass whose whole job is to re-route a message, and the in-tree core
+`board/chatbox.php:92` reads exactly the same input in exactly the same way. It performs no file,
+network or user-table access and builds no dynamic code. Accepted.
+
+**Dependencies — the one interesting case in this wave.** `ClassicGreyPressVariant`
+**extends `ClassicVariant`**, not `WDVariant`, and its installer is a one-line
+`require_once('variants/Classic/install.php')`. So it (a) requires variant 1 to stay in the tree,
+and (b) is the **only** wave-1 variant allowed to share `$mapID` 1 — the brief's exception for a
+stub installer. It does not carry vDiplomacy's Classic territory data at all; the `require_once`
+resolves to **our** `variants/Classic/install.php`, so it installs and draws our map 1, and no
+vDip-specific territory ID can leak in. The other three ship full installers with their own IDs
+and coordinates and keep their own `$mapID`.
+
+**IDs:** 14, 38, 50 and 123 were all free; all four kept their upstream `$id`. No renumbering.
+
+**No code fixes were needed** in any of the four beyond the generated dark-mode stylesheet.
+
+**Acceptance:**
+
+- **ClassicBrazilian (123) — gameID 22.** Start matches `adjudicatorPreGame.php`: the Brazilian
+  edition's differences are visible immediately — England is **F London**, F Edinburgh,
+  A Liverpool and Italy is A Venice, **F Rome**, F Naples, against Classic's F London/A Liverpool
+  and A Rome. Spring 1901: Italy `A Venice → Tyrolia` and Germany `A Munich → Tyrolia`
+  **bounced**; England `F Edinburgh → Clyde` supported by `A Liverpool` and France
+  `F Brest → Picardy` supported by `A Paris` **succeeded**. Autumn and Winter builds processed;
+  **Spring 1902** with 3/4/3/3/3/5/4 centres. `board.php?gameID=22` → 200; 20 KB map PNG.
+- **ClassicNoNeutrals (38) — gameID 23.** 22 supply centres, every one a home centre; the
+  starting position is the standard Classic one. Spring 1901: England
+  `F London → English Channel` and France `F Brest → English Channel` **bounced**; England
+  `F Edinburgh → Clyde` supported by `A Liverpool` and France `A Paris → Burgundy` supported by
+  `A Marseilles` **succeeded**. Autumn resolved with centre counts 3/3/3/3/3/3/4 = **22, the
+  whole board**, which is exactly right. **No builds phase was reached**, and this is structural
+  rather than a fault: with no neutral centres, nobody can gain one without dislodging a rival,
+  so a year-one game has nothing to build. The game was played on to **turn 12 (Spring 1907)** to
+  try to provoke one and the count never moved. The builds pipeline is untouched core code here —
+  the variant subclasses only `adjudicatorPreGame` and `drawMap` — and builds were exercised on
+  the other three variants in this batch. Recorded as a caveat, in the same spirit as issues 007
+  and 008's "a disband was never exercised".
+- **ClassicGreyPress (50) — gameID 24.** Standard Classic start on map 1, confirmed unit for
+  unit. Spring 1901: England `F London → English Channel` vs France `F Brest → English Channel`
+  **bounced**; two supported moves succeeded. Autumn and builds processed; **Spring 1902**,
+  3/4/3/4/3/5/4. **The rule change itself was exercised**: posting to the extra *Grey Press* tab
+  (`msgCountryID` 8, one past the seven countries) as Turkey with the body `Italy: …` produced
+  two rows in `wD_GameMessages` — the message delivered **to Italy from country 8**, and a
+  `[to: Italy]` receipt back to the sender. The recipient never sees Turkey. That is the variant
+  working end to end. `board.php?gameID=24` → 200.
+- **ClassicCrowded (14) — render-only, no gameID.** Eleven powers, and this install has ten
+  accounts, so per the brief the acceptance is install + render + counts. Done: the variant is in
+  the New Game dropdown; `variants.php` renders *"Classic - Crowded (11 Players)"*;
+  `map.php?variantID=14` returns a 17 KB PNG; `wD_VariantInfo` holds 35/18 for 11 countries; and
+  `wD_Territories` for map 14 holds 81 territories with **35 supply centres, every one a home
+  centre** (3+3+3+3+3+3+4+4+3+3+3), i.e. no neutrals — which is what "crowded" means here. As a
+  substitute for a played game, all 35 starting units in `classes/adjudicatorPreGame.php` were
+  checked against the installed map: every one names a real territory that is a supply centre
+  owned by the right power, with terrain that permits the unit type. Nothing is left to verify
+  but the adjudication, which is shared core code.
+
+**A tooling note that will bite the next batch: game creation costs points.** Every
+`gamecreate.php` bets 5 points, and after a dozen acceptance games `admin` and `player2` were on
+zero and creation failed with *"5 is an invalid bet size"*. Fixed with the admin panel's own
+**`givePoints`** action (`userID`, `points`) for each of the ten accounts — not with SQL.

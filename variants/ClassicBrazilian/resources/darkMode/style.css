@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantClassicBrazilian .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantClassicBrazilian .country1 { color: rgb(151, 173, 187) ! important; } /* England */
+.variantClassicBrazilian .country2 { color: rgb(111, 185, 210) ! important; } /* France */
+.variantClassicBrazilian .country3 { color: rgb(132, 197, 111) ! important; } /* Italy */
+.variantClassicBrazilian .country4 { color: rgb(153, 153, 153) ! important; } /* Germany */
+.variantClassicBrazilian .country5 { color: rgb(231, 134, 134) ! important; } /* Austria */
+.variantClassicBrazilian .country6 { color: rgb(183, 175, 63) ! important; } /* Turkey */
+.variantClassicBrazilian .country7 { color: rgb(165, 163, 161) ! important; } /* Russia */
+
+.variantClassicBrazilian .occupationBar1 { background-color: rgb(123, 178, 216); } /* England */
+.variantClassicBrazilian .occupationBar2 { background-color: rgb(155, 194, 230); } /* France */
+.variantClassicBrazilian .occupationBar3 { background-color: rgb(148, 211, 84); } /* Italy */
+.variantClassicBrazilian .occupationBar4 { background-color: rgb(159, 159, 159); } /* Germany */
+.variantClassicBrazilian .occupationBar5 { background-color: rgb(241, 140, 147); } /* Austria */
+.variantClassicBrazilian .occupationBar6 { background-color: rgb(255, 205, 58); } /* Turkey */
+.variantClassicBrazilian .occupationBar7 { background-color: rgb(255, 245, 231); } /* Russia */
