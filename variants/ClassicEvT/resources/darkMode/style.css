@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+/*
+ Dark-mode country colours for ClassicEvT. lib/html.php links
+ variants/<Name>/resources/darkMode/style.css unconditionally for every enabled variant
+ when the viewer has dark mode on, so this file must exist or it 404s. Upstream ships no
+ dark-mode stylesheet; these are ../style.css's colours lightened for a dark background,
+ in the style of variants/Classic/resources/darkMode/style.css.
+*/
+
+.variantClassicEvT .country0 { color: rgb(228, 180, 114) ! important; } /* Global  */
+.variantClassicEvT .country1 { color: rgb(236, 159, 218) ! important; } /* England */
+.variantClassicEvT .country2 { color: rgb(215, 209, 114) ! important; } /* Turkey  */
+
+.variantClassicEvT .occupationBar1 { background-color: rgb(246, 222, 240); } /* England */
+.variantClassicEvT .occupationBar2 { background-color: rgb(243, 243, 211); } /* Turkey  */
+

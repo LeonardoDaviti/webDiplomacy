@@ -38,48 +38,62 @@ config's variant array.
 | Variant | `$id` | `$mapID` | Players | Source | Status | Notes |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | Classic | 1 | 1 | 7 | upstream 1.83 (Avalon Hill) | enabled | The reference map. One of only three variants the React board renders. |
-| World | 2 | 2 | 6 | upstream 1.83 (David Norman) | enabled | World Diplomacy IX. Legacy board only. |
-| FleetRome | 3 | 1 | 7 | upstream 1.83 (Avalon Hill) | present | Classic with a fleet in Rome. Shares Classic's map. Wave 0. |
-| CustomStart | 4 | 1 | 7 | upstream 1.83 (Avalon Hill) | present | Classic with a configurable start. Shares Classic's map. Wave 0. |
-| BuildAnywhere | 5 | 1 | 7 | upstream 1.83 (Avalon Hill) | present | Classic, build in any owned SC. Shares Classic's map. Wave 0. |
+| World | 2 | 2 | 17 | upstream 1.83 (David Norman) | enabled | World Diplomacy IX. Seventeen powers — `$countries` in `variants/World/variant.php` lists 17. Legacy board only. |
+| FleetRome | 3 | 1 | 7 | upstream 1.83 (Avalon Hill) | playable | Classic with a fleet in Rome — Italy starts `F Rome` instead of `A Rome`. Shares Classic's map; `install.php` is a one-line `require_once` of Classic's. Wave 0, issue 009; gameID 9. Legacy board only. |
+| CustomStart | 4 | 1 | 7 | upstream 1.83 (Avalon Hill) | playable | Classic, but the game **opens in a Builds phase with no units** and each country places its own start. Shares Classic's map (stub `install.php`). Wave 0, issue 009; gameID 10. Legacy board only. **Zeus5 subclasses this variant's `adjudicatorPreGame`, so it must stay in the tree.** |
+| BuildAnywhere | 5 | 1 | 7 | upstream 1.83 (Avalon Hill) | playable | Classic, build in any owned SC. Shares Classic's map (stub `install.php`). Wave 0, issue 009; gameID 11 — verified by building `A Rumania`, a conquered non-home centre, in Winter 1902. Legacy board only. |
 | AncMed | 9 | 9 | 5 | upstream 1.83 (Don Hessong) | enabled | The Ancient Mediterranean. Legacy board only. |
-| Colonial | 12 | 12 | 7 | upstream 1.83 (Peter Hawes) | present | Colonial Diplomacy. Wave 0. |
-| ClassicFvA | 15 | 15 | 2 | upstream 1.83 | enabled | France vs Austria. **Two-player.** React-board whitelisted. Ships an interactive-map thumbnail. |
-| ClassicChaos | 17 | 17 | 1 | upstream 1.83 | enabled | Chaos: one power per SC. Player count of 1 in the definition is the variant's own convention. Ships an interactive-map thumbnail. |
+| Colonial | 12 | 12 | 7 | upstream 1.83 (Peter Hawes) | playable | Colonial Diplomacy. 125 territories / 62 SCs, solo target 30. Wave 0, issue 009; gameID 12. Already overrides `initialize()` to keep its solo target. Legacy board only. |
+| ClassicFvA | 15 | 15 | 2 | upstream 1.83 | playable | France vs Austria. **Two-player.** React-board whitelisted. Ships an interactive-map thumbnail. Issue 008 acceptance: gameID 6. |
+| ClassicChaos | 17 | 17 | 34 | upstream 1.83 | enabled | Chaos: one power per supply centre — `$countries` in `variants/ClassicChaos/variant.php` lists 34, and `$description` reads "The classic map for 34 players." Ships an interactive-map thumbnail. |
 | Modern2 | 19 | 19 | 10 | upstream 1.83 (Vincent Mous) | enabled | Modern Diplomacy II. Legacy board only. |
 | Empire4 | 20 | 20 | 10 | upstream 1.83 (Vincent Mous) | enabled | Fall of the American Empire IV. Legacy board only. |
-| ClassicGvI | 23 | 23 | 2 | upstream 1.83 | enabled | Germany vs Italy. **Two-player.** React-board whitelisted. Ships an interactive-map thumbnail. Also in the default bot variant list. |
-| Zeus5 | 70 | 70 | 7 | upstream 1.83 (Northcott / Davis / Reinecker) | present | Zeus 5. Ships an interactive-map thumbnail. Wave 0. |
-| ColdWar | 91 | 91 | 2 | upstream 1.83 | enabled | **Two-player.** Legacy board only — not React-whitelisted despite being a headline two-player map. |
+| ClassicGvI | 23 | 23 | 2 | upstream 1.83 | playable | Germany vs Italy. **Two-player.** React-board whitelisted. Ships an interactive-map thumbnail. Also in the default bot variant list. Issue 008 acceptance: gameID 7. |
+| Zeus5 | 70 | 70 | 7 | upstream 1.83 (Northcott / Davis / Reinecker) | playable | Zeus 5, WWII from Olympus. 113 territories / 41 SCs, solo target 21, **custom start** (opens in Builds with no units). Ships an interactive-map thumbnail. Wave 0, issue 009; gameID 13. Already overrides `initialize()`. Its `adjudicatorPreGame` extends **CustomStart's**, so variant 4 must stay in the tree. Legacy board only. |
+| ColdWar | 91 | 91 | 2 | upstream 1.83 | playable | **Two-player**, USSR vs USA, 104 territories / 27 SCs, solo target 17 (its own `initialize()` override). Legacy board only — not React-whitelisted despite being a headline two-player map. Issue 008 acceptance: gameID 8. |
 
 ### What this table already settles
 
-- **Wave 0 is five rows:** FleetRome (3), CustomStart (4), BuildAnywhere (5), Colonial (12),
-  Zeus 5 (70). All are `present` — the code is in the tree and only the config array entry and a
-  variant-info refresh are missing. No harvest, no porting, no risk.
+- **Wave 0 was five rows:** FleetRome (3), CustomStart (4), BuildAnywhere (5), Colonial (12),
+  Zeus 5 (70). All five are now registered, installed and `playable` — see issue 009's Wave 0
+  status. Each kept its upstream `$id` and `$mapID`; nothing was renumbered.
 - **Three two-player maps already exist:** ClassicFvA (15), ClassicGvI (23), ColdWar (91). Issue
   008 starts from these rather than from nothing.
 - **The draft spec's harvest list was wrong.** Chaos, Build Anywhere, Cold War, France vs
   Austria and Germany vs Italy were all listed as things to fetch. They are all here.
-- **Map IDs 1, 9, 12, 15, 17, 19, 20, 23, 70, 91 and variant IDs 1–5, 9, 12, 15, 17, 19, 20, 23,
-  70, 91 are taken.** IDs 6, 7, 8, 10, 11, 13, 14, 16, 18, 21, 22, 24–69, 71–90 and 92–99 are
-  free but should be treated as *upstream's to allocate*; prefer the 900 block for anything
-  ported in here.
+- **Taken after issues 007, 008 and 009:** variant and map IDs 1–5, 9, 12, 15, 17, 19, 20, 22,
+  23, 26, 45, 46, 62, 70, 91 (variant 3, 4 and 5 share map 1). Still free: 6, 7, 8, 10, 11, 13,
+  14, 16, 18, 21, 24, 25, 27–44, 47–61, 63–69, 71–90, 92–99 — but treat them as *upstream's to
+  allocate*, and prefer the 900 block for anything ported in here whose own ID collides.
 
 ## Ported and harvested variants
 
-Rows are added by issues 007, 008 and 009 as work lands. Issue 007 (Westeros) has landed.
+Rows are added by issues 007, 008 and 009 as work lands. Issues 007 (Westeros) and 008
+(two-player maps) have landed; issue 009's wave 0 needed no rows here, only status changes above.
 
 | Variant | `$id` | `$mapID` | Players | Source | Status | Notes |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | GoT2 | 46 | 46 | 2 | mcoirad/gameofthrones-diplomacy `GoT2` @ `8e1be97` (Dario Mitchell, after echepron / evil-minion) | playable | Issue 007. "Game of Thrones - Tully vs Lannister". Upstream `$id`/`$mapID` 46 were both free, so they were kept — no 900-block renumber. Own map data (ownership and two borders differ from `GoT`), so its own `$mapID`. Legacy board only. Solo target 20 (see Notes below). |
 | GoT | 45 | 45 | 8 | mcoirad/gameofthrones-diplomacy `master` @ `d1e01af` (Dario Mitchell, after echepron / evil-minion) | playable | Issue 007. "Game of Thrones", the full eight-house map. Upstream `$id`/`$mapID` 45 were both free, so they were kept. Legacy board only. Solo target 35 (see Notes below). |
+| Duo | 22 | 22 | 2 | Sleepcap/vDiplomacy @ `72c81f0` (Frank Hegermann; webDiplomacy adapter Oliver Auth; variant version 1.0, code version 0.20; <http://www.dipwiki.com/?title=Duo>) | playable | Issue 008. **Two-player**, and the only genuinely new geography of the three: 104 territories / 28 SCs on an original point-symmetric map, solo target 19. Upstream `$id`/`$mapID` 22 were free, so they were kept. Eight **neutral "Black" units** are placed at the start and eight SCs belong to that non-playable power — `countryID()` is overridden to resolve it. Already overrides `initialize()` to keep its target. Legacy board only. |
+| ClassicFGvsRT | 26 | 26 | 2 | Sleepcap/vDiplomacy @ `72c81f0` (adapter Orathaic, version 1.0.4, after ClassicFvA 1.0.1) | playable | Issue 008. "Classic - Frankland Vs Juggernaut" — **two-player**, France+Germany (6 units) against Russia+Turkey (7). Upstream `$id`/`$mapID` 26 were free. Classic's 81 territories / 34 SCs and an exact name-for-name match with our Classic, **but its own `$mapID` and its own full 575-line installer**, not a stub: territory *IDs* and pixel coordinates differ from our map 1, so sharing map 1 would have been wrong. Legacy board only. |
+| ClassicEvT | 62 | 62 | 2 | Sleepcap/vDiplomacy @ `72c81f0` (adapter Orathaic, version 1.1) | playable | Issue 008. "Classic - England* Vs Turkey" — **two-player**. Upstream `$id`/`$mapID` 62 were free. Same shape as ClassicFGvsRT: Classic geometry, own `$mapID`, own 578-line installer. The `*` is deliberate — England's two fleets start in **open sea** (North Sea, English Channel) to offset its opening, so two of its three starting units are not on supply centres. Legacy board only. |
 
 **Config line** (`config.php` is gitignored, so this is the only versioned record):
 
 ```php
-public static $variants=array(1=>'Classic',2=>'World',9=>'AncMed',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',23=>'ClassicGvI',45=>'GoT',46=>'GoT2',91=>'ColdWar');
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',9=>'AncMed',12=>'Colonial',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',26=>'ClassicFGvsRT',45=>'GoT',46=>'GoT2',62=>'ClassicEvT',70=>'Zeus5',91=>'ColdWar');
 ```
+
+Nineteen variants, every key unique:
+
+```sh
+sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d    # prints nothing
+```
+
+(Do **not** use `grep -o '[0-9]\+=>' config.php` on the whole file, as issue 009's verification
+block suggests — it also matches `Config::$serverMessages` and the bot/variant-mod arrays and
+reports duplicates that are not duplicate variant IDs.)
 
 **Notes on both Westeros variants**
 
@@ -94,6 +108,43 @@ public static $variants=array(1=>'Classic',2=>'World',9=>'AncMed',15=>'ClassicFv
   not `Westeros`.
 - **IDs 45 and 46 (variant and map) are now reserved permanently.**
 
+**Notes on the three variants harvested from vDiplomacy (issue 008)**
+
+- Source: `git clone https://github.com/Sleepcap/vDiplomacy` at
+  `72c81f0dd73bedccc11f13a750dfcc62f580549a` (2025-04-21). Only the three folders below were
+  copied in; nothing else from that tree is present.
+- **Security review: clean.** Every `.php` file in all three packages was read in full. Zero hits
+  across all of them for `eval`, `assert`, `create_function`, `preg_replace`, `exec`,
+  `shell_exec`, `system`, `passthru`, `proc_open`, `popen`, backticks, `base64_decode`,
+  `gzinflate`, `str_rot13`, `unserialize`, `curl_*`, `fsockopen`, sockets, stream wrappers, any
+  file read or write, remote includes, `wD_Users` / `wD_Sessions` / `wD_ApiKeys`, `$_SESSION`,
+  `$_GET` / `$_POST` / `$_COOKIE` / `$_REQUEST` / `$_SERVER`, `Config::`, `$$`,
+  `call_user_func`, or any obfuscated or dynamically-built executed string. The only
+  `require_once` in any of them is `variants/install.php`, the in-tree base installer. The four
+  SQL statements in Duo interpolate only internal integer IDs.
+- **Every one kept its upstream `$id` and `$mapID`** — 22, 26 and 62 were all free, so nothing
+  was renumbered into the 900 block and no incumbent was displaced.
+- **ClassicEvT and ClassicFGvsRT must not share Classic's `$mapID` 1.** Their territory *names*
+  match ours exactly, but their `install.php` files are full installers with their own IDs and
+  coordinates: 73 of the 81 rows land on a different numeric `id` than our map 1. They also ship
+  their own `resources/map.png`, which differs from ours.
+- **Missing dark-mode stylesheets were added.** None of the three shipped
+  `resources/darkMode/style.css`, which `lib/html.php:646-647` links unconditionally for every
+  enabled variant when the viewer has dark mode on. Each now has one, derived from its own
+  `resources/style.css` with the colours lightened. The light-mode selector prefixes were checked
+  and are already correct (`.variantDuo`, `.variantClassicEvT`, `.variantClassicFGvsRT`).
+- **One PHP 8.4 fix**, in `variants/Duo/classes/drawMap.php`: `$width` was
+  `fleet_width + fleet_width/2`, i.e. 37.5 (or 19.5 on the small map), passed straight to
+  `imagefilledellipse()`'s int parameters — an implicit-float-to-int deprecation on every render
+  of a Duo transform order. Now `(int)round($this->fleet['width']*1.5)`.
+- **Duo registers `$variantClasses['OrderArchiv']`, and no `OrderArchiv` base class exists in
+  this codebase.** Left alone deliberately: the in-tree, upstream `variants/Zeus5` does exactly
+  the same thing, the class is loaded lazily by `variant_autoloader()`, and nothing ever asks for
+  it — so it is inert on both. The same goes for `variants/Duo/interactiveMap/interactiveMap.php`
+  (extends a nonexistent `IAmap`; the interactive-map subsystem was never part of webDiplomacy,
+  and the file is not under `classes/` so the autoloader could not reach it anyway).
+- **IDs 22, 26 and 62 (variant and map) are now reserved permanently.**
+
 ## Deferred
 
 Variants that failed the twenty-minute triage budget. Each row records what broke, so that a
@@ -102,3 +153,7 @@ later attempt starts from the failure rather than repeating it.
 | Variant | Source | Attempted | Failure | Notes |
 | --- | --- | --- | --- | --- |
 | _(none yet)_ | | | | |
+
+Nothing has been deferred so far. Issue 008's three harvests and issue 009's wave 0 all came in
+under the twenty-minute budget with, between them, one one-line PHP 8.4 fix and eight added
+dark-mode stylesheets.

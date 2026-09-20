@@ -209,41 +209,61 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 ### B.1 Player count → variant
 
 Player count is the length of `$countries` in `variants/<Name>/variant.php`. "Enabled" means the
-ID is in `Config::$variants` in the gitignored `config.php`, which today is
-`1, 2, 9, 15, 17, 19, 20, 23, 91`. The React (point-and-click) board is whitelisted to exactly
-three variants — `Game::isClassicGame()`, `objects/game.php:565-568`, is
+ID is in `Config::$variants` in the gitignored `config.php`, which after issues 007, 008 and 009
+is all nineteen of `1, 2, 3, 4, 5, 9, 12, 15, 17, 19, 20, 22, 23, 26, 45, 46, 62, 70, 91`. The
+React (point-and-click) board is whitelisted to exactly three variants —
+`Game::isClassicGame()`, `objects/game.php:565-568`, is
 `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything else renders on the legacy
-`board.php` drop-down board.
+`board.php` drop-down board, **including the two-player variants that play on Classic's own
+geography**, because the whitelist matches by name, not by map.
 
 | Players | Variant(s) | `$id` | Enabled? | Board |
 | ---: | --- | ---: | --- | --- |
 | **2** | ClassicFvA (*Classic — France vs Austria*) | 15 | enabled | **React** |
 | **2** | ClassicGvI (*Classic — Germany vs Italy*) | 23 | enabled | **React** |
+| **2** | ClassicEvT (*Classic — England\* vs Turkey*) | 62 | enabled | legacy |
+| **2** | ClassicFGvsRT (*Classic — Frankland vs Juggernaut*) | 26 | enabled | legacy |
 | **2** | ColdWar | 91 | enabled | legacy |
-| **2** | GoT2 (*Game of Thrones — Tully vs Lannister*) | 46 | **pending issue 007** | legacy |
+| **2** | Duo | 22 | enabled | legacy |
+| **2** | GoT2 (*Game of Thrones — Tully vs Lannister*) | 46 | enabled | legacy |
 | **3** | — none installed | | | |
 | **4** | — none installed | | | |
 | **5** | AncMed (*The Ancient Mediterranean*) | 9 | enabled | legacy |
 | **6** | — none installed | | | |
 | **7** | Classic | 1 | enabled | **React** |
-| **8** | GoT (*Game of Thrones*) | 45 | **pending issue 007** | legacy |
+| **7** | FleetRome (*Classic, with fleet in Rome*) | 3 | enabled | legacy |
+| **7** | CustomStart (*Classic with a custom start*) | 4 | enabled | legacy |
+| **7** | BuildAnywhere (*Classic, but build anywhere*) | 5 | enabled | legacy |
+| **7** | Colonial (*Colonial Diplomacy*) | 12 | enabled | legacy |
+| **7** | Zeus5 (*Zeus 5*) | 70 | enabled | legacy |
+| **8** | GoT (*Game of Thrones*) | 45 | enabled | legacy |
 
 Also installed, outside the 2–8 range: **World** (`$id` 2, **17** players, legacy),
 **Modern2** (19, 10 players, legacy), **Empire4** (20, 10 players, legacy), **ClassicChaos**
 (17, **34** players, legacy).
 
-Four more Classic-derivative variants are *present* in the tree but not in `Config::$variants`, so
-the site never offers them: FleetRome (3), CustomStart (4), BuildAnywhere (5), Colonial (12),
-Zeus5 (70) — all **7 players**, so enabling them adds variety, not new player counts. Adding one
-is RUNBOOK §4.
+**Every variant in the tree is now enabled and has been played through at least one adjudicated
+phase.** Nothing is `present`-but-disabled any more.
 
-> Two corrections to `variant-registry.md`, from reading the definitions directly: **World is 17
-> players, not 6**, and **ClassicChaos is 34, not 1** (`$description` says "the classic map for 34
-> players"). Fix the registry when you next touch it.
+**Picking one for two people.** Seven is a lot of choice, but four of them (FvA, GvI, EvT,
+FGvsRT) are the same Classic board with different starting units, and only FvA and GvI get the
+point-and-click board. The three that feel genuinely different are **ColdWar** (a world map,
+USSR vs USA), **Duo** (an original symmetric map, with eight static neutral units in the middle
+that both sides have to chew through) and **GoT2** (Westeros). Suggested defaults: **ClassicFvA**
+if you want the nice board, **Duo** or **ColdWar** if you want a new map.
 
-**Three, four, six and eight players are not currently servable** except by Westeros (8, issue
-007). For an awkward number the practical answers are: play Classic with the spare people
-spectating or sharing a seat, or take two-player variants in parallel.
+**Three, four and six players are still not servable.** For an awkward number the practical
+answers are: play Classic (or one of its five seven-player cousins) with the spare people
+spectating or sharing a seat, or run two of the two-player maps in parallel.
+
+**The seven-player cousins, briefly**, since they are new and the New Game form only shows a
+name: *FleetRome* is Classic with Italy starting `F Rome` instead of `A Rome`. *CustomStart* is
+Classic where the game opens in a **Builds phase with no units at all** and everyone places their
+own three (four for Russia) — expect to spend the first five minutes on that, and note fleets can
+only go on coastal home centres. *BuildAnywhere* is Classic where you may build in **any** supply
+centre you own, not just your home ones — it only starts to matter in your second winter.
+*Colonial* (125 territories, solo on 30) and *Zeus5* (113 territories, solo on 21, also a custom
+start) are real different maps and much longer games.
 
 ### B.2 Creating the game, step by step
 
@@ -273,8 +293,13 @@ spectating or sharing a seat, or take two-player variants in parallel.
 
 Forced combinations, worth knowing before you are surprised:
 
-- **Two-player variants are forced unranked**: `variantID` 15, 23 or 91 ⇒ `bet = 5`,
-  `potType = 'Unranked'` (`gamecreate.php:142-147`).
+- **Two-player variants are forced unranked** — but only three of the seven.
+  `gamecreate.php:144` hard-codes `variantID == 15 or 23 or 91` ⇒ `bet = 5`,
+  `potType = 'Unranked'`. **Duo (22), ClassicEvT (62), ClassicFGvsRT (26) and GoT2 (46) are not
+  in that list**, so a two-player game on one of those can be created ranked and for a real bet.
+  Points are meaningless on a LAN box, so this is a curiosity rather than a problem; if it ever
+  matters, add the IDs to that line (it is core code, not variant code, so it is a real patch)
+  or just pick *Unranked* on the form.
 - **No-press forces anonymous**: `pressType = 'NoPress'` ⇒ `anon = 'Yes'`, to stop out-of-game
   messaging (`gamecreate.php:165-168`).
 - **Bot fill forces no-press + unranked** (`gamecreate.php:176-182`).

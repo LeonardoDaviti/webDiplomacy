@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+/*
+ Dark-mode country colours for Duo. lib/html.php links
+ variants/<Name>/resources/darkMode/style.css unconditionally for every enabled variant
+ when the viewer has dark mode on, so this file must exist or it 404s. Upstream ships no
+ dark-mode stylesheet; these are ../style.css's colours lightened for a dark background,
+ in the style of variants/Classic/resources/darkMode/style.css.
+*/
+
+.variantDuo .country0 { color: rgb(228, 180, 114) ! important; } /* Neutral */
+.variantDuo .country1 { color: rgb(232, 137, 137) ! important; } /* Austria */
+.variantDuo .country2 { color: rgb(135, 198, 115) ! important; } /* Italy   */
+.variantDuo .country3 { color: rgb(170, 170, 170) ! important; } /* Germany */
+
+.variantDuo .occupationBar1 { background-color: rgb(222, 193, 187); } /* Austria */
+.variantDuo .occupationBar2 { background-color: rgb(204, 222, 198); } /* Italy   */
+.variantDuo .occupationBar3 { background-color: rgb(170, 170, 170); } /* Germany */

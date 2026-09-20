@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+/*
+ Dark-mode country colours for ClassicFGvsRT. lib/html.php links
+ variants/<Name>/resources/darkMode/style.css unconditionally for every enabled variant
+ when the viewer has dark mode on, so this file must exist or it 404s. Upstream ships no
+ dark-mode stylesheet; these are ../style.css's colours lightened for a dark background,
+ in the style of variants/Classic/resources/darkMode/style.css.
+*/
+
+.variantClassicFGvsRT .country0 { color: rgb(228, 180, 114) ! important; } /* Global */
+.variantClassicFGvsRT .country1 { color: rgb(211, 161, 114) ! important; } /* Frankland */
+.variantClassicFGvsRT .country2 { color: rgb(159, 158, 158) ! important; } /* Juggernaut*/
+
+.variantClassicFGvsRT .occupationBar1 { background-color: rgb(228, 198, 171); } /* Frankland */
+.variantClassicFGvsRT .occupationBar2 { background-color: rgb(173, 171, 171); } /* Juggernaut*/
+
+
