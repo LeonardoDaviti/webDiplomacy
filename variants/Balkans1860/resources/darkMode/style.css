@@ -1,0 +1,20 @@
+@CHARSET "ISO-8859-1";
+
+.variantBalkans1860 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantBalkans1860 .country1 { color: rgb(231, 130, 130) ! important; } /* Austria-Hungary */
+.variantBalkans1860 .country2 { color: rgb(189, 152, 126) ! important; } /* Bulgaria */
+.variantBalkans1860 .country3 { color: rgb(107, 179, 203) ! important; } /* Greece  */
+.variantBalkans1860 .country4 { color: rgb(121, 192, 98) ! important; } /* Italy   */
+.variantBalkans1860 .country5 { color: rgb(186, 176, 9) ! important; } /* Ottomans  */
+.variantBalkans1860 .country6 { color: rgb(228, 117, 203) ! important; } /* Romania */
+.variantBalkans1860 .country7 { color: rgb(190, 140, 182) ! important; } /* Serbia  */
+
+.variantBalkans1860 .occupationBar1 { background-color: rgb(197, 146, 136); } /* Austria-Hungary */
+.variantBalkans1860 .occupationBar2 { background-color: rgb(175, 156, 139); } /* Bulgaria */
+.variantBalkans1860 .occupationBar3 { background-color: #79AFC6; } /* Greece  */
+.variantBalkans1860 .occupationBar4 { background-color: #A4C499; } /* Italy   */
+.variantBalkans1860 .occupationBar5 { background-color: #EAEAAF; } /* Ottomans  */
+.variantBalkans1860 .occupationBar6 { background-color: #EFC4E4; } /* Romania */
+.variantBalkans1860 .occupationBar7 { background-color: rgb(182, 146, 174); } /* Serbia  */
+
+

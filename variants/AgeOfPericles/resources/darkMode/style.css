@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+	
+.variantAgeOfPericles .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global   */
+.variantAgeOfPericles .country1 { color: rgb(228, 117, 203) ! important; } /* Aetolia  */
+.variantAgeOfPericles .country2 { color: rgb(190, 140, 182) ! important; } /* Arcolia  */
+.variantAgeOfPericles .country3 { color: rgb(206, 149, 96) ! important; } /* Attica   */
+.variantAgeOfPericles .country4 { color: rgb(139, 177, 126) ! important; } /* Boeotia  */
+.variantAgeOfPericles .country5 { color: rgb(107, 179, 203) ! important; } /* Elia     */
+.variantAgeOfPericles .country6 { color: rgb(121, 192, 98) ! important; } /* Laconia  */
+.variantAgeOfPericles .country7 { color: rgb(231, 130, 130) ! important; } /* Messenia */
+
+.variantAgeOfPericles .occupationBar1 { background-color: #EFC4E4; } /* Aetolia  */
+.variantAgeOfPericles .occupationBar2 { background-color: rgb(182, 146, 174); } /* Arcolia  */
+.variantAgeOfPericles .occupationBar3 { background-color: #ce9967; } /* Attica   */
+.variantAgeOfPericles .occupationBar4 { background-color: rgb(147, 171, 138); } /* Boeotia  */
+.variantAgeOfPericles .occupationBar5 { background-color: #79AFC6; } /* Elia     */
+.variantAgeOfPericles .occupationBar6 { background-color: #A4C499; } /* Laconia  */
+.variantAgeOfPericles .occupationBar7 { background-color: rgb(197, 146, 136); } /* Messenia */

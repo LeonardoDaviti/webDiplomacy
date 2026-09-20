@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantSpiceIslands .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantSpiceIslands .country1 { color: rgb(159, 160, 162) ! important; } /* Brunei */
+.variantSpiceIslands .country2 { color: rgb(157, 155, 197) ! important; } /* Majapahit */
+.variantSpiceIslands .country3 { color: rgb(182, 161, 98) ! important; } /* Tondo */
+.variantSpiceIslands .country4 { color: rgb(121, 188, 120) ! important; } /* Malacca */
+.variantSpiceIslands .country5 { color: rgb(254, 121, 115) ! important; } /* Ayutthaya */
+.variantSpiceIslands .country6 { color: rgb(177, 148, 177) ! important; } /* Ternate */
+.variantSpiceIslands .country7 { color: rgb(175, 175, 45) ! important; } /* Dai Viet */
+
+.variantSpiceIslands .occupationBar1 { background-color: #C2C5CE; } /* Brunei */
+.variantSpiceIslands .occupationBar2 { background-color: rgb(149, 147, 255); } /* Majapahit */
+.variantSpiceIslands .occupationBar3 { background-color: rgb(193, 162, 62); } /* Tondo */
+.variantSpiceIslands .occupationBar4 { background-color: rgb(121, 188, 120); } /* Malacca */
+.variantSpiceIslands .occupationBar5 { background-color: rgb(254, 121, 115); } /* Ayutthaya */
+.variantSpiceIslands .occupationBar6 { background-color: rgb(192, 138, 191); } /* Ternate */
+.variantSpiceIslands .occupationBar7 { background-color: #E8EA6E; } /* Dai Viet */

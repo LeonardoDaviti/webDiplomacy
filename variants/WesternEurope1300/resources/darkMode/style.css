@@ -1,0 +1,14 @@
+@CHARSET "ISO-8859-1";
+
+.variantWesternEurope1300 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantWesternEurope1300 .country1 { color: rgb(137, 163, 207) ! important; } /* France */
+.variantWesternEurope1300 .country2 { color: rgb(104, 195, 124) ! important; } /* England */
+.variantWesternEurope1300 .country3 { color: #C9C05A ! important; } /* Castile */
+.variantWesternEurope1300 .country4 { color: rgb(214, 155, 44) ! important; } /* Aragon */
+.variantWesternEurope1300 .country5 { color: rgb(186, 146, 163) ! important; } /* Burgundy */
+
+.variantWesternEurope1300 .occupationBar1 { background-color: #88A7DD; } /* France */
+.variantWesternEurope1300 .occupationBar2 { background-color: #9DEBAF; } /* England */
+.variantWesternEurope1300 .occupationBar3 { background-color: #D8D167; } /* Castile */
+.variantWesternEurope1300 .occupationBar4 { background-color: #D2A94D; } /* Aragon */
+.variantWesternEurope1300 .occupationBar5 { background-color: rgb(195, 141, 164); } /* Burgundy */

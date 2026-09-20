@@ -981,3 +981,66 @@ unblock all four at once, and is the single highest-value piece of variant work 
 ```php
 public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',79=>'AnarchyInTheUK',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',132=>'Chesspolitik',133=>'Classic1898',149=>'SouthSahara',254=>'BalkanWarsVI');
 ```
+
+### Wave 3 batch 2 — eleven more maps, and one schema wall
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Hussite | 47 | 47 | 9 | 90 / 47 | 24 | **61** | **Pass** |
+| Maharajah | 74 | 74 | 7 | 84 / 37 | 19 | **56** | **Pass** (one PHP 8 fix) |
+| CelticBritain | 75 | 75 | 8 | 88 / 43 | 23 | **58** | **Pass** (one PHP 8 fix) |
+| AgeOfPericles | 78 | 78 | 7 | 91 / 39 | 20 | **63** | **Pass** |
+| Balkans1860 | 103 | 103 | 7 | 84 / 37 | 19 | **55** | **Pass** |
+| Renaissance1453 | 107 | 107 | 7 | 82 / 35 | 18 | **54** | **Pass** |
+| Canton | 108 | 108 | 7 | 89 / 36 | 19 | **60** | **Pass** |
+| ManifestDestiny | 112 | 112 | 5 | 88 / 39 | 21 | **59** | **Pass** |
+| SpiceIslands | 116 | 116 | 7 | 90 / 35 | 19 | **62** | **Pass** |
+| Scottish_Clan_Wars | 141 | 141 | 7 | 86 / 33 | 17 | **57** | **Pass** |
+| WesternEurope1300 | 145 | 145 | 5 | 73 / 36 | 19 | **53** | **Pass** |
+| Baron1900 | ~~252~~ (upstream 1900) | — | 7 | 97 / 39 | — | — | **Deferred** |
+
+Again every one matches its own `install.php` exactly, and none declares its own
+`$supplyCenterTarget`.
+
+**Two PHP 8 breakages, one fix.** `implode($array, $glue)` — the argument order removed in PHP 8
+— appears in `Maharajah/classes/OrderInterface.php:47` and in two files of `CelticBritain`. With
+it, every member's `board.php` dies with *"implode(): Argument #2 ($array) must be of type
+?array, string given"* and the game can never leave its first Diplomacy phase, because no one can
+submit orders. The arguments are now swapped in place, with a comment, and the check is part of
+the wave-3 procedure: **13 of the 67 candidates contain the pattern** (Africa, CelticBritain,
+ClassicCataclysm, Edwardian, Edwardian3, EmpiresCoalitions, GobbleEarth, Maharajah, Mars, Viking,
+World10, WWIV_V6 — and the in-tree Zeus5, where it sits in a file nothing calls).
+
+**Baron1900 is the first variant to hit a schema wall.** Its `install.php` writes
+`wD_Territories.buildEligibilityFlags`, a **column vDiplomacy has and this schema does not**, and
+the autumn adjudication dies with `Unknown column 't.buildEligibilityFlags' in 'WHERE'`. Two
+other vDip-only dependencies were fixed inside its folder on the way there and are worth
+recording because they are cheap to spot:
+
+- `classes/processMembers.php` reads **`$Game->targetSCs`** (vDiplomacy's per-game custom solo
+  target) and **`$Game->maxTurns`** (its per-game turn limit). Neither property exists on
+  webDiplomacy's `Game`, and under this install's error handler reading one is fatal. Both are
+  now guarded with `isset()`, so the variant falls back to its own `$supplyCenterTarget`, which
+  is what the code means anyway. **Baron1900 is the only one of the 67 candidates that uses
+  either.**
+
+It was backed out completely — config entry, map rows, `wD_VariantInfo` row and its acceptance
+game — but **the folder was kept**, because unlike the fog variants it ships no front controller
+under `resources/`.
+
+Two operational traps met in this batch, both worth remembering:
+
+- **A game with inconsistent pause fields breaks `index.php` for every user, not just its own
+  players.** `objects/game.php:432-444` insists that a paused game has `processTime` NULL and
+  `pauseTimeRemaining` set, and a not-paused game the reverse; violate it and *every* page that
+  lists that game raises *"Not-paused game process-time values incorrectly set."* Never set
+  `processTime` by hand on a paused game — unpause it with `admincp actionName=togglePause`
+  first.
+- **A crashed game stays crashed.** `processStatus='Crashed'` is sticky and the gamemaster skips
+  the game forever after; it has to be put back to `Not-processing` once the cause is fixed.
+
+### The `config.php` line after wave 3 batch 2
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',78=>'AgeOfPericles',79=>'AnarchyInTheUK',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',112=>'ManifestDestiny',116=>'SpiceIslands',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',132=>'Chesspolitik',133=>'Classic1898',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',254=>'BalkanWarsVI');
+```

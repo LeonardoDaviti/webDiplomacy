@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantBaron1900 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global            */
+.variantBaron1900 .country1 { color: rgb(175, 161, 118) ! important; } /* Austria-Hungary, darker shade of EDBC29   */
+.variantBaron1900 .country2 { color: rgb(145, 160, 199) ! important; } /* Britain           */
+.variantBaron1900 .country3 { color: rgb(103, 179, 212) ! important; } /* France            */
+.variantBaron1900 .country4 { color: rgb(160, 160, 160) ! important; } /* Germany           */
+.variantBaron1900 .country5 { color: rgb(92, 198, 143) ! important; } /* Italy             */
+.variantBaron1900 .country6 { color: rgb(148, 168, 148) ! important; } /* Russia            */
+.variantBaron1900 .country7 { color: rgb(240, 125, 132) ! important; } /* Turkey            */
+
+.variantBaron1900 .occupationBar1 { background-color: #EDBC29; } /* Austria-Hungary   */
+.variantBaron1900 .occupationBar2 { background-color: rgb(145, 160, 199); } /* Britain           */
+.variantBaron1900 .occupationBar3 { background-color: rgb(103, 179, 212); } /* France            */
+.variantBaron1900 .occupationBar4 { background-color: rgb(160, 160, 160); } /* Germany           */
+.variantBaron1900 .occupationBar5 { background-color: rgb(92, 198, 143); } /* Italy             */
+.variantBaron1900 .occupationBar6 { background-color: rgb(148, 168, 148); } /* Russia            */
+.variantBaron1900 .occupationBar7 { background-color: rgb(240, 125, 132); } /* Turkey            */
