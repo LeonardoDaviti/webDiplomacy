@@ -1,0 +1,14 @@
+@CHARSET "ISO-8859-1";
+
+.variantWWII .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global */
+.variantWWII .country1 { color: rgb(107, 179, 203) ! important; } /* France */
+.variantWWII .country2 { color: rgb(189, 152, 126) ! important; } /* Germany */
+.variantWWII .country3 { color: rgb(228, 117, 203) ! important; } /* Great Britain */
+.variantWWII .country4 { color: rgb(121, 192, 98) ! important; } /* Italy */
+.variantWWII .country5 { color: rgb(225, 132, 132) ! important; } /* U.S.S.R */
+
+.variantWWII .occupationBar1 { background-color: #79AFC6; } /* France */
+.variantWWII .occupationBar2 { background-color: rgb(189, 152, 126); } /* Germany */
+.variantWWII .occupationBar3 { background-color: #EFC4E4; } /* Great Britain */
+.variantWWII .occupationBar4 { background-color: #A4C499; } /* Italy */
+.variantWWII .occupationBar5 { background-color: rgb(225, 132, 132); } /* U.S.S.R */

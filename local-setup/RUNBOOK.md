@@ -314,16 +314,20 @@ about what broke and move on.
    `mkdir -p variants/<Name>/cache`
 4. **Check resources.** It must ship `resources/style.css` (**not** `variant.css`) and dark-mode
    resources.
-5. **Register the ID** in `config.php`, in `Config::$variants` (currently
-   `array(1=>'Classic',2=>'World',9=>'AncMed',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',23=>'ClassicGvI',91=>'ColdWar')`).
-   First page load auto-installs it. `config.php` is gitignored — record the change in the issue
-   and the registry, since git will not.
-6. **Admin panel**, logged in as `admin`:
-   - <http://localhost:43000/admincp.php?actionName=updateVariantInfo&variantID=#updateVariantInfo>
-   - then <http://localhost:43000/admincp.php?actionName=wipeVariants#wipeVariants> to clear the
-     caches.
-   Enabling maintenance mode around this is optional on a quiet LAN box, and note that
-   maintenance mode also stops processing.
+5. **Register the ID** in `config.php`, in `Config::$variants` — ninety-four entries after issue
+   009 wave 3; the current line is recorded in `local-setup/variant-registry.md`, because
+   `config.php` is gitignored and git will not record it. **Every ID must be ≤ 255**:
+   `wD_Games.variantID` and `wD_Territories.mapID` are `tinyint unsigned` and silently clamp
+   anything larger. Renumber a colliding port from **254 downwards**.
+6. **Admin panel**, logged in as `admin`, in this order:
+   - <http://localhost:43000/admincp.php?actionName=wipeVariants#wipeVariants> to cool the caches;
+   - then <http://localhost:43000/admincp.php?actionName=updateVariantInfo&variantID=#updateVariantInfo>,
+     which is what actually installs the map, because it is a normal page that reaches
+     `libHTML::footer()`;
+   - then `updateVariantInfo` **once more**, because `wD_VariantInfo` is written from the variant
+     object and a run made while the map was still empty writes nothing.
+   **Then count the rows** — see the gotcha table. Enabling maintenance mode around this is
+   optional on a quiet LAN box, and note that maintenance mode also stops processing.
 7. **Acceptance checklist** — the five items in `SPEC.md`. Note that every harvested variant is
    **legacy-board only**; only Classic, ClassicFvA and ClassicGvI render on the React board, so do
    not spend triage time on that.
@@ -332,9 +336,15 @@ about what broke and move on.
 Sanity checks afterwards:
 
 ```sh
-grep -o '[0-9]\+=>' config.php | sort | uniq -d            # must print nothing (no duplicate IDs)
+# no duplicate variant IDs (do NOT grep the whole file: the server-message and bot arrays match too)
+python3 -c "import re;l=re.search(r'public static \\\$variants=array\\(.*?\\);',open('config.php').read(),re.S).group(0);i=re.findall(r\"(\\d+)=>'\",l);print(len(i),'variants','OK' if len(i)==len(set(i)) else 'DUPLICATES')"
 curl -s http://127.0.0.1:43000/gamecreate.php | grep -c '<option'
 docker compose logs --tail=200 php-fpm | grep -iE 'fatal|deprecated'
+
+# the map really installed: install.php's row count must equal the database's
+docker compose exec -T mariadb mysql -u root --password=mypassword123 -N -e \
+  "use webdiplomacy; select mapID,count(*),sum(supply='Yes') from wD_Territories where mapID=<id>;"
+grep -cE "^\s*array\(\s*'" variants/<Name>/install.php
 ```
 
 ---
@@ -515,6 +525,13 @@ Everything below has bitten this install at least once. In the order you are lik
 | **Generated reset/registration links hard-code `https://`** | The link 404s or the browser refuses it | Hand-edit the scheme to `http://` |
 | **Maintenance mode also stops game processing** — as does the panic switch. The mechanism: `gamemaster.php` is called anonymously by the SSE server, and an anonymous request dies in `header.php:260` before it reaches any processing code, while still returning **HTTP 200** | Turned on "just to be safe" during admin work, turns into stalled turns — and `docker compose logs php-fpm` shows a healthy-looking stream of `"GET /gamemaster.php" 200`. Check `wD_Misc.LastProcessTime`, which stops advancing | Use it only for variant wipes, and turn it off immediately. If you must leave it on (`datc.php:31` needs it for the interactive DATC runner), an **admin's own** request to `gamemaster.php` still processes, because `header.php:244` takes the Admin branch first |
 | **The error page hides the error** — `error_handler()` (`global/error.php:158`) sets `$DB = null` and then calls `libHTML::error()`, which calls `libHTML::gameNotifyBlock()` (`lib/html.php:830`), which dereferences `$DB` | Every triggered error, whatever it was, renders as the same `Uncaught Error: Call to a member function sql_tabl() on null in /application/lib/html.php:830` — in the browser **and** in the php-fpm log. The real message is lost | Do not debug the `sql_tabl()` fatal; it is never the cause. Read the page body instead — the original notice text is still printed above the stack trace (e.g. *"Server is in maintenance mode…"*) |
+| **A variant can be registered, cached, in the dropdown, drawing a map — and have zero rows in `wD_Territories`** (issue 009 wave 3). The install only runs when `variants/<X>/cache/data.php` is absent (`lib/variant.php:150`), and the only `COMMIT` is in `close()` (`header.php:304`), reached from `libHTML::footer()`. `map.php` builds the variant, writes `data.php` and dies without committing; `admincp actionName=wipeVariants` cools *every* variant's cache at once while the SSE gamemaster driver hits the site once a second | Games start in Pre-game and never begin, or every board is empty. Nothing in any log | Drive the install with `updateVariantInfo` on a **cold** `data.php`, then **count the rows against `install.php`** instead of assuming. If it is zero, delete `data.php` and repeat |
+| **Variant and map IDs above 255 are silently clamped** (issue 009 wave 3). `wD_Games.variantID` and `wD_Territories.mapID` are `tinyint(3) unsigned`; `wD_VariantInfo.mapID` is a `smallint`, so the mismatch does not announce itself | A variant registered as 900 installs its map as 255, and games created for it come back with `variantID` 255 | Keep every ID ≤ 255. Renumber colliding ports from **254 downwards**, not into the registry's old 900 block |
+| **`admincp`'s `updateVariantInfo` does not escape the description** (issue 009 waves 1 and 3, `admin/adminActionsRestricted.php:1275`) | One apostrophe in a variant's `$description` and the action dies with a SQL syntax error; no `wD_VariantInfo` row is written and the variant has no entry on `variants.php` | Replace the apostrophe with a typographic one (U+2019) in the variant's own `variant.php`. The bug is in core `admin/` and is still there |
+| **A game with inconsistent pause fields breaks `index.php` for every user** (issue 009 wave 3, `objects/game.php:432-444`) | *"Not-paused game process-time values incorrectly set."* on every page that lists that game, for everyone, not just its players | A paused game must have `processTime` NULL and `pauseTimeRemaining` set, a running game the reverse. Never set `processTime` by hand on a paused game — unpause with `admincp actionName=togglePause` first |
+| **`processStatus='Crashed'` is sticky** | The gamemaster skips the game for ever after, silently | Set it back to `Not-processing` once the cause is fixed |
+| **Sum-of-squares scoring divides by zero when nobody owns a supply centre** (issue 009 wave 3, `objects/scoringsystem.php:136`) | Every board load of the game is *"Division by zero"*. Hits `Imperium`, whose installer makes all 28 centres neutral | Create such games with any other pot type. Core bug; see `PLAYING.md` §B.1 |
+| **A variant's own order class can reject an order silently** (issue 009 wave 3, e.g. Lepanto forbidding `Move` from four territories) | The order comes back with **no type**, the member never reaches `Completed`, `Game::needsProcess()` never fires, and the game sits in one phase for ever with nothing in any log | Re-read the board's order context after submitting and give anything typeless a `Hold` (or `Wait` in a Builds phase) |
 
 ---
 

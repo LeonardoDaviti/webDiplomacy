@@ -208,80 +208,153 @@ sitting, and confirm the account can log in at <http://localhost:43000/logon.php
 
 ### B.1 Player count → variant
 
-Player count is the length of `$countries` in `variants/<Name>/variant.php`. "Enabled" means the
-ID is in `Config::$variants` in the gitignored `config.php`, which after issues 007, 008 and 009
-is all thirty-three of `1, 2, 3, 4, 5, 9, 12, 14, 15, 17, 19, 20, 22, 23, 25, 26, 28, 38, 40, 42, 45,
-46, 48, 49, 50, 54, 62, 70, 90, 91, 122, 123, 133`. The
-React (point-and-click) board is whitelisted to exactly three variants —
-`Game::isClassicGame()`, `objects/game.php:565-568`, is
-`name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything else renders on the legacy
-`board.php` drop-down board, **including the two-player variants that play on Classic's own
-geography**, because the whitelist matches by name, not by map.
+Player count is the length of `$countries` in `variants/<Name>/variant.php`, and is also in
+`wD_VariantInfo.countryCount`. "Enabled" means the ID is in `Config::$variants` in the gitignored
+`config.php`, which after issues 007, 008 and 009 (waves 0, 1 and 3) is **all ninety-four below** —
+every one of them installed and played through at least one adjudicated phase. The React
+(point-and-click) board is whitelisted to exactly three variants — `Game::isClassicGame()`,
+`objects/game.php:565-568`, is `name == 'Classic' || 'ClassicGvI' || 'ClassicFvA'` — everything
+else renders on the legacy `board.php` drop-down board, **including the two-player variants that
+play on Classic's own geography**, because the whitelist matches by name, not by map.
 
-| Players | Variant(s) | `$id` | Enabled? | Board |
-| ---: | --- | ---: | --- | --- |
-| **2** | ClassicFvA (*Classic — France vs Austria*) | 15 | enabled | **React** |
-| **2** | ClassicGvI (*Classic — Germany vs Italy*) | 23 | enabled | **React** |
-| **2** | ClassicEvT (*Classic — England\* vs Turkey*) | 62 | enabled | legacy |
-| **2** | ClassicFGvsRT (*Classic — Frankland vs Juggernaut*) | 26 | enabled | legacy |
-| **2** | ColdWar | 91 | enabled | legacy |
-| **2** | Duo | 22 | enabled | legacy |
-| **2** | GoT2 (*Game of Thrones — Tully vs Lannister*) | 46 | enabled | legacy |
-| **2** | ClassicGvR (*Classic — Germany vs Russia*) | 25 | enabled | legacy |
-| **3** | ClassicFGA (*Classic — France vs Germany vs Austria*) | 48 | enabled | legacy |
-| **3** | ClassicIER (*Classic — Italy+ vs England+ vs Russia*) | 49 | enabled | legacy |
-| **4** | — none installed | | | |
-| **5** | AncMed (*The Ancient Mediterranean*) | 9 | enabled | legacy |
-| **6** | — none installed | | | |
-| **7** | Classic | 1 | enabled | **React** |
-| **7** | FleetRome (*Classic, with fleet in Rome*) | 3 | enabled | legacy |
-| **7** | CustomStart (*Classic with a custom start*) | 4 | enabled | legacy |
-| **7** | BuildAnywhere (*Classic, but build anywhere*) | 5 | enabled | legacy |
-| **7** | Colonial (*Colonial Diplomacy*) | 12 | enabled | legacy |
-| **7** | Zeus5 (*Zeus 5*) | 70 | enabled | legacy |
-| **7** | ClassicBritain (*Classic — Britain*) | 122 | enabled | legacy |
-| **7** | ClassicBrazilian (*Classic — Brazilian*) | 123 | enabled | legacy |
-| **7** | ClassicNoNeutrals (*Classic — NoNeutrals*) | 38 | enabled | legacy |
-| **7** | ClassicGreyPress (*Classic — GreyPress*) | 50 | enabled | legacy |
-| **7** | Classic1897 (*Classic — 1897*) | 28 | enabled | legacy |
-| **7** | Classic1898 (*Classic — 1898*) | 133 | enabled | legacy |
-| **7** | ClassicOctopus (*Classic — Octopus*) | 40 | enabled | legacy |
-| **7** | ClassicAnkaraCrescent (*Classic — Ankara Crescent*) | 90 | enabled | legacy |
-| **2–7** | ClassicVS (*Classic — Pick your countries*) | 42 | enabled | legacy |
-| **8** | GoT (*Game of Thrones*) | 45 | enabled | legacy |
-| **11** | ClassicCrowded (*Classic — Crowded*) | 14 | enabled | legacy |
-| **34** | ClassicChaoctopi (*Classic — Chaoctopi*) | 54 | enabled | legacy |
+| Players | Variant(s) | `$id` | Board |
+| ---: | --- | ---: | --- |
+| **2** | ClassicFvA (*Classic - France vs Austria*) | 15 | **React** |
+| **2** | Duo | 22 | legacy |
+| **2** | ClassicGvI (*Classic - Germany vs Italy*) | 23 | **React** |
+| **2** | ClassicGvR (*Classic - Germany vs Russia*) | 25 | legacy |
+| **2** | ClassicFGvsRT (*Classic - Frankland Vs Juggernaut*) | 26 | legacy |
+| **2** | Empire1on1 (*Fall of the American Empire: Civil War!*) | 33 | legacy |
+| **2** | Lepanto | 41 | legacy |
+| **2** | GoT2 (*Game of Thrones - Tully vs Lannister*) | 46 | legacy |
+| **2** | ClassicEvT (*Classic - England* Vs Turkey*) | 62 | legacy |
+| **2** | ColdWar (*Cold War*) | 91 | legacy |
+| **3** | Hundred | 8 | legacy |
+| **3** | ClassicFGA (*Classic - France vs Germany vs Austria*) | 48 | legacy |
+| **3** | ClassicIER (*Classic - Italy+ Vs England+ Vs Russia*) | 49 | legacy |
+| **3** | TreatyOfVerdun (*843: Treaty of Verdun*) | 58 | legacy |
+| **4** | SouthAmerica4 (*South America (4 players)*) | 7 | legacy |
+| **4** | SailHo2 (*Sail Ho II*) | 16 | legacy |
+| **4** | NorthSeaWars (*NorthSea Wars*) | 73 | legacy |
+| **4** | AtlanticColonies (*Atlantic Colonies*) | 99 | legacy |
+| **4** | ColdWarRedux (*Cold War Redux*) | 128 | legacy |
+| **4** | Chesspolitik | 132 | legacy |
+| **5** | SouthAmerica5 (*South America (5 players)*) | 6 | legacy |
+| **5** | AncMed (*The Ancient Mediterranean*) | 9 | legacy |
+| **5** | WWII (*World War II*) | 87 | legacy |
+| **5** | Chromatic | 93 | legacy |
+| **5** | ManifestDestiny (*Manifest Destiny*) | 112 | legacy |
+| **5** | Caucasia | 118 | legacy |
+| **5** | WesternEurope1300 (*Western Europe 1300*) | 145 | legacy |
+| **5** | SouthSahara (*South of Sahara*) | 149 | legacy |
+| **6** | Imperium (*Imperium Diplomacy*) | 13 | legacy |
+| **6** | GreekDip (*Greek Diplomacy*) | 35 | legacy |
+| **6** | Fubar | 39 | legacy |
+| **6** | AmericanConflict (*American Conflict*) | 69 | legacy |
+| **6** | AnarchyInTheUK (*Anarchy in the UK*) | 79 | legacy |
+| **6** | Mars | 80 | legacy |
+| **6** | BalkanWarsVI (*Balkan Wars VI*) | 254 | legacy |
+| **7** | Classic | 1 | **React** |
+| **7** | FleetRome (*Classic, with fleet in Rome*) | 3 | legacy |
+| **7** | CustomStart (*Classic with a custom start*) | 4 | legacy |
+| **7** | BuildAnywhere (*Classic, but build anywhere*) | 5 | legacy |
+| **7** | Pure | 11 | legacy |
+| **7** | Colonial (*Colonial Diplomacy*) | 12 | legacy |
+| **7** | Classic1897 (*Classic - 1897*) | 28 | legacy |
+| **7** | Alacavre | 31 | legacy |
+| **7** | Germany1648 (*Germany 1648*) | 36 | legacy |
+| **7** | ClassicNoNeutrals (*Classic - NoNeutrals*) | 38 | legacy |
+| **7** | ClassicOctopus (*Classic - Octopus*) | 40 | legacy |
+| **7** | ClassicVS (*Classic - Pick your countries*) | 42 | legacy |
+| **7** | ClassicGreyPress (*Classic - GreyPress*) | 50 | legacy |
+| **7** | Abstraction3 (*Abstraction III*) | 67 | legacy |
+| **7** | Zeus5 (*Zeus 5*) | 70 | legacy |
+| **7** | Maharajah | 74 | legacy |
+| **7** | AgeOfPericles (*Age of Pericles*) | 78 | legacy |
+| **7** | DarkAges (*Dark Ages*) | 82 | legacy |
+| **7** | HeptarchyIV | 89 | legacy |
+| **7** | ClassicAnkaraCrescent (*Classic - Ankara Crescent*) | 90 | legacy |
+| **7** | FirstCrusade (*First Crusade*) | 98 | legacy |
+| **7** | Balkans1860 (*Balkans 1860*) | 103 | legacy |
+| **7** | Renaissance1453 (*Renaissance - 1453*) | 107 | legacy |
+| **7** | Canton (*Canton Diplomacy*) | 108 | legacy |
+| **7** | Edwardian | 110 | legacy |
+| **7** | SpiceIslands (*Spice Islands*) | 116 | legacy |
+| **7** | ClassicBritain (*Classic - Britain*) | 122 | legacy |
+| **7** | ClassicBrazilian (*Classic - Brazilian*) | 123 | legacy |
+| **7** | Edwardian3 (*Edwardian - 3rd Edition*) | 130 | legacy |
+| **7** | Classic1898 (*Classic - 1898*) | 133 | legacy |
+| **7** | Scottish_Clan_Wars (*Scottish Clan Wars*) | 141 | legacy |
+| **8** | Migraine | 21 | legacy |
+| **8** | SouthAmerica8 (*South American Supremacy*) | 24 | legacy |
+| **8** | MateAgainstMate (*Mate Against Mate*) | 37 | legacy |
+| **8** | WhoControlsAmerica (*Who controls America*) | 43 | legacy |
+| **8** | GoT (*Game of Thrones*) | 45 | legacy |
+| **8** | USofA (*USA*) | 56 | legacy |
+| **8** | Viking (*Viking Diplomacy IV*) | 63 | legacy |
+| **8** | Habelya | 68 | legacy |
+| **8** | Europe1939 (*Europe 1939*) | 72 | legacy |
+| **8** | CelticBritain (*Celtic Britain*) | 75 | legacy |
+| **8** | TiglathPileser (*Tiglath-Pileser*) | 137 | legacy |
+| **8** | Karibik | 251 | legacy |
+| **9** | Hussite (*Hussite Wars*) | 47 | legacy |
+| **9** | GreatLakes (*Indians of the Great Lakes*) | 77 | legacy |
+| **9** | AberrationV (*Aberration V*) | 88 | legacy |
+| **9** | Europe1600 (*1600*) | 97 | legacy |
+| **9** | EmpiresCoalitions (*1800 - Empires and Coalitions*) | 113 | legacy |
+| **9** | AustrianSuccession (*War of Austrian Succession*) | 117 | legacy |
+| **9** | WesternWorld_901 (*Western World 901*) | 127 | legacy |
+| **10** | Modern2 (*Modern Diplomacy II*) | 19 | legacy |
+| **10** | Empire4 (*Fall of the American Empire IV*) | 20 | legacy |
+| **10** | War2020 (*War in 2020*) | 61 | legacy |
+| **10** | Enlightenment (*Enlightenment & Succession*) | 76 | legacy |
+| **10** | Napoleonic | 101 | legacy |
+| **11** | ClassicCrowded (*Classic - Crowded*) | 14 | legacy |
+| **17** | World (*World Diplomacy IX*) | 2 | legacy |
+| **34** | ClassicChaos (*Classic - Chaos*) | 17 | legacy |
+| **34** | ClassicChaoctopi (*Classic - Chaoctopi*) | 54 | legacy |
 
-Also installed, outside the 2–8 range: **World** (`$id` 2, **17** players, legacy),
-**Modern2** (19, 10 players, legacy), **Empire4** (20, 10 players, legacy), **ClassicChaos**
-(17, **34** players, legacy).
+**Every player count from 2 to 11 is now servable**, and 17 and 34 as well. The gaps that
+issue 009 wave 1 could only fill with `ClassicVS`'s name trick are gone: four, five and six
+players all have real maps now.
 
-**Every variant in the tree is now enabled and has been played through at least one adjudicated
-phase.** Nothing is `present`-but-disabled any more.
+**Picking one for two people.** Ten two-player variants. Six of them (FvA, GvI, EvT, FGvsRT, GvR
+and, near enough, ClassicVS with a two-letter code) are the same Classic board with different
+starting units, and only FvA and GvI get the point-and-click board. The ones that feel genuinely
+different are **ColdWar** (a world map, USSR vs USA), **Duo** (an original symmetric map with
+eight static neutral units in the middle that both sides have to chew through), **GoT2**
+(Westeros), **Lepanto** (the 1571 galley battle — turns are half-hours, you win by taking two
+flagships, and four territories cannot be moved out of) and **Empire1on1** (180 territories, a
+custom start where you place your own units, and a long game). Suggested defaults:
+**ClassicFvA** if you want the nice board, **Duo** or **ColdWar** for a new map, **Lepanto** for
+something that is not really Diplomacy at all.
 
-**Picking one for two people.** Seven is a lot of choice, but four of them (FvA, GvI, EvT,
-FGvsRT) are the same Classic board with different starting units, and only FvA and GvI get the
-point-and-click board. The three that feel genuinely different are **ColdWar** (a world map,
-USSR vs USA), **Duo** (an original symmetric map, with eight static neutral units in the middle
-that both sides have to chew through) and **GoT2** (Westeros). Suggested defaults: **ClassicFvA**
-if you want the nice board, **Duo** or **ColdWar** if you want a new map.
+**Three, four, five and six players.** Three: `Hundred` (the Hundred Years' War), `TreatyOfVerdun`
+(the Carolingian split), or the two Classic ones. Four: `SouthAmerica4`, `NorthSeaWars`,
+`SailHo2`, `ColdWarRedux`, `AtlanticColonies` (nine units each) or `Chesspolitik` (a chessboard,
+32 of its 64 squares are supply centres). Five: `AncMed` is still the best-tested, with
+`SouthAmerica5`, `WWII`, `Caucasia`, `Chromatic`, `ManifestDestiny`, `WesternEurope1300` and
+`SouthSahara` beside it. Six: `GreekDip`, `AnarchyInTheUK`, `BalkanWarsVI`, `AmericanConflict`,
+`Fubar`, `Mars` or `Imperium`.
 
-**Four, five and six players are now servable after all — by `ClassicVS` (`$id` 42), which reads
-the powers out of the game's *name*:** call the game `Friday night (EFGA)` and it is a four-player
-England/France/Germany/Austria game on the Classic board. The letters are E, F, I, G, A, T, R for
-the seven powers, `?` adds a random one, and a name with no bracketed code gives all seven.
-Three is also directly servable, by ClassicFGA or ClassicIER. The older answers still work for
-an awkward number: play Classic (or one of its nine seven-player cousins) with the spare people
-spectating or sharing a seat, or run two of the two-player maps in parallel.
+**Two warnings, both learned the hard way in issue 009 wave 3:**
 
-**The seven-player cousins, briefly**, since they are new and the New Game form only shows a
-name: *FleetRome* is Classic with Italy starting `F Rome` instead of `A Rome`. *CustomStart* is
-Classic where the game opens in a **Builds phase with no units at all** and everyone places their
-own three (four for Russia) — expect to spend the first five minutes on that, and note fleets can
-only go on coastal home centres. *BuildAnywhere* is Classic where you may build in **any** supply
-centre you own, not just your home ones — it only starts to matter in your second winter.
-*Colonial* (125 territories, solo on 30) and *Zeus5* (113 territories, solo on 21, also a custom
-start) are real different maps and much longer games.
+- **Do not create an `Imperium` game with the Sum-of-squares pot type.** Imperium starts every
+  power with **zero supply centres** (its installer makes all 28 centres neutral), and core's
+  sum-of-squares scoring divides by the total — every board load of such a game dies with
+  *"Division by zero"*. Winner-takes-all, Points-per-supply-center and Unranked are all fine.
+  This is a core bug, not an Imperium bug; any future variant that starts nobody on a centre will
+  do the same.
+- **Custom-start variants open in a Builds phase with no units**, and everybody has to place
+  their own before the game really begins: `CustomStart`, `Zeus5`, `Classic1897`,
+  `ClassicChaoctopi`, `War2020`, `Migraine`, `Fubar`, `Mars` and `Empire1on1`. Budget five
+  minutes of game night for it, and note that fleets can only go on coastal home centres.
+
+**Bigger tables.** Seven players has thirty-one choices, eight has twelve, nine has seven and ten
+has five (`Modern2`, `Empire4`, `War2020`, `Enlightenment`, `Napoleonic`). Above ten,
+`ClassicCrowded` is eleven, `World` is seventeen and `ClassicChaos` / `ClassicChaoctopi` are
+thirty-four — more players than this install has accounts, so those need extra accounts
+(§A.4).
 
 ### B.2 Creating the game, step by step
 

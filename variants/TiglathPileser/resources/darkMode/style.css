@@ -1,0 +1,20 @@
+@CHARSET "ISO-8859-1";
+
+.variantTiglathPileser .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantTiglathPileser .country1 { color: #FF8C5E ! important; } /* Assyria */
+.variantTiglathPileser .country2 { color: rgb(184, 135, 223) ! important; } /* Babylonia  */
+.variantTiglathPileser .country3 { color: rgb(101, 185, 185) ! important; } /* Urartu */
+.variantTiglathPileser .country4 { color: #EE82EE ! important; } /* Kush */
+.variantTiglathPileser .country5 { color: rgb(175, 175, 44) ! important; } /* Elam */
+.variantTiglathPileser .country6 { color: rgb(103, 170, 255) ! important; } /* Egypt */
+.variantTiglathPileser .country7 { color: rgb(170, 170, 84) ! important; } /* Phrygia */
+.variantTiglathPileser .country8 { color: rgb(106, 196, 118) ! important; } /* Saba */
+
+.variantTiglathPileser .occupationBar1 { background-color: #FF8C5E; } /* Assyria */
+.variantTiglathPileser .occupationBar2 { background-color: rgb(208, 137, 154); } /* Babylonia  */
+.variantTiglathPileser .occupationBar3 { background-color: rgb(101, 185, 185); } /* Urartu */
+.variantTiglathPileser .occupationBar4 { background-color: #EE92EE; } /* Kush */
+.variantTiglathPileser .occupationBar5 { background-color: #FFDD2A; } /* Elam */
+.variantTiglathPileser .occupationBar6 { background-color: rgb(103, 170, 255); } /* Egypt */
+.variantTiglathPileser .occupationBar7 { background-color: rgb(170, 170, 84); } /* Phrygia */
+.variantTiglathPileser .occupationBar8 { background-color: rgb(100, 199, 115); } /* Saba */

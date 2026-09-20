@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+	
+.variantGreatLakes .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantGreatLakes .country1 { color: rgb(107, 179, 203) ! important; } /* Algonquin */
+.variantGreatLakes .country2 { color: rgb(186, 176, 9) ! important; } /* Erie */
+.variantGreatLakes .country3 { color: rgb(190, 140, 182) ! important; } /* Huron */
+.variantGreatLakes .country4 { color: rgb(189, 152, 126) ! important; } /* Iroquois */
+.variantGreatLakes .country5 { color: rgb(121, 192, 98) ! important; } /* Kaskasia */
+.variantGreatLakes .country6 { color: rgb(231, 130, 130) ! important; } /* Mississauga */
+.variantGreatLakes .country7 { color: rgb(206, 149, 96) ! important; } /* Ojibwe */
+.variantGreatLakes .country8 { color: rgb(228, 117, 203) ! important; } /* Otawatomi */
+.variantGreatLakes .country9 { color: rgb(161, 160, 160) ! important; } /* Ottawa */    
+
+
+.variantGreatLakes .occupationBar1 { background-color: #79AFC6; } /* Algonquin */
+.variantGreatLakes .occupationBar2 { background-color: #EAEAAF; } /* Erie */
+.variantGreatLakes .occupationBar3 { background-color: rgb(182, 146, 174); } /* Huron */
+.variantGreatLakes .occupationBar4 { background-color: rgb(175, 156, 139); } /* Iroquois */
+.variantGreatLakes .occupationBar5 { background-color: #A4C499; } /* Kaskasia */
+.variantGreatLakes .occupationBar6 { background-color: rgb(197, 146, 136); } /* Mississauga */
+.variantGreatLakes .occupationBar7 { background-color: #CE9967; } /* Ojibwe */
+.variantGreatLakes .occupationBar8 { background-color: #EFC4E4; } /* Otawatomi */
+.variantGreatLakes .occupationBar9 { background-color: rgb(160, 160, 160); } /* Ottawa */

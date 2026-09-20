@@ -228,7 +228,7 @@ merge conflict tells you why the hunk exists. Regenerate this list before any up
 grep -rn "LOCAL DEVIATION" --include=*.yml --include=*.conf --include=*.php .
 ```
 
-As of 2026-09-20 that is **nine markers in two files**:
+As of 2026-09-20 that is **eleven markers in three files**:
 
 **`docker-compose.yml`** (7)
 
@@ -242,12 +242,19 @@ As of 2026-09-20 that is **nine markers in two files**:
 | 195 | 006/011 | php-fpm `restart:` policy, same reason |
 | 282 | 002 | The named-volume declaration itself, at the bottom of the file |
 
-**`phpdocker/nginx/nginx.conf`** (2)
+**`phpdocker/nginx/nginx.conf`** (3)
 
 | Line | Issue | What it is |
 | ---: | --- | --- |
 | 21 | 011 | `resolver 127.0.0.11 valid=10s` + `set $sse_upstream …` / `proxy_pass $sse_upstream$request_uri`, so nginx resolves `sse` at request time instead of dying at startup when `sse` isn't up yet |
 | 62 | 003 | Public registration closed: `location = /register.php { return 404; }` and `location ^~ /register/ { return 404; }` |
+| 87 | 009 | `location ~ ^/variants/.*\.php$ { return 404; }` — harvested variant packages are third-party PHP inside the document root, and the generic `\.php` handler happily executed anything they shipped under `resources/` (vDiplomacy's fog variants ship `fogmap.php`, a front controller that `require_once('header.php')`). Nothing legitimate fetches a `.php` under `variants/`: variant PHP is included server-side and the only variant URLs the site emits are `resources/style.css` (`lib/html.php:647`) and `resources/smallmap.png` (`variants/variant.php:291`). **Regex locations are matched in order, so this block must stay above the `\.php` block.** |
+
+**`variants.php`** (1)
+
+| Line | Issue | What it is |
+| ---: | --- | --- |
+| 35 | 009 | Skip any `variants/<X>/` with no `install.php` or an abstract variant class. This page instantiates **every** directory under `variants/`, enabled or not, and instantiating a variant runs its installer — `variants/RuleExtensions` is an abstract base package that `SouthSahara` extends, and `new RuleExtensionsVariant` took the whole page down with *"Cannot instantiate abstract class"*. The same scan is why a **deferred** variant's folder must be deleted, not left on disk |
 
 Line numbers drift; the marker text does not. After resolving the merge, re-run the grep and
 confirm the count is still nine (or that a deliberate change explains the difference).
@@ -477,7 +484,7 @@ deprecations inside the variant's own `classes/`.
 ### 5.6 Deviations survived the merge
 
 ```sh
-grep -rn "LOCAL DEVIATION" --include=*.yml --include=*.conf --include=*.php .   # nine markers (§2.2)
+grep -rn "LOCAL DEVIATION" --include=*.yml --include=*.conf --include=*.php .   # eleven markers (§2.2)
 curl -s -o /dev/null -w 'register %{http_code}\n' http://127.0.0.1:43000/register.php   # 404
 curl -s -o /dev/null -w 'register/ %{http_code}\n' http://127.0.0.1:43000/register/processUserForm.php  # 404
 curl -s http://127.0.0.1:43000/events                              # Missing auth parameter
@@ -516,7 +523,8 @@ Tell the other player the site is back.
 - [ ] DATC batch run and compared to baseline; no new failures.
 - [ ] Five-item checklist passed on Classic + one variant per wave.
 - [ ] `variant-registry.md` updated for anything that broke.
-- [ ] Nine `LOCAL DEVIATION` markers present; registration 404s; `/events` answers.
+- [ ] Eleven `LOCAL DEVIATION` markers present; registration 404s; `/events` answers;
+      `/variants/Classic/resources/style.css` is 200 and `/variants/Classic/variant.php` is 404.
 - [ ] Processing restarted; `local` pushed.
 
 ---

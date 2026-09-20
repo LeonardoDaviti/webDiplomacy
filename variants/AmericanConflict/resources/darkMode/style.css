@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+.variantAmericanConflict .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global             */
+.variantAmericanConflict .country1 { color: rgb(177, 149, 171) ! important; } /* Russia             */
+.variantAmericanConflict .country2 { color: rgb(160, 160, 160) ! important; } /* Confederate States */
+.variantAmericanConflict .country3 { color: rgb(140, 167, 179) ! important; } /* United States      */
+.variantAmericanConflict .country4 { color: #D4AECA ! important; } /* England            */
+.variantAmericanConflict .country5 { color: #79AFC6 ! important; } /* France             */
+.variantAmericanConflict .country6 { color: #C1C163 ! important; } /* Spain              */
+
+.variantAmericanConflict .occupationBar1 { background-color: rgb(182, 146, 174); } /* Russia             */
+.variantAmericanConflict .occupationBar2 { background-color: #D3D3D3; } /* Confederate States */
+.variantAmericanConflict .occupationBar3 { background-color: rgb(140, 167, 179); } /* United States      */
+.variantAmericanConflict .occupationBar4 { background-color: #EFC4E4; } /* England            */
+.variantAmericanConflict .occupationBar5 { background-color: #79AFC6; } /* France             */
+.variantAmericanConflict .occupationBar6 { background-color: #C1C163; } /* Spain              */
+

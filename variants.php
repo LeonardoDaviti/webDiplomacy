@@ -32,10 +32,22 @@ print libHTML::pageTitle(l_t('webDiplomacy variants'),l_t('A list of the variant
 $variantsOn=array();
 $variantsOff=array();
 
+/*
+ * LOCAL DEVIATION (issue 009): this page instantiates every directory under variants/ that has a
+ * variant.php, whether or not it is in Config::$variants -- and instantiating a variant runs its
+ * installer. That is not safe once third-party packages are in the tree. variants/RuleExtensions
+ * is vDiplomacy's shared rule-extension base package: an abstract class with no install.php and
+ * no $id, present only because SouthSahara extends it, and `new RuleExtensionsVariant` is a fatal
+ * that takes the whole page with it. Skip any directory that does not ship its own install.php or
+ * whose variant class is abstract; neither is a variant this server can offer.
+ */
 $variants = glob('variants/*');
 foreach($variants as $variantDir) {
    if( is_dir($variantDir) && file_exists($variantDir.'/variant.php') )
    {
+      if( !file_exists($variantDir.'/install.php') ) continue;
+      if( preg_match('/abstract\s+class\s+\w+Variant\b/', file_get_contents($variantDir.'/variant.php')) ) continue;
+
       $variantDir=substr($variantDir,9);
       if( in_array($variantDir, Config::$variants) )
          $variantsOn[] = $variantDir;

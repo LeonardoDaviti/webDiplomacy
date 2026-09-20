@@ -1,0 +1,24 @@
+@CHARSET "ISO-8859-1";
+
+.variantWesternWorld_901 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantWesternWorld_901 .country1 { color: rgb(124, 183, 137) ! important; } /* Arabia */
+.variantWesternWorld_901 .country2 { color: rgb(198, 144, 143) ! important; } /* Byzantium   */
+.variantWesternWorld_901 .country3 { color: rgb(230, 130, 130) ! important; } /* Denmark */
+.variantWesternWorld_901 .country4 { color: rgb(186, 176, 9) ! important; } /* Egypt  */
+.variantWesternWorld_901 .country5 { color: rgb(126, 168, 210) ! important; } /* France  */
+.variantWesternWorld_901 .country6 { color: rgb(160, 160, 160) ! important; } /* Germany  */
+.variantWesternWorld_901 .country7 { color: rgb(40, 212, 209) ! important; } /* Khazaria */
+.variantWesternWorld_901 .country8 { color: rgb(108, 182, 183) ! important; } /* Rus */
+.variantWesternWorld_901 .country9 { color: rgb(65, 216, 119) ! important; } /* Spain */
+
+.variantWesternWorld_901 .occupationBar1 { background-color: rgb(150, 169, 143); } /* Arabia */
+.variantWesternWorld_901 .occupationBar2 { background-color: rgb(198, 144, 143); } /* Byzantium   */
+.variantWesternWorld_901 .occupationBar3 { background-color: rgb(230, 130, 130); } /* Denmark */
+.variantWesternWorld_901 .occupationBar4 { background-color: #EBD984; } /* Egypt  */
+.variantWesternWorld_901 .occupationBar5 { background-color: rgb(126, 168, 210); } /* France  */
+.variantWesternWorld_901 .occupationBar6 { background-color: rgb(160, 160, 160); } /* Germany  */
+.variantWesternWorld_901 .occupationBar7 { background-color: #00FFFF; } /* Khazaria */
+.variantWesternWorld_901 .occupationBar8 { background-color: rgb(108, 182, 183); } /* Rus */
+.variantWesternWorld_901 .occupationBar9 { background-color: rgb(147, 190, 41); } /* Spain */
+
+

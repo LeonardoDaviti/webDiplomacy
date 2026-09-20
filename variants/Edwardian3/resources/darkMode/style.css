@@ -1,0 +1,18 @@
+@CHARSET "ISO-8859-1";
+
+.variantEdwardian3 .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Neutral */
+.variantEdwardian3 .country1 { color: rgb(206, 141, 141) ! important; } /* Austria-Hungary */
+.variantEdwardian3 .country2 { color: rgb(215, 136, 136) ! important; } /* Britain */
+.variantEdwardian3 .country3 { color: rgb(128, 165, 221) ! important; } /* France */
+.variantEdwardian3 .country4 { color: rgb(160, 160, 160) ! important; } /* Germany */
+.variantEdwardian3 .country5 { color: rgb(139, 179, 119) ! important; } /* Italy */
+.variantEdwardian3 .country6 { color: rgb(160, 160, 160) ! important; } /* Russia */
+.variantEdwardian3 .country7 { color: rgb(198, 151, 105) ! important; } /* Turkey */
+
+.variantEdwardian3 .occupationBar1 { background-color: rgb(223, 133, 132); } /* Austria-Hungary */
+.variantEdwardian3 .occupationBar2 { background-color: #FF9999; } /* Britain */
+.variantEdwardian3 .occupationBar3 { background-color: rgb(111, 167, 255); } /* France */
+.variantEdwardian3 .occupationBar4 { background-color: rgb(160, 160, 160); } /* Germany */
+.variantEdwardian3 .occupationBar5 { background-color: #75CC47; } /* Italy */
+.variantEdwardian3 .occupationBar6 { background-color: #FFF5E7; } /* Russia */
+.variantEdwardian3 .occupationBar7 { background-color: rgb(203, 150, 97); } /* Turkey */

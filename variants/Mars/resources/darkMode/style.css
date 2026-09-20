@@ -1,0 +1,15 @@
+@CHARSET"ISO-8859-1";
+.variantMars .country0{color:rgba(255, 255, 255, 0.8)!important;}/*Global*/
+.variantMars .country1{color:rgb(228, 117, 203)!important;}/*Amazonia*/
+.variantMars .country2{color:rgb(107, 179, 203)!important;}/*Mareotia*/
+.variantMars .country3{color:rgb(121, 192, 98)!important;}/*Noachtia*/
+.variantMars .country4{color:rgb(189, 152, 126)!important;}/*Cydonia*/
+.variantMars .country5{color:rgb(231, 130, 130)!important;}/*Arkadia*/
+.variantMars .country6{color:rgb(186, 176, 9)!important;}/*Alborian*/
+
+.variantMars .occupationBar1{background-color:#EFC4E4;}/*Amazonia*/
+.variantMars .occupationBar2{background-color:#79AFC6;}/*Mareaotia*/
+.variantMars .occupationBar3{background-color:#A4C499;}/*Noachtia*/
+.variantMars .occupationBar4{background-color:rgb(175, 156, 139);}/*Cydonia*/
+.variantMars .occupationBar5{background-color:rgb(197, 146, 136);}/*Arkadia*/
+.variantMars .occupationBar6{background-color:#EAEAAF;}/*Alborian*/

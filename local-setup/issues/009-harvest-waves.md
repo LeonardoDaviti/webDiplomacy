@@ -1024,9 +1024,11 @@ recording because they are cheap to spot:
   is what the code means anyway. **Baron1900 is the only one of the 67 candidates that uses
   either.**
 
-It was backed out completely — config entry, map rows, `wD_VariantInfo` row and its acceptance
-game — but **the folder was kept**, because unlike the fog variants it ships no front controller
-under `resources/`.
+It was backed out completely — config entry, map rows, `wD_VariantInfo` row, acceptance game and
+**the folder**. (The folder was initially kept, on the grounds that unlike the fog variants it
+ships no front controller under `resources/`; it was deleted later in the wave when `variants.php`
+turned out to instantiate every directory under `variants/` whether or not it is enabled — and
+instantiating a variant runs its installer. A deferred package cannot be left on disk here.)
 
 Two operational traps met in this batch, both worth remembering:
 
@@ -1084,7 +1086,8 @@ no build can be submitted and the game cannot leave turn 0. Its `classes/OrderIn
 rewrites `libHTML::$footerScript` with `str_replace` to inject four JS hooks, which is the
 obvious suspect but was not proven; `load()`'s write into `$GLOBALS['Variants']` is *not* the
 cause, because that global does exist in this codebase (`variants/variant.php:379-381`).
-Backed out; folder kept.
+Backed out, folder and all — see the note under Baron1900 about why a deferred package cannot
+stay on disk.
 
 Its upstream `$id` is also a reminder to read the source rather than a regex: DutchRevolt
 declares **`public $id = '32';`** — quoted — so the first pass over the tree read it as having no
@@ -1095,3 +1098,157 @@ declares **`public $id = '32';`** — quoted — so the first pass over the tree
 ```php
 public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',70=>'Zeus5',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',78=>'AgeOfPericles',79=>'AnarchyInTheUK',82=>'DarkAges',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',112=>'ManifestDestiny',113=>'EmpiresCoalitions',116=>'SpiceIslands',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',128=>'ColdWarRedux',132=>'Chesspolitik',133=>'Classic1898',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',251=>'Karibik',254=>'BalkanWarsVI');
 ```
+
+### Wave 3 batch 4 — the last twenty-three, and the last two deferrals
+
+| Variant | `$id` | `$mapID` | Players | Territories / SCs (install.php = DB) | Solo target | gameID | Verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Empire1on1 | 33 | 33 | 2 | 180 / 59 | 34 | **98** | **Pass** |
+| GreekDip | 35 | 35 | 6 | 110 / 34 | 18 | **80** | **Pass** |
+| Germany1648 | 36 | 36 | 7 | 106 / 53 | 28 | **78** | **Pass** |
+| MateAgainstMate | 37 | 37 | 8 | 116 / 47 | 25 | **82** | **Pass** |
+| Viking | 63 | 63 | 8 | 184 / 85 | 26 | **100** | **Pass** |
+| Abstraction3 | 67 | 67 | 7 | 122 / 48 | 25 | **89** | **Pass** |
+| Habelya | 68 | 68 | 8 | 121 / 43 | 23 | **88** | **Pass** |
+| AmericanConflict | 69 | 69 | 6 | 173 / 56 | 29 | **97** | **Pass** |
+| Europe1939 | 72 | 72 | 8 | 150 / 55 | 29 | **94** | **Pass** |
+| Enlightenment | 76 | 76 | 10 | 120 / 57 | 29 | **86** | **Pass** |
+| GreatLakes | 77 | 77 | 9 | 116 / 52 | 28 | **81** | **Pass** |
+| Mars | 80 | 80 | 6 | 130 / 40 | 21 | **92** | **Pass** |
+| WWII | 87 | 87 | 5 | 186 / 74 | 45 | **99** | **Pass** |
+| AberrationV | 88 | 88 | 9 | 152 / 53 | 28 | **95** | **Pass** |
+| Europe1600 | 97 | 97 | 9 | 129 / 53 | 27 | **91** | **Pass** |
+| FirstCrusade | 98 | 98 | 7 | 134 / 52 | 27 | **93** | **Pass** |
+| AtlanticColonies | 99 | 99 | 4 | 121 / 49 | 25 | **87** | **Pass** |
+| Napoleonic | 101 | 101 | 10 | 116 / 35 | 18 | **85** | **Pass** |
+| Edwardian | 110 | 110 | 7 | 118 / 50 | 26 | **84** | **Pass** |
+| AustrianSuccession | 117 | 117 | 9 | 108 / 51 | 27 | **79** | **Pass** |
+| WesternWorld_901 | 127 | 127 | 9 | 167 / 64 | 33 | **96** | **Pass** |
+| Edwardian3 | 130 | 130 | 7 | 117 / 51 | 20 | **83** | **Pass** |
+| TiglathPileser | 137 | 137 | 8 | 127 / 52 | 28 | **90** | **Pass** |
+| SpeedEuropa | 253 | — | 7 | 104 / 35 | — | — | **Deferred** |
+| RatWars | 65 | — | 4 | 191 / 31 | — | — | **Deferred** |
+
+Two more refusals, both caught by the security read **before anything was copied**:
+
+- **SpeedEuropa (253)** `SELECT`s from and `UPDATE`s **`wD_Users`**. vDiplomacy's
+  country-balancing keeps a `Chance<CountryName>` column per power on the *user* row, and its
+  `adjudicatorPreGame` reads every player's chances, draws countries from them and writes the
+  updated chances back. Touching the user table is on the reject list whatever the reason, and
+  the columns do not exist here — a schema change *and* a policy exception.
+- **RatWars (65)** is the fifth fog variant: `STATICSRV`, `extends Maps`, `extends OrderArchiv`
+  and `resources/{fogmap,jsonBoardData}.php`.
+
+Worth noting from this batch:
+
+- **Three of them place a non-playable power at the start**, the way `Duo` places its neutral
+  "Black": `Germany1648` (an eighth power with fifteen units), `WesternWorld_901` (a tenth with
+  twenty-eight) and `MateAgainstMate` (a ninth). The acceptance games treat them correctly —
+  they are in `wD_Units` and `wD_TerrStatus` but have no member row, so no seat is needed.
+- **`Empire1on1` (33) is the tree's tenth two-player variant**, and the biggest by a wide margin:
+  180 territories / 59 SCs, solo on 34, opening in a turn-0 Builds phase with no units.
+- **`Viking` (63) has 85 supply centres on 184 territories**, the highest supply-centre density
+  in the wave; `WWII` (87) has the most in absolute terms at 74, and `Germany1648` the most
+  borders at 1,574.
+- Five more variants needed the `implode($array, $glue)` PHP 8 fix: `Edwardian`, `Edwardian3`,
+  `EmpiresCoalitions`, `Mars` and `Viking`.
+
+### Wave 3 — final tally
+
+**67 candidates: 61 playable, 6 deferred.** Every one of the 61 is registered, installed with a
+territory and supply-centre count matching its own `install.php` exactly, present in the New Game
+dropdown, rendered by `variants.php` and `map.php?variantID=<id>`, and has an acceptance game
+driven through **Spring → Autumn → Builds** (a few needed a third year to reach builds) and left
+**paused**. Acceptance games are **35–100**, excluding the ones cancelled with their variants.
+
+| Verdict | Count | Variants |
+| --- | ---: | --- |
+| **Playable, played** | 61 | Pure 11, SouthAmerica5 6, SouthAmerica4 7, Hundred 8, Imperium 13, SailHo2 16, Migraine 21, SouthAmerica8 24, Alacavre 31, Empire1on1 33, GreekDip 35, Germany1648 36, MateAgainstMate 37, Fubar 39, Lepanto 41, WhoControlsAmerica 43, Hussite 47, USofA 56, TreatyOfVerdun 58, War2020 61, Viking 63, Abstraction3 67, Habelya 68, AmericanConflict 69, Europe1939 72, NorthSeaWars 73, Maharajah 74, CelticBritain 75, Enlightenment 76, GreatLakes 77, AgeOfPericles 78, AnarchyInTheUK 79, Mars 80, DarkAges 82, WWII 87, AberrationV 88, HeptarchyIV 89, Chromatic 93, Europe1600 97, FirstCrusade 98, AtlanticColonies 99, Napoleonic 101, Balkans1860 103, Renaissance1453 107, Canton 108, Edwardian 110, ManifestDestiny 112, EmpiresCoalitions 113, SpiceIslands 116, AustrianSuccession 117, Caucasia 118, WesternWorld_901 127, ColdWarRedux 128, Edwardian3 130, Chesspolitik 132, TiglathPileser 137, Scottish_Clan_Wars 141, WesternEurope1300 145, SouthSahara 149, Karibik 251, BalkanWarsVI 254 |
+| **Deferred** | 6 | TenSixtySix 55, PunicWars 208, RatWars 65 (fog family) · Baron1900 1900 (needs `wD_Territories.buildEligibilityFlags`) · DutchRevolt 32 (no order interface on its turn-0 Builds phase) · SpeedEuropa 253 (writes `wD_Users`) |
+
+Two renumbers, both into the 254-downwards band and both written only into the variant's own
+`variant.php`: **BalkanWarsVI 46 → 254** (GoT2 holds 46) and **Karibik 45 → 251** (GoT holds 45).
+One package, `variants/RuleExtensions/`, is in the tree as a **dependency only** and is not
+registered.
+
+`Config::$variants` now holds **94 variants**, every key unique:
+
+```sh
+python3 - <<'EOF'
+import re
+line=re.search(r'public static \$variants=array\(.*?\);',open('config.php').read(),re.S).group(0)
+ids=re.findall(r"(\d+)=>'",line)
+assert len(ids)==len(set(ids)), 'duplicate variant IDs'
+print(len(ids),'variants, no duplicates')
+EOF
+```
+
+(The registry's shell one-liner still works too; do **not** use
+`grep -o '[0-9]\+=>' config.php` on the whole file, which also matches the server-message and
+bot arrays.)
+
+### The `config.php` line after wave 3
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',6=>'SouthAmerica5',7=>'SouthAmerica4',8=>'Hundred',9=>'AncMed',11=>'Pure',12=>'Colonial',13=>'Imperium',14=>'ClassicCrowded',15=>'ClassicFvA',16=>'SailHo2',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',21=>'Migraine',22=>'Duo',23=>'ClassicGvI',24=>'SouthAmerica8',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',31=>'Alacavre',33=>'Empire1on1',35=>'GreekDip',36=>'Germany1648',37=>'MateAgainstMate',38=>'ClassicNoNeutrals',39=>'Fubar',40=>'ClassicOctopus',41=>'Lepanto',42=>'ClassicVS',43=>'WhoControlsAmerica',45=>'GoT',46=>'GoT2',47=>'Hussite',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',56=>'USofA',58=>'TreatyOfVerdun',61=>'War2020',62=>'ClassicEvT',63=>'Viking',67=>'Abstraction3',68=>'Habelya',69=>'AmericanConflict',70=>'Zeus5',72=>'Europe1939',73=>'NorthSeaWars',74=>'Maharajah',75=>'CelticBritain',76=>'Enlightenment',77=>'GreatLakes',78=>'AgeOfPericles',79=>'AnarchyInTheUK',80=>'Mars',82=>'DarkAges',87=>'WWII',88=>'AberrationV',89=>'HeptarchyIV',90=>'ClassicAnkaraCrescent',91=>'ColdWar',93=>'Chromatic',97=>'Europe1600',98=>'FirstCrusade',99=>'AtlanticColonies',101=>'Napoleonic',103=>'Balkans1860',107=>'Renaissance1453',108=>'Canton',110=>'Edwardian',112=>'ManifestDestiny',113=>'EmpiresCoalitions',116=>'SpiceIslands',117=>'AustrianSuccession',118=>'Caucasia',122=>'ClassicBritain',123=>'ClassicBrazilian',127=>'WesternWorld_901',128=>'ColdWarRedux',130=>'Edwardian3',132=>'Chesspolitik',133=>'Classic1898',137=>'TiglathPileser',141=>'Scottish_Clan_Wars',145=>'WesternEurope1300',149=>'SouthSahara',251=>'Karibik',254=>'BalkanWarsVI');
+```
+
+### What wave 3 learned, for wave 4
+
+1. **Grep for `STATICSRV` first.** Five of the six deferrals are the fog subsystem and one grep
+   finds them all in a second. `extends Maps` is the same tell; `extends OrderArchiv` **alone** is
+   not — the in-tree Zeus5 and Duo carry it harmlessly.
+2. **Grep for `wD_Users`.** SpeedEuropa is the only candidate that writes it, but that is the one
+   thing a variant must never do.
+3. **Grep for `implode($`.** Eight of the 61 needed the PHP 8 argument-order fix and every one of
+   them was fatal at the board, not at install time.
+4. **Grep for `$Game->` properties that do not exist here** — `targetSCs`, `maxTurns` — and for
+   `wD_` column names that are not in this schema (`buildEligibilityFlags`).
+5. **Grep for `extends <X>Variant` where `<X>` is not in the tree.** One hit, `SouthSahara` →
+   `RuleExtensions`, and it is a two-minute fix if you see it before the install fails.
+6. **Never trust `data.php` as evidence of an install.** Count the rows.
+7. **Never trust an upstream `$id` read by regex.** DutchRevolt declares `public $id = '32';` with
+   quotes, and Baron1900's 1900 is above the `tinyint` ceiling that this schema silently clamps.
+
+### One core edit, and why
+
+`variants.php` builds its list by `glob('variants/*')` and calling
+`libVariant::loadFromVariantName()` on **every** directory that has a `variant.php`, enabled or
+not — and constructing a variant is what runs its installer. That is fine while every directory
+under `variants/` is a variant this server offers, and it stops being fine the moment a harvest
+puts anything else there:
+
+- `variants/RuleExtensions/` is vDiplomacy's **abstract** rule-extension base package, present
+  only because `SouthSahara` extends it. `new RuleExtensionsVariant` is a fatal, and it took the
+  whole page down with *"Cannot instantiate abstract class RuleExtensionsVariant"* — for every
+  visitor, not just an admin.
+- A **deferred** variant left on disk would have its installer run on that page. Baron1900's
+  would have died on `buildEligibilityFlags` there just as it did in the gamemaster.
+
+So `variants.php` now skips any directory with no `install.php` or an abstract variant class
+(`LOCAL DEVIATION (issue 009)`, the eleventh marker in the tree), **and** the rule for a deferred
+variant is now unconditional: **delete the folder.** Wave 1 deleted `variants/ClassicFog/` for a
+different reason — its web-reachable front controllers — and arrived at the same place.
+
+After the guard, `variants.php` renders **all 94 enabled variants**, `RuleExtensions` is absent
+from it, and the page body is 274 KB instead of a 2.7 KB error.
+
+### Part 0 — variant PHP is no longer executable over HTTP
+
+Separate from the harvest, and committed separately: `phpdocker/nginx/nginx.conf` now returns
+**404 for `^/variants/.*\.php$`**, above the generic `\.php` handler (regex locations are matched
+in definition order).
+
+Wave 1 found that `GET /variants/ClassicFog/resources/fogmap.php` **executed** — it is a front
+controller that `require_once('header.php')` and runs a full request — for a variant that was not
+even enabled. Confirmed before adding the block that **nothing** in the codebase fetches a `.php`
+under `variants/` over HTTP: variant PHP is included server-side, and the only variant URLs the
+site emits are `resources/style.css` (`lib/html.php:647`) and
+`resources/{style.css,smallmap.png}` (`variants/variant.php:291-292`). The JS references to
+`variants/` in `game-src/` are TypeScript import paths, not URLs.
+
+After `nginx -t` and `docker compose restart webserver`:
+`/variants/Classic/resources/style.css` **200**, `/variants/Classic/variant.php` **404**,
+`/variants/variant.php` **404**, and the site, the legacy board, `map.php`, `/game/` and
+`/events` all unchanged. Wave 3 harvested **eleven** packages that ship a PHP file under
+`resources/` or `interactiveMap/` — every one of them is now 404 rather than executable.

@@ -1,0 +1,24 @@
+@CHARSET "ISO-8859-1";
+
+/*Chat and Name colors */
+.variantAustrianSuccession .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantAustrianSuccession .country1 { color: rgb(186, 176, 9) ! important; } /* Austria */
+.variantAustrianSuccession .country2 { color: rgb(142, 163, 192) ! important; } /* Bavaria */
+.variantAustrianSuccession .country3 { color: rgb(231, 130, 130) ! important; } /* England */
+.variantAustrianSuccession .country4 { color: rgb(107, 179, 203) ! important; } /* France */
+.variantAustrianSuccession .country5 { color: rgb(185, 150, 148) ! important; } /* Ottoman Empire */
+.variantAustrianSuccession .country6 { color: rgb(140, 181, 107) ! important; } /* Piedmont-Sardinia */
+.variantAustrianSuccession .country7 { color: rgb(232, 143, 61) ! important; } /* Prussia */
+.variantAustrianSuccession .country8 { color: rgb(206, 124, 223) ! important; } /* Russia */
+.variantAustrianSuccession .country9 { color: rgb(150, 171, 129) ! important; } /* Spain */    
+
+/*SC Bar colors*/
+.variantAustrianSuccession .occupationBar1 { background-color: #f9fb6d; } /* Austria */
+.variantAustrianSuccession .occupationBar2 { background-color: rgb(140, 163, 196); } /* Bavaria */
+.variantAustrianSuccession .occupationBar3 { background-color: rgb(226, 135, 117); } /* England */
+.variantAustrianSuccession .occupationBar4 { background-color: #79b9d4; } /* France */
+.variantAustrianSuccession .occupationBar5 { background-color: rgb(206, 144, 124); } /* Ottoman Empire */
+.variantAustrianSuccession .occupationBar6 { background-color: #b7c572; } /* Piedmont-Sardinia */
+.variantAustrianSuccession .occupationBar7 { background-color: #CE9967; } /* Prussia */
+.variantAustrianSuccession .occupationBar8 { background-color: #e1b1b9; } /* Russia */
+.variantAustrianSuccession .occupationBar9 { background-color: rgb(145, 176, 115); } /* Spain */

@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+	
+.variantViking .country0 { color: rgba(255, 255, 255, 0.8) ! important; }  /* Global  */
+.variantViking .country1 { color: rgb(228, 117, 203) ! important; }  /* Arab Caliphates */
+.variantViking .country2 { color: rgb(139, 177, 126) ! important; }  /* Burgandy   */
+.variantViking .country3 { color: rgb(107, 179, 203) ! important; }  /* Danmark  */
+.variantViking .country4 { color: rgb(189, 152, 126) ! important; }  /* Eastern Roman Empire */
+.variantViking .country5 { color: rgb(121, 192, 98) ! important; }  /* France   */
+.variantViking .country6 { color: rgb(231, 130, 130) ! important; }  /* Slavic Nations  */
+.variantViking .country7 { color: rgb(190, 140, 182) ! important; }  /* Norge  */
+.variantViking .country8 { color: rgb(206, 149, 96) ! important; }  /* Sverige   */
+.variantViking .country9 { color: rgb(186, 176, 9) ! important; }  /* Neutral units  */
+
+.variantViking .occupationBar1 { background-color: #EFC4E4; }  /* Arab Caliphates */
+.variantViking .occupationBar2 { background-color: rgb(147, 171, 138); }  /* Burgandy   */
+.variantViking .occupationBar3 { background-color: #79AFC6; }  /* Danmark  */
+.variantViking .occupationBar4 { background-color: rgb(175, 156, 139); }  /* Eastern Roman Empire */
+.variantViking .occupationBar5 { background-color: #A4C499; }  /* France   */
+.variantViking .occupationBar6 { background-color: rgb(197, 146, 136); }  /* Slavic Nations  */
+.variantViking .occupationBar7 { background-color: rgb(182, 146, 174); }  /* Norge  */
+.variantViking .occupationBar8 { background-color: #ce9967; }  /* Sverige   */
+.variantViking .occupationBar9 { background-color: #EAEAAF; }  /* Neutral units  */
+
