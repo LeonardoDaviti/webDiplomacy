@@ -670,3 +670,56 @@ Installing it would have reproduced a known failure. One fix unblocks both.
 
 **IDs 30 and 134 are reserved permanently** even though neither is installed, per the registry's
 never-reuse rule.
+
+### Wave 1 — summary and the final `config.php` line
+
+Sixteen candidates, **fourteen playable, two deferred**, nothing renumbered: every one kept its
+upstream `$id` and `$mapID`, because all sixteen upstream IDs were free.
+
+| Verdict | Variants |
+| --- | --- |
+| **Playable, played** (12) | ClassicGvR 25, Classic1897 28, ClassicNoNeutrals 38, ClassicOctopus 40, ClassicVS 42, ClassicFGA 48, ClassicIER 49, ClassicGreyPress 50, ClassicAnkaraCrescent 90, ClassicBritain 122, ClassicBrazilian 123, Classic1898 133 |
+| **Playable, render-only** (2) | ClassicCrowded 14 (11 players), ClassicChaoctopi 54 (34 players) |
+| **Deferred** (2) | ClassicFog 30, Classic1898Fog 134 — both `STATICSRV` / `Maps` / `OrderArchiv` |
+
+Acceptance games **18–30**, all **paused** afterwards. Thirteen games, because ClassicVS needed
+two (seven-player and three-player).
+
+`config.php` is gitignored, so this is the only versioned record. **Thirty-three variants:**
+
+```php
+public static $variants=array(1=>'Classic',2=>'World',3=>'FleetRome',4=>'CustomStart',5=>'BuildAnywhere',9=>'AncMed',12=>'Colonial',14=>'ClassicCrowded',15=>'ClassicFvA',17=>'ClassicChaos',19=>'Modern2',20=>'Empire4',22=>'Duo',23=>'ClassicGvI',25=>'ClassicGvR',26=>'ClassicFGvsRT',28=>'Classic1897',38=>'ClassicNoNeutrals',40=>'ClassicOctopus',42=>'ClassicVS',45=>'GoT',46=>'GoT2',48=>'ClassicFGA',49=>'ClassicIER',50=>'ClassicGreyPress',54=>'ClassicChaoctopi',62=>'ClassicEvT',70=>'Zeus5',90=>'ClassicAnkaraCrescent',91=>'ColdWar',122=>'ClassicBritain',123=>'ClassicBrazilian',133=>'Classic1898');
+```
+
+Every key unique — `sed -n '163p' config.php | grep -o "[0-9]\+=>'" | sort | uniq -d` prints
+nothing.
+
+### Wave 1 — things worth carrying forward
+
+- **`admincp`'s `updateVariantInfo` does not escape the variant description.** One apostrophe in
+  `ClassicIER`'s `$description` was enough to kill the action with a SQL syntax error. Worked
+  around in the variant; the escaping bug is in core `admin/` and is still there. **Any future
+  harvest whose description contains an apostrophe will hit it.**
+- **Creating games costs points.** Thirteen acceptance games emptied `admin` and `player2`, and
+  creation then fails with the unhelpful *"5 is an invalid bet size"*. The admin panel's
+  **`givePoints`** action fixes it in one request per account.
+- **Maintenance mode makes `playerN` accounts unusable, but `?auid=<userID>` does not care.**
+  `header.php:244` takes the Admin branch before the maintenance check, so an admin session can
+  act as any user with `?auid=N` (and `auid=0` to switch back) even while maintenance is on. That
+  is how all thirteen games were played without touching the DATC run's maintenance flag.
+  (Maintenance was on when this wave started and was **off** by the end — turned off by whoever
+  owns the DATC run, not by this work.)
+- **A disabled variant must not be left with games pointing at it.** Before removing `30` from
+  `Config::$variants`, the ClassicFog acceptance game was cancelled; otherwise the gamemaster
+  would have tried to load a variant that is no longer in the config on every pass.
+  `cancelGame` needs `formTicket` **and** `actionConfirm=on`, unlike `wipeVariants`,
+  `updateVariantInfo`, `togglePause` and `givePoints`, which need neither.
+- **Rule variants divide into two kinds, and the second kind is nearly free.** ClassicOctopus,
+  ClassicAnkaraCrescent and ClassicChaoctopi change nothing but the **border table** — 1,205 and
+  1,691 rows against Classic's 431 — and carry almost no PHP. Those are the safest harvests
+  there are. The ones that hook `processGame`, `processOrderBuilds` or `OrderInterface`
+  (Classic1897, Classic1898, ClassicVS, the fog pair) are where the risk lives, and the fog pair
+  is where it actually bit.
+- **Every wave-1 variant is legacy-board only**, as the issue predicts: `Game::isClassicGame()`
+  whitelists by *name*, so even the fourteen that play on Classic's own geometry render on
+  `board.php`. All of them return 200 there without redirecting.
