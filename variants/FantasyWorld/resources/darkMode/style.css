@@ -1,0 +1,29 @@
+@CHARSET "ISO-8859-1";
+	
+.variantFantasyWorld .country0 { color: rgba(255, 255, 255, 0.8) ! important; }  /* Global        */
+
+.variantFantasyWorld .country1 { color: rgb(182, 165, 150)! important; }  /* Arafura       */
+.variantFantasyWorld .country2 { color: rgb(129, 197, 108)! important; }  /* Hamra         */
+.variantFantasyWorld .country3 { color: rgb(168, 167, 167)! important; }  /* Ishfahan      */
+.variantFantasyWorld .country4 { color: rgb(230, 123, 206)! important; }  /* Jylland       */
+.variantFantasyWorld .country5 { color: rgb(220, 142, 142)! important; }  /* Kyushu        */
+.variantFantasyWorld .country6 { color: rgb(140, 179, 126)! important; }  /* Lugulu        */
+.variantFantasyWorld .country7 { color: rgb(193, 184, 32)! important; }  /* Ming-tao      */
+.variantFantasyWorld .country8 { color: rgb(186, 151, 144)! important; }  /* New Foundland */
+.variantFantasyWorld .country9 { color: rgb(107, 179, 204)! important; }  /* Orleans       */
+.variantFantasyWorld .country10 { color: rgb(193, 143, 185)! important; } /* Rajasthan     */
+.variantFantasyWorld .country11 { color: rgb(146, 168, 177)! important; } /* Sakhalin      */
+.variantFantasyWorld .country12 { color: rgb(210, 158, 107)! important; } /* Valparaiso    */
+
+.variantFantasyWorld .occupationBar1 { background-color: #A08A75; }  /* Arafura       */
+.variantFantasyWorld .occupationBar2 { background-color: #A4C499; }  /* Hamra         */
+.variantFantasyWorld .occupationBar3 { background-color: #6a6868; }  /* Ishfahan      */
+.variantFantasyWorld .occupationBar4 { background-color: #EFC4E4; }  /* Jylland       */
+.variantFantasyWorld .occupationBar5 { background-color: #883C3C; }  /* Kyushu        */
+.variantFantasyWorld .occupationBar6 { background-color: #729267; }  /* Lugulu        */
+.variantFantasyWorld .occupationBar7 { background-color: #EAEAAF; }  /* Ming-tao      */
+.variantFantasyWorld .occupationBar8 { background-color: #C48F85; }  /* New Foundland */
+.variantFantasyWorld .occupationBar9 { background-color: #79AFC6; }  /* Orleans       */
+.variantFantasyWorld .occupationBar10 { background-color: #A87E9F; } /* Rajasthan     */
+.variantFantasyWorld .occupationBar11 { background-color: #406c80; } /* Sakhalin      */
+.variantFantasyWorld .occupationBar12 { background-color: #ce9967; } /* Valparaiso    */

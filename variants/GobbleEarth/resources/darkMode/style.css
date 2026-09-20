@@ -1,0 +1,32 @@
+@CHARSET "ISO-8859-1";
+
+.variantGobbleEarth .country0 { color: rgba(255, 255, 255, 0.8) ! important; } /* Global  */
+.variantGobbleEarth .country1 { color: rgb(255, 120, 120)! important; } /* Austria */
+.variantGobbleEarth .country2 { color: rgb(222, 120, 222)! important; } /* England */
+.variantGobbleEarth .country3 { color: rgb(120, 188, 188)! important; } /* France  */
+.variantGobbleEarth .country4 { color: rgb(165, 165, 165)! important; } /* Germany */
+.variantGobbleEarth .country5 { color: rgb(100, 217, 60)! important; } /* Italy   */
+.variantGobbleEarth .country6 { color: rgb(171, 171, 171)! important; } /* Russia  */
+.variantGobbleEarth .country7 { color: rgb(178, 178, 60)! important; } /* Turkey  */
+.variantGobbleEarth .country8 { color: rgb(189, 143, 189)! important; } /* China   */
+.variantGobbleEarth .country9 { color: rgb(172, 170, 125)! important; } /* Japan   */
+.variantGobbleEarth .country10 { color: rgb(143, 189, 143)! important; } /* Brazil */
+.variantGobbleEarth .country11 { color: rgb(212, 143, 143)! important; } /* Argentina */
+.variantGobbleEarth .country12 { color: rgb(207, 170, 87)! important; } /* Colombia */
+.variantGobbleEarth .country13 { color: rgb(174, 165, 158)! important; } /* Mexico */
+.variantGobbleEarth .country14 { color: rgb(143, 165, 212)! important; } /* USA */
+
+.variantGobbleEarth .occupationBar1 { background-color: #ff6666; } /* Austria */
+.variantGobbleEarth .occupationBar2 { background-color: #fab5e8; } /* England */
+.variantGobbleEarth .occupationBar3 { background-color: #57eaea; } /* France  */
+.variantGobbleEarth .occupationBar4 { background-color: #7f7f7f; } /* Germany */
+.variantGobbleEarth .occupationBar5 { background-color: #5ee85e; } /* Italy   */
+.variantGobbleEarth .occupationBar6 { background-color: #ebebeb; } /* Russia  */
+.variantGobbleEarth .occupationBar7 { background-color: #f3f379; } /* Turkey  */
+.variantGobbleEarth .occupationBar8 { background-color: #c266c2; } /* China   */
+.variantGobbleEarth .occupationBar9 { background-color: #b3b366; } /* Japan   */
+.variantGobbleEarth .occupationBar10 { background-color: #539d53; } /* Brazil */
+.variantGobbleEarth .occupationBar11 { background-color: #b36666; } /* Argentina */
+.variantGobbleEarth .occupationBar12 { background-color: #ffc266; } /* Colombia */
+.variantGobbleEarth .occupationBar13 { background-color: #897664; } /* Mexico */
+.variantGobbleEarth .occupationBar14 { background-color: #6666ff; } /* USA */
