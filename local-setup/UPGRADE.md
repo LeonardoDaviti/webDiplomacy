@@ -415,16 +415,21 @@ Classic rules only, and the regression suite for the rules engine:
 
 1. Turn on maintenance mode in the admin CP (the DATC page requires it). Remember it **also stops
    game processing**; turn it off the moment you are finished.
-2. <http://localhost:43000/datc.php> → **Batch all**.
-3. Compare the summary against the recorded baseline.
+2. <http://localhost:43000/datc.php> → **Reset all**, then **Batch-test** from the first case.
+   Reset first: the batch only picks up cases whose status is still `NotPassed`, and the baseline
+   run left all 137 `Passed`. Run them in ascending order and never past a failure — the results
+   page carries no `testID` and falls back to the lowest `NotPassed` case, so continuing after a
+   failure scores every later case against the stale one.
+3. Compare the summary against the recorded baseline:
+   [`datc-baseline-2026-09-20-c645b132.md`](datc-baseline-2026-09-20-c645b132.md) — **137 of 137
+   pass, no failures**, recorded on `local` `c645b132` (from upstream `7be9bb05`), schema 183.
 
 **Any newly failing case is a release blocker, not a curiosity.** A case that failed on the
-baseline and still fails is a known upstream gap.
+baseline and still fails is a known upstream gap — as of the current baseline there are none, so
+*any* failure is new.
 
-> **Baseline status:** not yet recorded on this install. Issue 012's last open item is to run
-> Batch all on a green stack and paste the summary into that issue, so there is something to
-> compare against. Until then an upgrade can only compare against the *expected* pass set, which
-> is much weaker. Record it at the first opportunity.
+> `datc/maps/` must be writable by the web user or every case hangs on "Loading order..."; see the
+> baseline file's gotchas before blaming the upgrade.
 
 **DATC covers Classic rules only.** A green DATC run says nothing whatsoever about a
 variant-specific adjudication regression — that is what §5.4 is for, and the two do not substitute

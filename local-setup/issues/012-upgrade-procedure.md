@@ -9,9 +9,10 @@ depends-on: [002, 011]
 # 012 — Upgrade procedure
 
 **Status: done.** The procedure is [`local-setup/UPGRADE.md`](../UPGRADE.md), linked from
-`local-setup/README.md` and from `RUNBOOK.md` §9 (which stays the short form). One item is
-carried forward: the DATC baseline has **not** been recorded, because the stack was down for
-unrelated container work while this was written. See *Outstanding* below.
+`local-setup/README.md` and from `RUNBOOK.md` §9 (which stays the short form). The one carried-over
+item, the DATC baseline, was recorded on 2026-09-20:
+[`local-setup/datc-baseline-2026-09-20-c645b132.md`](../datc-baseline-2026-09-20-c645b132.md) —
+**137 of 137 cases pass, no failures.** Nothing is outstanding.
 
 Upgrading this site is **a planned outage, never a casual `git pull`**. Deliverable: an
 `## Upgrading` section in `local-setup/RUNBOOK.md`, or a separate `local-setup/UPGRADING.md` —
@@ -69,24 +70,35 @@ bridge. Upgrading across several versions means running several in order.
       `Dump completed` marker check and a pre-flight checklist that gates on it.
 - [x] It requires DATC batch tests against a recorded baseline afterwards. — §5.3, with the
       "any new failure is a release blocker" rule and the Classic-only caveat.
-- [ ] A DATC **baseline has actually been recorded** on the current install, so there is
-      something to compare against. — **not done**, see *Outstanding*.
+- [x] A DATC **baseline has actually been recorded** on the current install, so there is
+      something to compare against. — `local-setup/datc-baseline-2026-09-20-c645b132.md`,
+      137/137 passing, and §5.3 now links it.
 - [x] It is linked from the runbook. — `README.md` contents table and `RUNBOOK.md` §9.
 
-## Outstanding
+## The DATC baseline — recorded 2026-09-20
 
-**Record the DATC baseline.** `curl http://127.0.0.1:43000/` returned nothing while this was
-written — the stack was down for unrelated container work — so Batch all could not be run. On the
-next green stack:
+Run on `local` `c645b132` (upstream merge base `7be9bb05`), schema 183, maintenance mode on for
+the duration and off afterwards with `status.php` green again.
 
-1. Admin CP → maintenance mode on (the DATC page needs it; it also stops game processing).
-2. <http://localhost:43000/datc.php> → **Batch all**.
-3. Paste the summary (pass/fail counts and the list of failing case numbers) into this issue,
-   dated.
-4. Maintenance mode off; confirm `status.php` goes green again.
+**137 of 137 cases pass. 0 failures. No failing case IDs.** 6.A (12), 6.B (14), 6.C (7), 6.D (34),
+6.E (15), 6.F (24), 6.G (18), wD.Intro (12), wD.Test (1) — every `wD_DATC` row ended `Passed`, and
+each case's own page printed `<case> has passed!`. Retreat and build phases are outside the suite
+(`datc/interactive.php`: "Non-Diplomacy phase DATC tests are currently unsupported").
 
-`UPGRADE.md` §5.3 carries a visible note saying the baseline is missing; remove it when the
-summary lands here.
+Full record, including how to re-run it and the three traps:
+[`local-setup/datc-baseline-2026-09-20-c645b132.md`](../datc-baseline-2026-09-20-c645b132.md).
+`UPGRADE.md` §5.3 links it and no longer says the baseline is missing.
+
+Three findings worth carrying, all in the baseline file:
+
+- **`datc/maps/` ships unwritable by the web user**, which kills `map.php`'s json board data and
+  leaves every case stuck on "Loading order..." with only a console `ReferenceError` to show for
+  it. `chmod 777 datc/maps` — directory permissions are not tracked by git.
+- **The suite needs a browser.** Each case is two requests and the first one's work is done by
+  JavaScript (order entry → `ajax.php` → self-navigation to `datc.php?DATCResults=…`).
+- **The second request carries no `testID`** and falls back to the lowest `NotPassed` case, so
+  running out of order — or continuing past a failure — scores later cases against a stale one.
+  Two attempts here reported 15–18 bogus failures before the ordering was corrected.
 
 ## Verification
 
